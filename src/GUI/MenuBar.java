@@ -1,9 +1,10 @@
 package GUI;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 
-public class MenuBar extends JPanel {
+public class MenuBar extends JMenuBar {
     private JMenuBar menuBar;
     private JMenu menu,file,edit,playBack,help;
     private JMenuItem newPlaylist,exit;
@@ -33,12 +34,18 @@ public class MenuBar extends JPanel {
         seekBackward=new JMenuItem("    SeekForward    ");
         seekForward=new JMenuItem("    SeekBackward    ");
 
+        Border border=BorderFactory.createEmptyBorder();
+
         menu = new JMenu("   ...");
         menu.setFont(font);
-        menu.setForeground(Color.white);
+        menu.setForeground(Color.WHITE);
         menu.setBackground(Color.BLACK);
         menu.setOpaque(true);
         menu.setBorderPainted(false);
+        menu.setContentAreaFilled(false);
+        menu.setBorder(border);
+
+
 
         file.setFont(JMenuFonts);
         edit.setFont(JMenuFonts);
@@ -60,7 +67,9 @@ public class MenuBar extends JPanel {
         edit.add(undo);edit.add(redo);
         playBack.add(play);playBack.add(next);playBack.add(previous);playBack.add(seekBackward);playBack.add(seekForward);
 
-        menuBar.add(menu);
-        add(menuBar);
+        add(menu);
+        setBorder(border);
+        setBorderPainted(false);
+
     }
 }
