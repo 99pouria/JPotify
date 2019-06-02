@@ -11,9 +11,6 @@ public class CentralPanel extends JPanel {
     public CentralPanel() throws IOException {
         setLayout(new BorderLayout());
 
-        setOpaque(true);
-        setBackground(Color.DARK_GRAY);
-
         TitleBar titleBar = new TitleBar();
         InteractivePart interactivePart = new InteractivePart();
 
@@ -36,8 +33,8 @@ class TitleBar extends JPanel {
     public TitleBar() throws IOException {
         super();
         setOpaque(true);
-        setBackground(Color.BLACK);
-        setPreferredSize(new Dimension(700, 50));
+        setBackground(Color.GRAY);
+        setPreferredSize(new Dimension(700, 40));
 
         searchBar = new JPanel();
         emptySpace=new JPanel();
@@ -49,12 +46,12 @@ class TitleBar extends JPanel {
         setSearchBarGUI();
         setIdGUI();
         setEmptySpaceGUI();
-        setLineGUI();
+//        setLineGUI();
 
         add(searchBar,BorderLayout.WEST);
         add(emptySpace,BorderLayout.CENTER);
         add(id,BorderLayout.EAST);
-        add(line,BorderLayout.SOUTH);
+//        add(line,BorderLayout.SOUTH);
 
     }
 
@@ -66,12 +63,14 @@ class TitleBar extends JPanel {
         searchBar.setOpaque(true);
         searchBar.setBackground(Color.WHITE);
 
-        searchBar.setPreferredSize(new Dimension(320,50));
+        searchBar.setPreferredSize(new Dimension(320,40));
 
         searchBar.setLayout(new BorderLayout());
 
         previousBtn.setPreferredSize(new Dimension(40,50));
         searchField.setPreferredSize(new Dimension(240,50));
+        previousBtn.setPreferredSize(new Dimension(40,40));
+        searchField.setPreferredSize(new Dimension(240,40));
 
         Image img = ImageIO.read(getClass().getResource("icons\\top-screen-icons-2\\png\\002-left-arrow.png"));
         img = img.getScaledInstance(14, 14, java.awt.Image.SCALE_SMOOTH);
@@ -99,7 +98,7 @@ class TitleBar extends JPanel {
     public void setIdGUI(){
         id.setOpaque(true);
         id.setBackground(Color.WHITE);
-        id.setPreferredSize(new Dimension(100,50));
+        id.setPreferredSize(new Dimension(100,40));
 
         Font font1=new Font("Font1",1,20);
 

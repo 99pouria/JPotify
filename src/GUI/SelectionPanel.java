@@ -1,6 +1,7 @@
 package GUI;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 
 public class SelectionPanel extends JPanel {
@@ -15,7 +16,6 @@ public class SelectionPanel extends JPanel {
         PlayLists playLists = new PlayLists();
 
         SpringLayout springLayout = new SpringLayout();
-
         setLayout(springLayout);
 
         springLayout.putConstraint(SpringLayout.NORTH, menu, 10, SpringLayout.NORTH, this);
