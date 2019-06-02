@@ -2,6 +2,7 @@ package GUI;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.io.IOException;
 
@@ -29,38 +30,98 @@ class SongInfo extends JPanel {
         super();
         setPreferredSize(new Dimension(250, 70));
         setOpaque(true);
-        setBackground(Color.blue);
+        setBackground(Color.DARK_GRAY);
     }
 }
 
-class PlayerTools extends JPanel {
+class PlayerTools extends JPanel implements AddIcon {
+
+    private JSlider progressBar;
+    private JPanel buttonsPanel;
+    private JButton play;
+    private JButton back;
+    private JButton next;
+    private JButton shuffle;
+    private JButton repeat;
+
     public PlayerTools() throws IOException {
         super();
+        progressBar = new JSlider(0,100, 25);
+        buttonsPanel = new JPanel();
+
+        setLayout(new BorderLayout());
+
         setOpaque(true);
-        setBackground(Color.red);
+        setBackground(Color.darkGray);
 
-        JButton play = new JButton("");
-        JButton back = new RoundButton("");
-        JButton next = new RoundButton("");
-        JButton shuffle = new RoundButton("");
-        JButton repeat = new RoundButton("");
+        play = new JButton("");
+        back = new JButton("");
+        next = new JButton("");
+        shuffle = new JButton("");
+        repeat = new JButton("");
 
-        Image img = ImageIO.read(getClass().getResource("icons\\my-icons-collection-2\\png\\002-play-button.png"));
-        img = img.getScaledInstance( 30, 30,  java.awt.Image.SCALE_SMOOTH ) ;
-        play.setIcon(new ImageIcon(img));
-        play.setPreferredSize(new Dimension(40,40));
-        play.setBorderPainted(false);
-        play.setContentAreaFilled(false);
+        createIcon(play, "icons\\my-icons-collection-2\\png\\002-play-button.png", 35, 35);
+        createIcon(next, "icons\\my-icons-collection-2\\png\\010-skip-track-option.png", 14, 14);
+        createIcon(shuffle, "icons\\my-icons-collection-2\\png\\003-suffle-option.png", 14, 14);
+        createIcon(repeat, "icons\\my-icons-collection-2\\png\\008-clockwise-refresh-arrow.png", 14, 14);
+        createIcon(back, "icons\\my-icons-collection-2\\png\\009-saltar-a-pista-anterior.png", 14, 14);
 
-        add(play);
+
+        buttonsPanel.add(shuffle);
+        buttonsPanel.add(back);
+        buttonsPanel.add(play);
+        buttonsPanel.add(next);
+        buttonsPanel.add(repeat);
+
+        buttonsPanel.setOpaque(true);
+        buttonsPanel.setBackground(Color.DARK_GRAY);
+        progressBar.setOpaque(true);
+        progressBar.setBackground(Color.DARK_GRAY);
+
+        add(progressBar, BorderLayout.CENTER);
+        add(buttonsPanel, BorderLayout.NORTH);
+    }
+
+    @Override
+    public void createIcon(Container container, String iconAddress, int width, int height) throws IOException {
+        Image img = ImageIO.read(getClass().getResource(iconAddress));
+        img = img.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
+        ((JButton) container).setIcon(new ImageIcon(img));
+        container.setPreferredSize(new Dimension(40, 40));
+        ((JButton) container).setBorderPainted(false);
+        ((JButton) container).setContentAreaFilled(false);
+        ((JButton) container).setFocusPainted(false);
+
     }
 }
 
 class VolumeBox extends JPanel {
-    public VolumeBox() {
+
+    JSlider volumeSlider;
+    JButton volumeButton;
+
+    public VolumeBox() throws IOException {
         super();
+        volumeSlider = new JSlider(0,100,25);
+        volumeButton = new JButton();
+
         setPreferredSize(new Dimension(250, 70));
         setOpaque(true);
-        setBackground(Color.yellow);
+        setBackground(Color.DARK_GRAY);
+
+        Image img = ImageIO.read(getClass().getResource("icons\\my-icons-collection-2\\png\\006-speaker-1.png"));
+        img = img.getScaledInstance(14, 14, java.awt.Image.SCALE_SMOOTH);
+        volumeButton.setIcon(new ImageIcon(img));
+        volumeButton.setPreferredSize(new Dimension(40, 40));
+        volumeButton.setBorderPainted(false);
+        volumeButton.setContentAreaFilled(false);
+        volumeButton.setFocusPainted(false);
+
+        volumeSlider.setOpaque(true);
+        volumeSlider.setBackground(Color.DARK_GRAY);
+
+
+        add(volumeButton);
+        add(volumeSlider);
     }
 }

@@ -106,6 +106,6 @@ class InteractivePart extends JPanel {
     public InteractivePart() {
         super();
         setOpaque(true);
-        setBackground(Color.DARK_GRAY);
+        setBackground(Color.GRAY);
     }
 }
