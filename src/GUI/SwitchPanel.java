@@ -9,12 +9,9 @@ import java.awt.event.MouseListener;
 
 public class SwitchPanel extends JPanel implements ActionListener{
 
-    private JFileChooser fileChooser;
 
     public SwitchPanel() {
         super();
-
-        fileChooser = new JFileChooser();
 
         setLayout(new GridLayout(2, 1));
 
