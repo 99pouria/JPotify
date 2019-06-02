@@ -8,7 +8,7 @@ import java.awt.event.MouseListener;
 public class Libraries extends JPanel {
     public Libraries() {
         super();
-        setLayout(new GridLayout(7,1));
+        setLayout(new GridLayout(5,1));
 
         Font font = new Font("MyFont", 1, 17);
         Font font1=new Font("Font1",Font.ITALIC,15);
@@ -22,7 +22,7 @@ public class Libraries extends JPanel {
         title.setFont(font);
         add(title);
 
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 4; i++) {
             buttons[i] = new JButton();
             buttons[i].setPreferredSize(new Dimension(250, 50));
             buttons[i].setHorizontalAlignment(SwingConstants.LEFT);

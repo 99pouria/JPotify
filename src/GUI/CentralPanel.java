@@ -5,6 +5,8 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 public class CentralPanel extends JPanel {
@@ -58,10 +60,10 @@ class TitleBar extends JPanel {
     public void setSearchBarGUI() throws IOException {
         previousBtn=new JButton();
         nextBtn=new JButton();
-        searchField=new JTextField("Search");
+        searchField=new JTextField(" Search");
 
         searchBar.setOpaque(true);
-        searchBar.setBackground(Color.WHITE);
+        searchBar.setBackground(Color.GRAY);
 
         searchBar.setPreferredSize(new Dimension(320,40));
 
@@ -121,9 +123,15 @@ class TitleBar extends JPanel {
 
 
 class InteractivePart extends JPanel {
-    public InteractivePart() {
+    public InteractivePart() throws IOException {
         super();
         setOpaque(true);
         setBackground(Color.GRAY);
+
+//        Image image = ImageIO.read(getClass().getResource("icons\\starry_sky_night_mountains_grass_milky_way_120463_1280x720.png"));
+//        JLabel label = new JLabel(new ImageIcon(image));
+//        add(label);
+
+
     }
 }
