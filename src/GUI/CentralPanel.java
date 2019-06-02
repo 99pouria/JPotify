@@ -7,7 +7,10 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 public class CentralPanel extends JPanel {
     public CentralPanel() throws IOException {
@@ -39,7 +42,7 @@ class TitleBar extends JPanel {
         setPreferredSize(new Dimension(700, 40));
 
         searchBar = new JPanel();
-        emptySpace=new JPanel();
+        emptySpace = new JPanel();
         id = new JPanel();
         line = new JLabel();
 
@@ -50,29 +53,29 @@ class TitleBar extends JPanel {
         setEmptySpaceGUI();
 //        setLineGUI();
 
-        add(searchBar,BorderLayout.WEST);
-        add(emptySpace,BorderLayout.CENTER);
-        add(id,BorderLayout.EAST);
+        add(searchBar, BorderLayout.WEST);
+        add(emptySpace, BorderLayout.CENTER);
+        add(id, BorderLayout.EAST);
 //        add(line,BorderLayout.SOUTH);
 
     }
 
     public void setSearchBarGUI() throws IOException {
-        previousBtn=new JButton();
-        nextBtn=new JButton();
-        searchField=new JTextField(" Search");
+        previousBtn = new JButton();
+        nextBtn = new JButton();
+        searchField = new JTextField(" Search");
 
         searchBar.setOpaque(true);
         searchBar.setBackground(Color.GRAY);
 
-        searchBar.setPreferredSize(new Dimension(320,40));
+        searchBar.setPreferredSize(new Dimension(320, 40));
 
         searchBar.setLayout(new BorderLayout());
 
-        previousBtn.setPreferredSize(new Dimension(40,50));
-        searchField.setPreferredSize(new Dimension(240,50));
-        previousBtn.setPreferredSize(new Dimension(40,40));
-        searchField.setPreferredSize(new Dimension(240,40));
+        previousBtn.setPreferredSize(new Dimension(40, 50));
+        searchField.setPreferredSize(new Dimension(240, 50));
+        previousBtn.setPreferredSize(new Dimension(40, 40));
+        searchField.setPreferredSize(new Dimension(240, 40));
 
         Image img = ImageIO.read(getClass().getResource("icons\\top-screen-icons-2\\png\\002-left-arrow.png"));
         img = img.getScaledInstance(14, 14, java.awt.Image.SCALE_SMOOTH);
@@ -91,31 +94,31 @@ class TitleBar extends JPanel {
         nextBtn.setFocusPainted(false);
 
 
-        searchBar.add(previousBtn,BorderLayout.WEST);
-        searchBar.add(nextBtn,BorderLayout.CENTER);
-        searchBar.add(searchField,BorderLayout.EAST);
+        searchBar.add(previousBtn, BorderLayout.WEST);
+        searchBar.add(nextBtn, BorderLayout.CENTER);
+        searchBar.add(searchField, BorderLayout.EAST);
 
     }
 
-    public void setIdGUI(){
+    public void setIdGUI() {
         id.setOpaque(true);
         id.setBackground(Color.WHITE);
-        id.setPreferredSize(new Dimension(100,40));
+        id.setPreferredSize(new Dimension(100, 40));
 
-        Font font1=new Font("Font1",1,20);
+        Font font1 = new Font("Font1", 1, 20);
 
-        idLabel=new JLabel("9731***");
+        idLabel = new JLabel("9731***");
         id.setFont(font1);
 
         id.add(idLabel);
     }
 
-    public void setLineGUI(){
+    public void setLineGUI() {
         line.setText("_______________________________________________________________________________________________________________________");
         line.setForeground(Color.DARK_GRAY);
     }
 
-    public void setEmptySpaceGUI(){
+    public void setEmptySpaceGUI() {
         emptySpace.setOpaque(true);
         emptySpace.setBackground(Color.lightGray);
     }
@@ -127,7 +130,20 @@ class InteractivePart extends JPanel {
         super();
         setOpaque(true);
         setBackground(Color.GRAY);
-        File file = new File("C:\\Users\\Pooria\\Music\\all|02.Shadmehr Aghili - Hamishegi_-412988269.mp3");
-//        Byte[] fileBytes = file;
+        findSongInfo("C:\\Users\\Pooria\\Downloads\\Music\\Hayedeh - Ashiooneh.mp3", 0);
+        findSongInfo("C:\\Users\\Pooria\\Downloads\\Music\\Hayedeh - Ashiooneh.mp3", 1);
+        findSongInfo("C:\\Users\\Pooria\\Downloads\\Music\\Hayedeh - Ashiooneh.mp3", 2);
+    }
+
+    public String findSongInfo (String filePath, int index) throws IOException {
+        File file = new File(filePath);
+        byte[] songName = new byte[30];
+        byte[] fileContent = Files.readAllBytes(file.toPath());
+        for (int i = 0; i < 30; i++) {
+            songName[i] = fileContent[i + fileContent.length - 125 + index * 30];
+        }
+        String name = new String(songName);
+        System.out.println(name);
+        return name;
     }
 }
