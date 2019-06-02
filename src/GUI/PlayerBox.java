@@ -45,9 +45,12 @@ class PlayerTools extends JPanel {
         JButton shuffle = new RoundButton("");
         JButton repeat = new RoundButton("");
 
-//        Image img = ImageIO.read(getClass().getResource("multimedia.png"));
-//        play.setIcon(new ImageIcon(img));
+        Image img = ImageIO.read(getClass().getResource("icons\\my-icons-collection-2\\png\\002-play-button.png"));
+        img = img.getScaledInstance( 30, 30,  java.awt.Image.SCALE_SMOOTH ) ;
+        play.setIcon(new ImageIcon(img));
         play.setPreferredSize(new Dimension(40,40));
+        play.setBorderPainted(false);
+        play.setContentAreaFilled(false);
 
         add(play);
     }
@@ -63,24 +66,3 @@ class VolumeBox extends JPanel {
         add(label);
     }
 }
-
-
-//        SpringLayout springLayout=new SpringLayout();
-//        setLayout(BoxLayout);
-//
-//        SongInfo songInfo=new SongInfo();
-//        PlayerTools playerTools=new PlayerTools();
-//        VolumeBox volumeBox=new VolumeBox();
-//
-////        springLayout.putConstraint(SpringLayout.WEST,volumeBox,0,SpringLayout.WEST,this);
-////        springLayout.putConstraint(SpringLayout.EAST,volumeBox,250,SpringLayout.WEST,this);
-////        springLayout.putConstraint(SpringLayout.NORTH,volumeBox,0,SpringLayout.NORTH,this);
-////        springLayout.putConstraint(SpringLayout.SOUTH,volumeBox,0,SpringLayout.SOUTH,this);
-//        springLayout.putConstraint(SpringLayout.EAST,songInfo,1200,SpringLayout.WEST,this);
-//        springLayout.putConstraint(SpringLayout.WEST,songInfo,950,SpringLayout.WEST,this);
-//        springLayout.putConstraint(SpringLayout.NORTH,songInfo,0,SpringLayout.NORTH,this);
-//        springLayout.putConstraint(SpringLayout.SOUTH,songInfo,0,SpringLayout.SOUTH,this);
-////        springLayout.putConstraint(SpringLayout.WEST,playerTools,0,SpringLayout.EAST,songInfo);
-////        springLayout.putConstraint(SpringLayout.EAST,playerTools,0,SpringLayout.WEST,volumeBox);
-////        springLayout.putConstraint(SpringLayout.NORTH,playerTools,0,SpringLayout.NORTH,this);
-////        springLayout.putConstraint(SpringLayout.SOUTH,playerTools,0,SpringLayout.SOUTH,this);

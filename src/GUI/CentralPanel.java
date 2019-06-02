@@ -8,10 +8,10 @@ public class CentralPanel extends JPanel {
         setLayout(new BorderLayout());
 
         TitleBar titleBar = new TitleBar();
-        InteractivPart interactivPart = new InteractivPart();
+        InteractivePart interactivePart = new InteractivePart();
 
         add(titleBar, BorderLayout.NORTH);
-        add(interactivPart, BorderLayout.CENTER);
+        add(interactivePart, BorderLayout.CENTER);
 
     }
 }
@@ -50,8 +50,8 @@ class TitleBar extends JPanel {
 }
 
 
-class InteractivPart extends JPanel {
-    public InteractivPart() {
+class InteractivePart extends JPanel {
+    public InteractivePart() {
         super();
         setOpaque(true);
         setBackground(Color.DARK_GRAY);
