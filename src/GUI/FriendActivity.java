@@ -14,7 +14,7 @@ public class FriendActivity extends JPanel {
 
         setLayout(springLayout);
 
-        Font font = new Font("MyFont", 7, 17);
+        Font font = new Font("MyFont", 1, 19);
 
         JLabel title = new JLabel("     Friend Activity");
         title.setFont(font);
