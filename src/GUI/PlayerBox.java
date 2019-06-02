@@ -46,7 +46,7 @@ class PlayerTools extends JPanel implements AddIcon {
 
     public PlayerTools() throws IOException {
         super();
-        progressBar = new JSlider(0,100, 25);
+        progressBar = new JSlider(0, 100, 25);
         buttonsPanel = new JPanel();
 
         setLayout(new BorderLayout());
@@ -77,6 +77,7 @@ class PlayerTools extends JPanel implements AddIcon {
         buttonsPanel.setBackground(Color.DARK_GRAY);
         progressBar.setOpaque(true);
         progressBar.setBackground(Color.DARK_GRAY);
+        progressBar.setSnapToTicks(true);
 
         add(progressBar, BorderLayout.CENTER);
         add(buttonsPanel, BorderLayout.NORTH);
@@ -102,7 +103,7 @@ class VolumeBox extends JPanel {
 
     public VolumeBox() throws IOException {
         super();
-        volumeSlider = new JSlider(0,100,25);
+        volumeSlider = new JSlider(0, 100, 25);
         volumeButton = new JButton();
 
         setPreferredSize(new Dimension(250, 70));
@@ -120,6 +121,7 @@ class VolumeBox extends JPanel {
         volumeSlider.setOpaque(true);
         volumeSlider.setBackground(Color.DARK_GRAY);
 
+        volumeSlider.setExtent(50);
 
         add(volumeButton);
         add(volumeSlider);

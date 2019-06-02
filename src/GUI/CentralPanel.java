@@ -1,13 +1,18 @@
 package GUI;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.io.IOException;
 
 public class CentralPanel extends JPanel {
-    public CentralPanel() {
+    public CentralPanel() throws IOException {
         setLayout(new BorderLayout());
+
+        setOpaque(true);
+        setBackground(Color.DARK_GRAY);
 
         TitleBar titleBar = new TitleBar();
         InteractivePart interactivePart = new InteractivePart();
@@ -23,12 +28,12 @@ class TitleBar extends JPanel {
     private JPanel emptySpace;
     private JPanel id;
     private JLabel line;
-    private JButton priviousBtn;
+    private JButton previousBtn;
     private JButton nextBtn;
     private JTextField searchField;
     private JLabel idLabel;
 
-    public TitleBar() {
+    public TitleBar() throws IOException {
         super();
         setOpaque(true);
         setBackground(Color.BLACK);
@@ -53,8 +58,8 @@ class TitleBar extends JPanel {
 
     }
 
-    public void setSearchBarGUI(){
-        priviousBtn=new JButton();
+    public void setSearchBarGUI() throws IOException {
+        previousBtn=new JButton();
         nextBtn=new JButton();
         searchField=new JTextField("Search");
 
@@ -64,14 +69,28 @@ class TitleBar extends JPanel {
         searchBar.setPreferredSize(new Dimension(320,50));
 
         searchBar.setLayout(new BorderLayout());
-//
-//        Border roundedBorder = BorderFactory.createEmptyBorder();
-//        searchField.setBorder(roundedBorder);
 
-        priviousBtn.setPreferredSize(new Dimension(40,50));
+        previousBtn.setPreferredSize(new Dimension(40,50));
         searchField.setPreferredSize(new Dimension(240,50));
 
-        searchBar.add(priviousBtn,BorderLayout.WEST);
+        Image img = ImageIO.read(getClass().getResource("icons\\top-screen-icons-2\\png\\002-left-arrow.png"));
+        img = img.getScaledInstance(14, 14, java.awt.Image.SCALE_SMOOTH);
+        previousBtn.setIcon(new ImageIcon(img));
+        previousBtn.setPreferredSize(new Dimension(40, 40));
+        previousBtn.setBorderPainted(false);
+        previousBtn.setContentAreaFilled(false);
+        previousBtn.setFocusPainted(false);
+
+        img = ImageIO.read(getClass().getResource("icons\\top-screen-icons-2\\png\\001-right-arrow.png"));
+        img = img.getScaledInstance(14, 14, java.awt.Image.SCALE_SMOOTH);
+        nextBtn.setIcon(new ImageIcon(img));
+        nextBtn.setPreferredSize(new Dimension(40, 40));
+        nextBtn.setBorderPainted(false);
+        nextBtn.setContentAreaFilled(false);
+        nextBtn.setFocusPainted(false);
+
+
+        searchBar.add(previousBtn,BorderLayout.WEST);
         searchBar.add(nextBtn,BorderLayout.CENTER);
         searchBar.add(searchField,BorderLayout.EAST);
 
