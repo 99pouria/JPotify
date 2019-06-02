@@ -2,6 +2,8 @@ package GUI;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class PlayLists extends JPanel {
     public PlayLists() {
@@ -25,15 +27,44 @@ public class PlayLists extends JPanel {
             buttons[i].setHorizontalAlignment(SwingConstants.LEFT);
             buttons[i].setText("  playlist " + (i+1));
             buttons[i].setContentAreaFilled(false);
-//            btn3.setFocusPainted(false);
+            buttons[i].setFocusPainted(false);
             buttons[i].setBorderPainted(false);
             buttons[i].setFont(font1);
             buttons[i].setForeground(Color.WHITE);
+            buttonEventHandler(buttons[i]);
             add(buttons[i]);
         }
 
 
         setOpaque(true);
         setBackground(Color.BLACK);
+    }
+
+    public void buttonEventHandler(JButton button){
+        button.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                button.setForeground(Color.getHSBColor(104,69,55));
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                button.setForeground(Color.GREEN);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setForeground(Color.GREEN);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setForeground(Color.WHITE);
+            }
+        });
     }
 }

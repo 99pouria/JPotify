@@ -22,6 +22,8 @@ public class FriendActivity extends JPanel {
         title.setForeground(Color.WHITE);
         JLabel line = new JLabel("  _________________________________");
         JPanel friendsList = new JPanel();
+        friendsList.setOpaque(true);
+        friendsList.setBackground(Color.BLACK);
 
         springLayout.putConstraint(SpringLayout.NORTH, title, 20, SpringLayout.NORTH, this);
         springLayout.putConstraint(SpringLayout.NORTH, line, 5, SpringLayout.SOUTH, title);
