@@ -62,7 +62,5 @@ class VolumeBox extends JPanel {
         setPreferredSize(new Dimension(250, 70));
         setOpaque(true);
         setBackground(Color.yellow);
-        JLabel label = new JLabel("hello pooria");
-        add(label);
     }
 }
