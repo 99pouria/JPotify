@@ -127,11 +127,7 @@ class InteractivePart extends JPanel {
         super();
         setOpaque(true);
         setBackground(Color.GRAY);
-
-//        Image image = ImageIO.read(getClass().getResource("icons\\starry_sky_night_mountains_grass_milky_way_120463_1280x720.png"));
-//        JLabel label = new JLabel(new ImageIcon(image));
-//        add(label);
-
-
+        File file = new File("C:\\Users\\Pooria\\Music\\all|02.Shadmehr Aghili - Hamishegi_-412988269.mp3");
+//        Byte[] fileBytes = file;
     }
 }

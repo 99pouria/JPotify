@@ -66,7 +66,6 @@ class PlayerTools extends JPanel implements AddIcon {
         createIcon(repeat, "icons\\my-icons-collection-2\\png\\008-clockwise-refresh-arrow.png", 14, 14);
         createIcon(back, "icons\\my-icons-collection-2\\png\\009-saltar-a-pista-anterior.png", 14, 14);
 
-
         buttonsPanel.add(shuffle);
         buttonsPanel.add(back);
         buttonsPanel.add(play);
