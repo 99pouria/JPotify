@@ -6,7 +6,9 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 public class CentralPanel extends JPanel {
@@ -132,6 +134,10 @@ class InteractivePart extends JPanel {
 //        JLabel label = new JLabel(new ImageIcon(image));
 //        add(label);
 
+        FileInputStream fileInputStream=new FileInputStream("C:\\Users\\asus\\IdeaProjects\\Final Project2\\src\\GUI\\Reza Bahram - Az Eshgh Bego.mp3");
+        fileInputStream.read();
 
     }
 }
+
+
