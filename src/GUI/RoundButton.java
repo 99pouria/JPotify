@@ -12,7 +12,7 @@ public class RoundButton extends JButton {
 
         setBackground(Color.lightGray);
         setFocusable(false);
- 
+        int a;
     /*
      These statements enlarge the button so that it 
      becomes a circle rather than an oval.

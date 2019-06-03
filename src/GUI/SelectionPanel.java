@@ -1,11 +1,11 @@
 package GUI;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
+import java.io.IOException;
 
 public class SelectionPanel extends JPanel {
-    public SelectionPanel() {
+    public SelectionPanel() throws IOException {
         super();
         setPreferredSize(new Dimension(250,600));
         setOpaque(true);

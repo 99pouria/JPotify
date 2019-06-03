@@ -1,6 +1,8 @@
 package GUI;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,13 +12,18 @@ import java.awt.event.MouseListener;
 public class SwitchPanel extends JPanel implements ActionListener{
 
 
+    private JButton homeBtn;
+    private JButton browseBtn;
+    private JFileChooser fileChooser;
+
     public SwitchPanel() {
         super();
 
         setLayout(new GridLayout(2, 1));
 
-        JButton homeBtn = new JButton("Home");
-        JButton browseBtn = new JButton("Browse");
+        fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+        homeBtn = new JButton("Home");
+        browseBtn = new JButton("Browse");
 
         homeBtn.setOpaque(true);
         homeBtn.setBackground(Color.BLACK);
@@ -51,6 +58,28 @@ public class SwitchPanel extends JPanel implements ActionListener{
 
         add(homeBtn);
         add(browseBtn);
+
+        browseBtn.addActionListener(this);
+    }
+
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == browseBtn) {
+            JLabel l = new JLabel();
+
+            fileChooser.setAcceptAllFileFilterUsed(false);
+            fileChooser.setDialogTitle("Select a .mp3 file");
+            FileNameExtensionFilter restrict = new FileNameExtensionFilter("Only .mp3 files", "mp3");
+            fileChooser.addChoosableFileFilter(restrict);
+            int r = fileChooser.showSaveDialog(null);
+            if (r == JFileChooser.APPROVE_OPTION) {
+                l.setText(fileChooser.getSelectedFile().getAbsolutePath());
+            }
+            else
+                l.setText("the user cancelled the operation");
+            add(l);
+        }
     }
 
 
@@ -88,8 +117,5 @@ public class SwitchPanel extends JPanel implements ActionListener{
 
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
 
-    }
 }

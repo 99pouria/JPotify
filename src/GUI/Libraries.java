@@ -13,7 +13,7 @@ public class Libraries extends JPanel {
         Font font = new Font("MyFont", 1, 17);
         Font font1=new Font("Font1",Font.ITALIC,15);
 
-        JLabel title = new JLabel("     Your LIBRARIES");
+        JLabel title = new JLabel("     YOUR LIBRARY");
         title.setForeground(Color.white);
         JButton[] buttons = new JButton[6];
 
@@ -22,8 +22,12 @@ public class Libraries extends JPanel {
         title.setFont(font);
         add(title);
 
+        buttons[0] = new JButton("Songs");
+        buttons[1] = new JButton("Albums");
+        buttons[2] = new JButton("Artists");
+        buttons[3] = new JButton("Add To Library");
+
         for (int i = 0; i < 4; i++) {
-            buttons[i] = new JButton();
             buttons[i].setPreferredSize(new Dimension(250, 50));
             buttons[i].setHorizontalAlignment(SwingConstants.LEFT);
             buttons[i].setContentAreaFilled(false);
@@ -32,7 +36,6 @@ public class Libraries extends JPanel {
             buttons[i].setFont(font1);
             buttons[i].setForeground(Color.WHITE);
             buttonEventHandler(buttons[i]);
-            buttons[i].setText("  library " + (i+1));
             add(buttons[i]);
         }
 
