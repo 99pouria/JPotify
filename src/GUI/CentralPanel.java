@@ -5,6 +5,8 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,7 +27,7 @@ public class CentralPanel extends JPanel {
     }
 }
 
-class TitleBar extends JPanel {
+class TitleBar extends JPanel implements MouseListener {
     private JPanel searchBar;
     private JPanel emptySpace;
     private JPanel id;
@@ -111,6 +113,8 @@ class TitleBar extends JPanel {
         id.setFont(font1);
 
         id.add(idLabel);
+
+        searchField.addMouseListener(this);
     }
 
     public void setLineGUI() {
@@ -122,7 +126,35 @@ class TitleBar extends JPanel {
         emptySpace.setOpaque(true);
         emptySpace.setBackground(Color.lightGray);
     }
-}
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (searchField.getText().equals(" Search")) {
+            searchField.setText("");
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+        }
+    }
+
 
 
 class InteractivePart extends JPanel {
@@ -131,12 +163,11 @@ class InteractivePart extends JPanel {
         setOpaque(true);
         setBackground(Color.GRAY);
 //        findSongInfo("C:\\Users\\Pooria\\Downloads\\Music\\Hayedeh - Ashiooneh.mp3", 0);
-//        findSongInfo("C:\\Users\\Pooria\\Downloads\\Music\\Hayedeh - Ashiooneh.mp3", 1);
 //        findSongInfo("C:\\Users\\Pooria\\Downloads\\Music\\Hayedeh - Ashiooneh.mp3", 2);
-
+//        findSongInfo("C:\\Users\\Pooria\\Downloads\\Music\\Hayedeh - Ashiooneh.mp3", 1);
     }
 
-    public String findSongInfo (String filePath, int index) throws IOException {
+    public String findSongInfo(String filePath, int index) throws IOException {
         File file = new File(filePath);
         byte[] songName = new byte[30];
         byte[] fileContent = Files.readAllBytes(file.toPath());

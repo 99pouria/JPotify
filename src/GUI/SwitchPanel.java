@@ -63,8 +63,7 @@ public class SwitchPanel extends JPanel implements ActionListener {
             int r = fileChooser.showSaveDialog(null);
             if (r == JFileChooser.APPROVE_OPTION) {
                 l.setText(fileChooser.getSelectedFile().getAbsolutePath());
-            }
-            else
+            } else
                 l.setText("the user cancelled the operation");
             add(l);
         }
