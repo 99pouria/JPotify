@@ -6,8 +6,11 @@ import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-public class SwitchPanel extends JPanel implements ActionListener {
+public class SwitchPanel extends JPanel implements ActionListener{
+
 
     private JButton homeBtn;
     private JButton browseBtn;
@@ -15,6 +18,7 @@ public class SwitchPanel extends JPanel implements ActionListener {
 
     public SwitchPanel() {
         super();
+
         setLayout(new GridLayout(2, 1));
 
         fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
@@ -32,6 +36,9 @@ public class SwitchPanel extends JPanel implements ActionListener {
         setOpaque(true);
         setBackground(Color.black);
 
+        homeBtn.setHorizontalAlignment(SwingConstants.LEFT);
+        browseBtn.setHorizontalAlignment(SwingConstants.LEFT);
+
         homeBtn.setContentAreaFilled(false);
         homeBtn.setFocusPainted(false);
         homeBtn.setBorderPainted(false);
@@ -43,6 +50,11 @@ public class SwitchPanel extends JPanel implements ActionListener {
 
         homeBtn.setFont(font);
         browseBtn.setFont(font);
+
+        buttonEventHandler(homeBtn);
+        buttonEventHandler(browseBtn);
+
+//        homeBtn.addActionListener(this);
 
         add(homeBtn);
         add(browseBtn);
@@ -68,4 +80,41 @@ public class SwitchPanel extends JPanel implements ActionListener {
             add(l);
         }
     }
+
+
+
+    public void buttonEventHandler(JButton button) {
+        button.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                button.setForeground(Color.getHSBColor(104, 69, 55));
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                button.setForeground(Color.GREEN);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setForeground(Color.GREEN);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setForeground(Color.WHITE);
+            }
+        });
+    }
+
+    public void addActionListener() {
+
+    }
+
+
 }
