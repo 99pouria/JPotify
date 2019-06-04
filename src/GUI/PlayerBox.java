@@ -1,16 +1,23 @@
 package GUI;
 
+import Logic.RunMusic;
+import com.mpatric.mp3agic.ID3v2;
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.Mp3File;
+import com.mpatric.mp3agic.UnsupportedTagException;
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.Player;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 
 public class PlayerBox extends JPanel {
-    public PlayerBox() throws IOException {
+    public PlayerBox() throws IOException, InvalidDataException, UnsupportedTagException, JavaLayerException {
         setPreferredSize(new Dimension(1200, 70));
         setOpaque(true);
         setBackground(Color.GRAY);
@@ -34,7 +41,7 @@ class SongInfo extends JPanel implements AddIcon {
     private JPanel like;
     private String filePath;
 
-    public SongInfo() throws IOException {
+    public SongInfo() throws IOException, InvalidDataException, UnsupportedTagException {
 
         super();
         setPreferredSize(new Dimension(250, 70));
@@ -42,7 +49,7 @@ class SongInfo extends JPanel implements AddIcon {
         setBackground(Color.DARK_GRAY);
 
         setLayout(new BorderLayout());
-        createInfoPanel("C:\\Users\\Pooria\\Downloads\\Music\\Babak Jahanbakhsh - Sheydaei.mp3");
+        createInfoPanel("F:\\Reza Bahram - Az Eshgh Bego.mp3");
         add(info, BorderLayout.CENTER);
         createLikeIcon();
         add(like, BorderLayout.EAST);
@@ -80,16 +87,18 @@ class SongInfo extends JPanel implements AddIcon {
         return name;
     }
 
-    public void createArtWorkPanel() {
+    public void createArtWorkPanel() throws InvalidDataException, IOException, UnsupportedTagException {
         artWork = new JPanel();
         artWork.setPreferredSize(new Dimension(70, 70));
         artWork.setOpaque(true);
         artWork.setBackground(Color.DARK_GRAY);
         JPanel pic = new JPanel();
         pic.setPreferredSize(new Dimension(60, 60));
-        pic.setOpaque(true);
-        pic.setBackground(Color.WHITE);
-        artWork.add(pic);
+
+//        artWork.add(pic);
+
+        showCoverImage(artWork);
+
     }
 
     public void createLikeIcon() throws IOException {
@@ -114,6 +123,25 @@ class SongInfo extends JPanel implements AddIcon {
         ((JButton) container).setContentAreaFilled(false);
         ((JButton) container).setFocusPainted(false);
     }
+
+    public void showCoverImage(Container container) throws InvalidDataException, IOException, UnsupportedTagException {
+        JLabel label=new JLabel();
+
+        Mp3File song = new Mp3File("F:\\Reza Bahram - Az Eshgh Bego.mp3");
+        if (song.hasId3v2Tag()){
+            ID3v2 id3v2tag = song.getId3v2Tag();
+            byte[] imageData = id3v2tag.getAlbumImage();
+            if (imageData!=null){
+                System.out.println("debug:: imageData is not null");
+                Image img = ImageIO.read(new ByteArrayInputStream(imageData));
+                img=  img.getScaledInstance(65,65, Image.SCALE_SMOOTH);
+                ImageIcon icon = new ImageIcon(img);
+                label.setIcon(icon);
+            }
+        }
+
+        container.add(label);
+    }
 }
 
 class PlayerTools extends JPanel implements AddIcon {
@@ -129,7 +157,7 @@ class PlayerTools extends JPanel implements AddIcon {
     private boolean isShuffle = false;
     private boolean isRepeat = false;
 
-    public PlayerTools() throws IOException {
+    public PlayerTools() throws IOException, JavaLayerException {
         super();
         progressBar = new JSlider(0, 100, 25);
         buttonsPanel = new JPanel();
@@ -172,6 +200,9 @@ class PlayerTools extends JPanel implements AddIcon {
         add(buttonsPanel, BorderLayout.NORTH);
     }
 
+
+
+
     public void buttonEventHandler(JButton button, String icon1, String icon2, String icon3, String icon4) {
         button.addMouseListener(new MouseListener() {
             @Override
@@ -185,21 +216,26 @@ class PlayerTools extends JPanel implements AddIcon {
 
             @Override
             public void mouseEntered(MouseEvent e) {
+                System.out.println("sfdsdfsdfssdfsdf");
 
                 if (icon2.equals(icon4)) {
                     try {
+                        System.out.println("1");
                         createIcon(button, icon1, 14, 14);
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
                 } else if (!isPlayed) {
                     try {
+                        System.out.println("2");
                         createIcon(button, icon1, 35, 35);
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
                 } else {
                     try {
+                        System.out.println("3");
+
                         createIcon(button, icon3, 35, 35);
                     } catch (IOException e1) {
                         e1.printStackTrace();
@@ -400,6 +436,8 @@ class PlayerTools extends JPanel implements AddIcon {
         ((JButton) container).setFocusPainted(false);
 
     }
+
+
 }
 
 class VolumeBox extends JPanel {

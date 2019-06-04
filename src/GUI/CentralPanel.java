@@ -1,5 +1,6 @@
 package GUI;
 
+import Logic.RunMusic;
 import com.mpatric.mp3agic.*;
 
 import javax.imageio.ImageIO;
@@ -7,18 +8,20 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.Player;
+
 public class CentralPanel extends JPanel {
-    public CentralPanel() throws IOException, InvalidDataException, UnsupportedTagException {
+    public CentralPanel() throws IOException, InvalidDataException, UnsupportedTagException, JavaLayerException {
         setLayout(new BorderLayout());
 
         TitleBar titleBar = new TitleBar();
@@ -40,7 +43,7 @@ class TitleBar extends JPanel implements MouseListener {
     private JTextField searchField;
     private JLabel idLabel;
 
-    public TitleBar() throws IOException {
+    public TitleBar() throws IOException, JavaLayerException {
         super();
         setOpaque(true);
         setBackground(Color.GRAY);
@@ -56,16 +59,16 @@ class TitleBar extends JPanel implements MouseListener {
         setSearchBarGUI();
         setIdGUI();
         setEmptySpaceGUI();
-        setLineGUI();
+//        setLineGUI();
 
         add(searchBar, BorderLayout.WEST);
         add(emptySpace, BorderLayout.CENTER);
         add(id, BorderLayout.EAST);
-        add(line,BorderLayout.SOUTH);
+//        add(line,BorderLayout.SOUTH);
 
     }
 
-    public void setSearchBarGUI() throws IOException {
+    public void setSearchBarGUI() throws IOException, JavaLayerException {
         previousBtn = new JButton();
         nextBtn = new JButton();
         searchField = new JTextField(" Search");
@@ -90,6 +93,22 @@ class TitleBar extends JPanel implements MouseListener {
         previousBtn.setContentAreaFilled(false);
         previousBtn.setFocusPainted(false);
 
+        RunMusic runMusic=new RunMusic("F:\\Reza Bahram - Az Eshgh Bego.mp3");
+        Thread thread=new Thread(runMusic);
+
+        previousBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (thread.isAlive())
+                {
+                    runMusic.resume(thread);
+                }
+                else {
+                    thread.start();
+                }
+            }
+        });
+
         img = ImageIO.read(getClass().getResource("icons\\top-screen-icons-2\\png\\001-right-arrow.png"));
         img = img.getScaledInstance(14, 14, java.awt.Image.SCALE_SMOOTH);
         nextBtn.setIcon(new ImageIcon(img));
@@ -97,6 +116,17 @@ class TitleBar extends JPanel implements MouseListener {
         nextBtn.setBorderPainted(false);
         nextBtn.setContentAreaFilled(false);
         nextBtn.setFocusPainted(false);
+
+        nextBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    runMusic.stopThread(thread);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
 
 
         searchBar.add(previousBtn, BorderLayout.WEST);
@@ -167,6 +197,10 @@ class InteractivePart extends JPanel {
         super();
         setOpaque(true);
         setBackground(Color.GRAY);
+//        findSongInfo("C:\\Users\\Pooria\\Downloads\\Music\\Hayedeh - Ashiooneh.mp3", 0);
+//        findSongInfo("C:\\Users\\Pooria\\Downloads\\Music\\Hayedeh - Ashiooneh.mp3", 2);
+//        findSongInfo("C:\\Users\\Pooria\\Downloads\\Music\\Hayedeh - Ashiooneh.mp3", 1);
+//        showCoverImage();
 
         findSongInfo("C:\\Users\\Pooria\\Music\\all\\Shadmehr Aghili - Sarnevesht_-1603298114.mp3", 0);
         findSongInfo("C:\\Users\\Pooria\\Downloads\\Music\\Hayedeh - Ashiooneh.mp3", 1);
@@ -174,12 +208,14 @@ class InteractivePart extends JPanel {
 
         setLayout(new GridBagLayout());
 
+
         makeMusicPad();
         makeMusicPad();
         makeMusicPad();
         makeMusicPad();
         makeMusicPad();
         makeMusicPad();
+
     }
 
     public String findSongInfo(String filePath, int index) throws IOException {

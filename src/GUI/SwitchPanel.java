@@ -1,5 +1,7 @@
 package GUI;
 
+import Logic.Save;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
@@ -15,6 +17,7 @@ public class SwitchPanel extends JPanel implements ActionListener {
     private JButton homeBtn;
     private JButton browseBtn;
     private JFileChooser fileChooser;
+    private Save save;
 
     public SwitchPanel() {
         super();
@@ -24,6 +27,7 @@ public class SwitchPanel extends JPanel implements ActionListener {
         fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
         homeBtn = new JButton("Home");
         browseBtn = new JButton("Browse");
+        save=new Save();
 
         homeBtn.setOpaque(true);
         homeBtn.setBackground(Color.BLACK);
@@ -72,8 +76,14 @@ public class SwitchPanel extends JPanel implements ActionListener {
             fileChooser.setDialogTitle("Select a .mp3 file");
             FileNameExtensionFilter restrict = new FileNameExtensionFilter("Only .mp3 files", "mp3");
             fileChooser.addChoosableFileFilter(restrict);
-            HashMap<String, Boolean> map = null;
-
+            int r = fileChooser.showSaveDialog(null);
+            if (r == JFileChooser.APPROVE_OPTION) {
+                l.setText(fileChooser.getSelectedFile().getAbsolutePath());
+            } else
+                l.setText("the user cancelled the operation");
+            add(l);
+            save.addMusic(fileChooser.getSelectedFile().getAbsolutePath(),true);
+            save.saveToFile();
         }
     }
 
@@ -106,10 +116,5 @@ public class SwitchPanel extends JPanel implements ActionListener {
             }
         });
     }
-
-    public void addFile(String filePath) {
-//        File.add(filePath);
-    }
-
 
 }
