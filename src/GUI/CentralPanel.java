@@ -1,6 +1,7 @@
 package GUI;
 
 import Logic.RunMusic;
+import Logic.Save;
 import com.mpatric.mp3agic.*;
 
 import javax.imageio.ImageIO;
@@ -16,6 +17,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Map;
 
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
@@ -210,12 +212,19 @@ class InteractivePart extends JPanel {
         setLayout(new GridBagLayout());
 
 
-        makeMusicPad();
-        makeMusicPad();
-        makeMusicPad();
-        makeMusicPad();
-        makeMusicPad();
-        makeMusicPad();
+//        makeMusicPad("F:\\Reza Bahram - Az Eshgh Bego.mp3");
+//        makeMusicPad("F:\\Reza Bahram - Az Eshgh Bego.mp3");
+//        makeMusicPad();
+//        makeMusicPad();
+//        makeMusicPad();
+//        makeMusicPad();
+        Save save =new Save();
+        save.readFile();
+        for (Map.Entry<String, Boolean> entry:
+        save.getMusics().entrySet()){
+            makeMusicPad(entry.getKey());
+            System.out.println(entry.getKey()+"-----------------");
+        }
 
     }
 
@@ -232,10 +241,10 @@ class InteractivePart extends JPanel {
     }
 
 
-    public void showCoverImage(Container container) throws InvalidDataException, IOException, UnsupportedTagException {
+    public void showCoverImage(Container container,String path) throws InvalidDataException, IOException, UnsupportedTagException {
         JLabel label=new JLabel();
 
-        Mp3File song = new Mp3File("F:\\Reza Bahram - Az Eshgh Bego.mp3");
+        Mp3File song = new Mp3File(path);
         if (song.hasId3v2Tag()){
             ID3v2 id3v2tag = song.getId3v2Tag();
             byte[] imageData = id3v2tag.getAlbumImage();
@@ -251,7 +260,7 @@ class InteractivePart extends JPanel {
         container.add(label);
     }
 
-    public void makeMusicPad() throws InvalidDataException, IOException, UnsupportedTagException {
+    public void makeMusicPad(String path) throws InvalidDataException, IOException, UnsupportedTagException {
 
         JPanel panel=new JPanel();
         JPanel coverImage=new JPanel();
@@ -304,9 +313,9 @@ class InteractivePart extends JPanel {
         albumName.setHorizontalAlignment(SwingConstants.LEFT);
 
 
-        showCoverImage(coverImage);
-        artistName.setText(findSongInfo("F:\\Reza Bahram - Az Eshgh Bego.mp3",0));
-        albumName.setText(findSongInfo("F:\\Reza Bahram - Az Eshgh Bego.mp3",2));
+        showCoverImage(coverImage,path);
+        artistName.setText(findSongInfo(path,0));
+        albumName.setText(findSongInfo(path,2));
 
 
         panel.add(coverImage,BorderLayout.NORTH);
