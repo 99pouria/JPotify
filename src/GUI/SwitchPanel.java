@@ -1,5 +1,7 @@
 package GUI;
 
+import Logic.Save;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
@@ -15,6 +17,7 @@ public class SwitchPanel extends JPanel implements ActionListener{
     private JButton homeBtn;
     private JButton browseBtn;
     private JFileChooser fileChooser;
+    private Save save;
 
     public SwitchPanel() {
         super();
@@ -24,6 +27,7 @@ public class SwitchPanel extends JPanel implements ActionListener{
         fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
         homeBtn = new JButton("Home");
         browseBtn = new JButton("Browse");
+        save=new Save();
 
         homeBtn.setOpaque(true);
         homeBtn.setBackground(Color.BLACK);
@@ -78,6 +82,8 @@ public class SwitchPanel extends JPanel implements ActionListener{
             } else
                 l.setText("the user cancelled the operation");
             add(l);
+            save.addMusic(fileChooser.getSelectedFile().getAbsolutePath(),true);
+            save.saveToFile();
         }
     }
 
@@ -111,10 +117,5 @@ public class SwitchPanel extends JPanel implements ActionListener{
             }
         });
     }
-
-    public void addActionListener() {
-
-    }
-
 
 }

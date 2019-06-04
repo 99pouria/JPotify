@@ -1,5 +1,6 @@
 package GUI;
 
+import Logic.RunMusic;
 import com.mpatric.mp3agic.*;
 
 import javax.imageio.ImageIO;
@@ -7,18 +8,20 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.Player;
+
 public class CentralPanel extends JPanel {
-    public CentralPanel() throws IOException, InvalidDataException, UnsupportedTagException {
+    public CentralPanel() throws IOException, InvalidDataException, UnsupportedTagException, JavaLayerException {
         setLayout(new BorderLayout());
 
         TitleBar titleBar = new TitleBar();
@@ -40,7 +43,7 @@ class TitleBar extends JPanel implements MouseListener {
     private JTextField searchField;
     private JLabel idLabel;
 
-    public TitleBar() throws IOException {
+    public TitleBar() throws IOException, JavaLayerException {
         super();
         setOpaque(true);
         setBackground(Color.GRAY);
@@ -65,7 +68,7 @@ class TitleBar extends JPanel implements MouseListener {
 
     }
 
-    public void setSearchBarGUI() throws IOException {
+    public void setSearchBarGUI() throws IOException, JavaLayerException {
         previousBtn = new JButton();
         nextBtn = new JButton();
         searchField = new JTextField(" Search");
@@ -90,6 +93,22 @@ class TitleBar extends JPanel implements MouseListener {
         previousBtn.setContentAreaFilled(false);
         previousBtn.setFocusPainted(false);
 
+        RunMusic runMusic=new RunMusic("F:\\Reza Bahram - Az Eshgh Bego.mp3");
+        Thread thread=new Thread(runMusic);
+
+        previousBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (thread.isAlive())
+                {
+                    runMusic.resume(thread);
+                }
+                else {
+                    thread.start();
+                }
+            }
+        });
+
         img = ImageIO.read(getClass().getResource("icons\\top-screen-icons-2\\png\\001-right-arrow.png"));
         img = img.getScaledInstance(14, 14, java.awt.Image.SCALE_SMOOTH);
         nextBtn.setIcon(new ImageIcon(img));
@@ -97,6 +116,17 @@ class TitleBar extends JPanel implements MouseListener {
         nextBtn.setBorderPainted(false);
         nextBtn.setContentAreaFilled(false);
         nextBtn.setFocusPainted(false);
+
+        nextBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    runMusic.stopThread(thread);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
 
 
         searchBar.add(previousBtn, BorderLayout.WEST);
@@ -178,52 +208,7 @@ class InteractivePart extends JPanel {
         findSongInfo("F:\\Reza Bahram - Az Eshgh Bego.mp3", 2);
 
         setLayout(new GridBagLayout());
-//        GridBagConstraints constraints=new GridBagConstraints();
-//
-//
-//        JPanel panel1=new JPanel();
-//        JPanel panel2=new JPanel();
-//        JPanel panel3=new JPanel();
-//        JPanel panel4=new JPanel();
-//        JPanel panel5=new JPanel();
-//        JPanel panel6=new JPanel();
-//
-//        panel1.setOpaque(true);
-//        panel1.setBackground(Color.black);
-//
-//        panel2.setOpaque(true);
-//        panel2.setBackground(Color.black);
-//
-//        panel3.setOpaque(true);
-//        panel3.setBackground(Color.black);
-//
-//        panel4.setOpaque(true);
-//        panel4.setBackground(Color.black);
-//
-//        panel5.setOpaque(true);
-//        panel5.setBackground(Color.black);
-//
-//        panel6.setOpaque(true);
-//        panel6.setBackground(Color.black);
-//
-//        constraints.insets=new Insets(20,20,20,20);
-//        constraints.weightx=2;
-//        constraints.gridx=0;
-//        constraints.gridy=0;
-//        constraints.ipadx=200;
-//        constraints.ipady=200;
-//        add(panel1,constraints);
-//        constraints.gridx=1;
-//        add(panel2,constraints);
-//        constraints.gridx=2;
-//        add(panel3,constraints);
-//        constraints.gridy=1;
-//        constraints.gridx=0;
-//        add(panel4,constraints);
-//        constraints.gridx=1;
-//        add(panel5,constraints);
-//        constraints.gridx=2;
-//        add(panel6,constraints);
+
 
         makeMusicPad();
         makeMusicPad();

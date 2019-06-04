@@ -1,5 +1,7 @@
 package GUI;
 
+import Logic.Save;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -32,5 +34,10 @@ public class FormGUI extends JFrame {
 
     public static void main(String[] args) throws Exception {
         FormGUI formGUI = new FormGUI();
+
+        Save save=new Save();
+        save.addMusic("F:\\Reza Bahram - Az Eshgh Bego.mp3",false);
+        save.addMusic("C:\\Users\\asus\\Downloads\\Music\\Reza Bahram - Shabhaye Bad Az To.mp3",false);
+        save.saveToFile();
     }
 }

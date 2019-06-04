@@ -1,11 +1,17 @@
 package GUI;
 
+import Logic.Save;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Map;
 
 public class Libraries extends JPanel {
+    private JButton[] buttons;
+    private Save save=new Save();
+
     public Libraries() {
         super();
         setLayout(new GridLayout(5,1));
@@ -15,13 +21,13 @@ public class Libraries extends JPanel {
 
         JLabel title = new JLabel("     YOUR LIBRARY");
         title.setForeground(Color.white);
-        JButton[] buttons = new JButton[6];
 
 
         title.setPreferredSize(new Dimension(250, 45));
         title.setFont(font);
         add(title);
 
+        buttons = new JButton[4];
         buttons[0] = new JButton("Songs");
         buttons[1] = new JButton("Albums");
         buttons[2] = new JButton("Artists");
@@ -38,15 +44,25 @@ public class Libraries extends JPanel {
             buttonEventHandler(buttons[i]);
             add(buttons[i]);
         }
+        
+        
 
         setOpaque(true);
         setBackground(Color.BLACK);
     }
 
+
     public void buttonEventHandler(JButton button){
         button.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                if (e.getSource()==buttons[0])
+                {
+                    for (Map.Entry<String,Boolean> entry:
+                         save.readFile().entrySet()) {
+                        System.out.println(entry.getKey());
+                    }
+                }
             }
 
             @Override
@@ -69,5 +85,9 @@ public class Libraries extends JPanel {
                 button.setForeground(Color.WHITE);
             }
         });
+    }
+
+    public void allSongsPage(){
+
     }
 }
