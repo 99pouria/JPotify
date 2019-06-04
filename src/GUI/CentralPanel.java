@@ -248,10 +248,10 @@ class InteractivePart extends JPanel {
         if (song.hasId3v2Tag()){
             ID3v2 id3v2tag = song.getId3v2Tag();
             byte[] imageData = id3v2tag.getAlbumImage();
-            if (imageData!=null){
+            if (imageData != null) {
                 System.out.println("debug:: imageData is not null");
                 Image img = ImageIO.read(new ByteArrayInputStream(imageData));
-                img=  img.getScaledInstance(400,230, Image.SCALE_SMOOTH);
+                img = img.getScaledInstance(400, 230, Image.SCALE_SMOOTH);
                 ImageIcon icon = new ImageIcon(img);
                 label.setIcon(icon);
             }
@@ -262,35 +262,34 @@ class InteractivePart extends JPanel {
 
     public void makeMusicPad(String path) throws InvalidDataException, IOException, UnsupportedTagException {
 
-        JPanel panel=new JPanel();
-        JPanel coverImage=new JPanel();
-        JButton artistName=new JButton();
-        JButton albumName=new JButton();
+        JPanel panel = new JPanel();
+        JPanel coverImage = new JPanel();
+        JButton artistName = new JButton();
+        JButton albumName = new JButton();
 
         panel.setLayout(new BorderLayout());
 
         panel.setOpaque(true);
         panel.setBackground(Color.DARK_GRAY);
-        GridBagConstraints constraints=new GridBagConstraints();
-        constraints.insets=new Insets(20,20,20,20);
-        constraints.fill=GridBagConstraints.HORIZONTAL;
-        constraints.weightx=2;
-        constraints.gridx=gridX;
-        constraints.gridy=gridY;
-        constraints.ipadx=200;
-        constraints.ipady=0;
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new Insets(20, 20, 20, 20);
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 2;
+        constraints.gridx = gridX;
+        constraints.gridy = gridY;
+        constraints.ipadx = 200;
+        constraints.ipady = 0;
         gridX++;
-        if (gridX==4)
-        {
-            gridX=0;
+        if (gridX == 4) {
+            gridX = 0;
             gridY++;
         }
-        add(panel,constraints);
+        add(panel, constraints);
 
-        Font font=new Font("font",1,17);
+        Font font = new Font("font", 1, 17);
 
-        coverImage.setPreferredSize(new Dimension(200,200));
-        albumName.setPreferredSize(new Dimension(200,35));
+        coverImage.setPreferredSize(new Dimension(200, 200));
+        albumName.setPreferredSize(new Dimension(200, 35));
 
         coverImage.setOpaque(true);
         coverImage.setBackground(Color.GRAY);
@@ -318,9 +317,8 @@ class InteractivePart extends JPanel {
         albumName.setText(findSongInfo(path,2));
 
 
-        panel.add(coverImage,BorderLayout.NORTH);
-        panel.add(artistName,BorderLayout.CENTER);
-        panel.add(albumName,BorderLayout.SOUTH);
-
+        panel.add(coverImage, BorderLayout.NORTH);
+        panel.add(artistName, BorderLayout.CENTER);
+        panel.add(albumName, BorderLayout.SOUTH);
     }
 }

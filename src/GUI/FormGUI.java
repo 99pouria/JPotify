@@ -3,7 +3,6 @@ package GUI;
 import Logic.Save;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 
 public class FormGUI extends JFrame {

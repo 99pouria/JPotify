@@ -10,9 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.HashMap;
 
-public class SwitchPanel extends JPanel implements ActionListener{
-
+public class SwitchPanel extends JPanel implements ActionListener {
 
     private JButton homeBtn;
     private JButton browseBtn;
@@ -66,11 +66,11 @@ public class SwitchPanel extends JPanel implements ActionListener{
         browseBtn.addActionListener(this);
     }
 
-
     @Override
     public void actionPerformed(ActionEvent e) {
+        JLabel l = new JLabel();
         if (e.getSource() == browseBtn) {
-            JLabel l = new JLabel();
+
 
             fileChooser.setAcceptAllFileFilterUsed(false);
             fileChooser.setDialogTitle("Select a .mp3 file");
@@ -86,7 +86,6 @@ public class SwitchPanel extends JPanel implements ActionListener{
             save.saveToFile();
         }
     }
-
 
 
     public void buttonEventHandler(JButton button) {
