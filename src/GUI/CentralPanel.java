@@ -56,12 +56,12 @@ class TitleBar extends JPanel implements MouseListener {
         setSearchBarGUI();
         setIdGUI();
         setEmptySpaceGUI();
-//        setLineGUI();
+        setLineGUI();
 
         add(searchBar, BorderLayout.WEST);
         add(emptySpace, BorderLayout.CENTER);
         add(id, BorderLayout.EAST);
-//        add(line,BorderLayout.SOUTH);
+        add(line,BorderLayout.SOUTH);
 
     }
 
@@ -155,75 +155,24 @@ class TitleBar extends JPanel implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
 
-        }
     }
-
+}
 
 
 class InteractivePart extends JPanel {
-    private static int gridX=0;
-    private static int gridY=0;
+    private static int gridX = 0;
+    private static int gridY = 0;
 
     public InteractivePart() throws IOException, InvalidDataException, UnsupportedTagException {
         super();
         setOpaque(true);
         setBackground(Color.GRAY);
-//        findSongInfo("C:\\Users\\Pooria\\Downloads\\Music\\Hayedeh - Ashiooneh.mp3", 0);
-//        findSongInfo("C:\\Users\\Pooria\\Downloads\\Music\\Hayedeh - Ashiooneh.mp3", 2);
-//        findSongInfo("C:\\Users\\Pooria\\Downloads\\Music\\Hayedeh - Ashiooneh.mp3", 1);
-//        showCoverImage();
 
-        findSongInfo("F:\\Reza Bahram - Az Eshgh Bego.mp3", 0);
-        findSongInfo("F:\\Reza Bahram - Az Eshgh Bego.mp3", 1);
-        findSongInfo("F:\\Reza Bahram - Az Eshgh Bego.mp3", 2);
+        findSongInfo("C:\\Users\\Pooria\\Music\\all\\Shadmehr Aghili - Sarnevesht_-1603298114.mp3", 0);
+        findSongInfo("C:\\Users\\Pooria\\Downloads\\Music\\Hayedeh - Ashiooneh.mp3", 1);
+        findSongInfo("C:\\Users\\Pooria\\Downloads\\Music\\Hayedeh - Ashiooneh.mp3", 2);
 
         setLayout(new GridBagLayout());
-//        GridBagConstraints constraints=new GridBagConstraints();
-//
-//
-//        JPanel panel1=new JPanel();
-//        JPanel panel2=new JPanel();
-//        JPanel panel3=new JPanel();
-//        JPanel panel4=new JPanel();
-//        JPanel panel5=new JPanel();
-//        JPanel panel6=new JPanel();
-//
-//        panel1.setOpaque(true);
-//        panel1.setBackground(Color.black);
-//
-//        panel2.setOpaque(true);
-//        panel2.setBackground(Color.black);
-//
-//        panel3.setOpaque(true);
-//        panel3.setBackground(Color.black);
-//
-//        panel4.setOpaque(true);
-//        panel4.setBackground(Color.black);
-//
-//        panel5.setOpaque(true);
-//        panel5.setBackground(Color.black);
-//
-//        panel6.setOpaque(true);
-//        panel6.setBackground(Color.black);
-//
-//        constraints.insets=new Insets(20,20,20,20);
-//        constraints.weightx=2;
-//        constraints.gridx=0;
-//        constraints.gridy=0;
-//        constraints.ipadx=200;
-//        constraints.ipady=200;
-//        add(panel1,constraints);
-//        constraints.gridx=1;
-//        add(panel2,constraints);
-//        constraints.gridx=2;
-//        add(panel3,constraints);
-//        constraints.gridy=1;
-//        constraints.gridx=0;
-//        add(panel4,constraints);
-//        constraints.gridx=1;
-//        add(panel5,constraints);
-//        constraints.gridx=2;
-//        add(panel6,constraints);
 
         makeMusicPad();
         makeMusicPad();
@@ -231,7 +180,6 @@ class InteractivePart extends JPanel {
         makeMusicPad();
         makeMusicPad();
         makeMusicPad();
-
     }
 
     public String findSongInfo(String filePath, int index) throws IOException {
@@ -248,16 +196,16 @@ class InteractivePart extends JPanel {
 
 
     public void showCoverImage(Container container) throws InvalidDataException, IOException, UnsupportedTagException {
-        JLabel label=new JLabel();
+        JLabel label = new JLabel();
 
-        Mp3File song = new Mp3File("F:\\Reza Bahram - Az Eshgh Bego.mp3");
-        if (song.hasId3v2Tag()){
+        Mp3File song = new Mp3File("C:\\Users\\Pooria\\Music\\all\\Shadmehr Aghili - Sarnevesht_-1603298114.mp3");
+        if (song.hasId3v2Tag()) {
             ID3v2 id3v2tag = song.getId3v2Tag();
             byte[] imageData = id3v2tag.getAlbumImage();
-            if (imageData!=null){
+            if (imageData != null) {
                 System.out.println("debug:: imageData is not null");
                 Image img = ImageIO.read(new ByteArrayInputStream(imageData));
-                img=  img.getScaledInstance(400,230, Image.SCALE_SMOOTH);
+                img = img.getScaledInstance(400, 230, Image.SCALE_SMOOTH);
                 ImageIcon icon = new ImageIcon(img);
                 label.setIcon(icon);
             }
@@ -268,35 +216,34 @@ class InteractivePart extends JPanel {
 
     public void makeMusicPad() throws InvalidDataException, IOException, UnsupportedTagException {
 
-        JPanel panel=new JPanel();
-        JPanel coverImage=new JPanel();
-        JButton artistName=new JButton();
-        JButton albumName=new JButton();
+        JPanel panel = new JPanel();
+        JPanel coverImage = new JPanel();
+        JButton artistName = new JButton();
+        JButton albumName = new JButton();
 
         panel.setLayout(new BorderLayout());
 
         panel.setOpaque(true);
         panel.setBackground(Color.DARK_GRAY);
-        GridBagConstraints constraints=new GridBagConstraints();
-        constraints.insets=new Insets(20,20,20,20);
-        constraints.fill=GridBagConstraints.HORIZONTAL;
-        constraints.weightx=2;
-        constraints.gridx=gridX;
-        constraints.gridy=gridY;
-        constraints.ipadx=200;
-        constraints.ipady=0;
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new Insets(20, 20, 20, 20);
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 2;
+        constraints.gridx = gridX;
+        constraints.gridy = gridY;
+        constraints.ipadx = 200;
+        constraints.ipady = 0;
         gridX++;
-        if (gridX==4)
-        {
-            gridX=0;
+        if (gridX == 4) {
+            gridX = 0;
             gridY++;
         }
-        add(panel,constraints);
+        add(panel, constraints);
 
-        Font font=new Font("font",1,17);
+        Font font = new Font("font", 1, 17);
 
-        coverImage.setPreferredSize(new Dimension(200,200));
-        albumName.setPreferredSize(new Dimension(200,35));
+        coverImage.setPreferredSize(new Dimension(200, 200));
+        albumName.setPreferredSize(new Dimension(200, 35));
 
         coverImage.setOpaque(true);
         coverImage.setBackground(Color.GRAY);
@@ -318,15 +265,12 @@ class InteractivePart extends JPanel {
         albumName.setBorderPainted(false);
         albumName.setHorizontalAlignment(SwingConstants.LEFT);
 
-
         showCoverImage(coverImage);
-        artistName.setText(findSongInfo("F:\\Reza Bahram - Az Eshgh Bego.mp3",0));
-        albumName.setText(findSongInfo("F:\\Reza Bahram - Az Eshgh Bego.mp3",2));
+        artistName.setText(findSongInfo("C:\\Users\\Pooria\\Music\\all\\Shadmehr Aghili - Sarnevesht_-1603298114.mp3", 0));
+        albumName.setText(findSongInfo("C:\\Users\\Pooria\\Music\\all\\Shadmehr Aghili - Sarnevesht_-1603298114.mp3", 2));
 
-
-        panel.add(coverImage,BorderLayout.NORTH);
-        panel.add(artistName,BorderLayout.CENTER);
-        panel.add(albumName,BorderLayout.SOUTH);
-
+        panel.add(coverImage, BorderLayout.NORTH);
+        panel.add(artistName, BorderLayout.CENTER);
+        panel.add(albumName, BorderLayout.SOUTH);
     }
 }

@@ -175,8 +175,7 @@ class PlayerTools extends JPanel implements AddIcon {
     public void buttonEventHandler(JButton button, String icon1, String icon2, String icon3, String icon4) {
         button.addMouseListener(new MouseListener() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                mouseEntered(e);
+            public void mouseReleased(MouseEvent e) {
             }
 
 
@@ -209,7 +208,7 @@ class PlayerTools extends JPanel implements AddIcon {
             }
 
             @Override
-            public void mouseReleased(MouseEvent e) {
+            public void mouseClicked(MouseEvent e) {
                 if (icon2.equals(icon4)) {
                     try {
                         createIcon(button, icon2, 14, 14);
@@ -261,8 +260,7 @@ class PlayerTools extends JPanel implements AddIcon {
     public void repeatEventHandler(String icon1, String icon2, String icon3, String icon4) {
         repeat.addMouseListener(new MouseListener() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                mouseEntered(e);
+            public void mouseReleased(MouseEvent e) {
             }
 
 
@@ -288,7 +286,7 @@ class PlayerTools extends JPanel implements AddIcon {
             }
 
             @Override
-            public void mouseReleased(MouseEvent e) {
+            public void mouseClicked(MouseEvent e) {
                 if (!isRepeat) {
                     try {
                         createIcon(repeat, icon4, 14, 14);
@@ -328,8 +326,7 @@ class PlayerTools extends JPanel implements AddIcon {
     public void shuffleEventHandler(String icon1, String icon2, String icon3, String icon4) {
         shuffle.addMouseListener(new MouseListener() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                mouseEntered(e);
+            public void mouseReleased(MouseEvent e) {
             }
 
 
@@ -355,7 +352,7 @@ class PlayerTools extends JPanel implements AddIcon {
             }
 
             @Override
-            public void mouseReleased(MouseEvent e) {
+            public void mouseClicked(MouseEvent e) {
                 if (!isShuffle) {
                     try {
                         createIcon(shuffle, icon4, 14, 14);
