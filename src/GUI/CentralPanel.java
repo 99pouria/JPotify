@@ -215,7 +215,7 @@ class InteractivePart extends JPanel {
 
     public InteractivePart(SongInfo songInfo) throws IOException, InvalidDataException, UnsupportedTagException {
         super();
-        this.songInfo=songInfo;
+        this.songInfo = songInfo;
 
         setOpaque(true);
         setBackground(Color.GRAY);
@@ -342,7 +342,7 @@ class InteractivePart extends JPanel {
             Thread thread = new Thread(runMusic);
             CentralPanel.setThread(thread);
             try {
-                if (songInfo!=null) {
+                if (songInfo != null) {
                     songInfo.changeSongInfo(path);
                 }
             } catch (IOException e1) {
@@ -363,7 +363,7 @@ class InteractivePart extends JPanel {
             Thread thread = new Thread(runMusic);
             CentralPanel.setThread(thread);
             try {
-                if (songInfo!=null) {
+                if (songInfo != null) {
                     songInfo.changeSongInfo(path);
                 }
             } catch (IOException e1) {
@@ -386,7 +386,7 @@ class InteractivePart extends JPanel {
                 Thread thread = new Thread(runMusic);
                 CentralPanel.setThread(thread);
                 try {
-                    if (songInfo!=null) {
+                    if (songInfo != null) {
                         songInfo.changeSongInfo(path);
                     }
                 } catch (IOException e1) {

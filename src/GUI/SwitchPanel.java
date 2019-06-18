@@ -81,7 +81,7 @@ public class SwitchPanel extends JPanel implements ActionListener {
             } else
                 l.setText("the user cancelled the operation");
             add(l);
-            save.addMusic(fileChooser.getSelectedFile().getAbsolutePath(),true);
+            save.addMusic(fileChooser.getSelectedFile().getAbsolutePath(),false);
             save.saveToFile();
         }
     }
