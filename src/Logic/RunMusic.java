@@ -5,28 +5,26 @@ import javazoom.jl.player.Player;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 
-public class RunMusic implements Runnable{
+public class RunMusic implements Runnable {
     private String path;
 
 
     public RunMusic(String path) {
-        this.path=path;
+        this.path = path;
     }
 
     @Override
     public void run() {
         try {
 
-            BufferedInputStream bis=new BufferedInputStream(new FileInputStream(path));
-            Player player=new Player(bis);
+            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(path));
+            Player player = new Player(bis);
             try {
                 player.play();
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -35,8 +33,7 @@ public class RunMusic implements Runnable{
         thread.suspend();
     }
 
-    public void resume(Thread thread)
-    {
+    public void resume(Thread thread) {
         System.out.println("fek konam shoro shod !!!!!!!!!!!!!!!!!!");
         thread.resume();
     }

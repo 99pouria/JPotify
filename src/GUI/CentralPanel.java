@@ -215,14 +215,14 @@ class InteractivePart extends JPanel {
         super();
         setOpaque(true);
         setBackground(Color.GRAY);
-//        findSongInfo("C:\\Users\\Pooria\\Downloads\\Music\\Hayedeh - Ashiooneh.mp3", 0);
-//        findSongInfo("C:\\Users\\Pooria\\Downloads\\Music\\Hayedeh - Ashiooneh.mp3", 2);
-//        findSongInfo("C:\\Users\\Pooria\\Downloads\\Music\\Hayedeh - Ashiooneh.mp3", 1);
+        findSongInfo("C:\\Users\\Pooria\\Downloads\\Music\\Hayedeh - Ashiooneh.mp3", 0);
+        findSongInfo("C:\\Users\\Pooria\\Downloads\\Music\\Hayedeh - Ashiooneh.mp3", 2);
+        findSongInfo("C:\\Users\\Pooria\\Downloads\\Music\\Hayedeh - Ashiooneh.mp3", 1);
 //        showCoverImage();
 
-        findSongInfo("F:\\Reza Bahram - Az Eshgh Bego.mp3", 0);
-        findSongInfo("F:\\Reza Bahram - Az Eshgh Bego.mp3", 1);
-        findSongInfo("F:\\Reza Bahram - Az Eshgh Bego.mp3", 2);
+//        findSongInfo("F:\\Reza Bahram - Az Eshgh Bego.mp3", 0);
+//        findSongInfo("F:\\Reza Bahram - Az Eshgh Bego.mp3", 1);
+//        findSongInfo("F:\\Reza Bahram - Az Eshgh Bego.mp3", 2);
 
         setLayout(new GridBagLayout());
 

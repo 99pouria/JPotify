@@ -24,7 +24,7 @@ public class Save {
         try
         {
             FileOutputStream fos =
-                    new FileOutputStream("F:\\hashmap.ser");
+                    new FileOutputStream("hashmap.ser");
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(getMusics());
             oos.close();
@@ -39,7 +39,7 @@ public class Save {
     public HashMap<String,Boolean> readFile(){
         try
         {
-            FileInputStream fis = new FileInputStream("F:\\hashmap.ser");
+            FileInputStream fis = new FileInputStream("hashmap.ser");
             ObjectInputStream ois = new ObjectInputStream(fis);
             setMusics( (HashMap) ois.readObject());
             ois.close();
