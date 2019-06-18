@@ -7,6 +7,8 @@ import java.awt.*;
 
 public class FormGUI extends JFrame {
 //    private final int WIDTH = 1500, HEIGHT = 1500;
+    private PlayerBox playerBox;
+    private CentralPanel centralPanel;
 
     public FormGUI() throws Exception {
         super();
@@ -14,21 +16,25 @@ public class FormGUI extends JFrame {
         setLayout(new BorderLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        CentralPanel centralPanel = new CentralPanel();
+        playerBox = new PlayerBox();
+        add(playerBox, BorderLayout.SOUTH);
+
+        centralPanel = new CentralPanel(getPlayerBox().getSongInfo());
         add(centralPanel, BorderLayout.CENTER);
 //        centralPanel.setPreferredSize(new Dimension(200, 350));
 
         FriendActivity friendActivity = new FriendActivity();
         add(friendActivity, BorderLayout.EAST);
 
-        PlayerBox playerBox = new PlayerBox();
-        add(playerBox, BorderLayout.SOUTH);
-
         SelectionPanel selectionPanel = new SelectionPanel();
         add(selectionPanel, BorderLayout.WEST);
 
         pack();
         this.setVisible(true);
+    }
+
+    public PlayerBox getPlayerBox() {
+        return playerBox;
     }
 
     public static void main(String[] args) throws Exception {
