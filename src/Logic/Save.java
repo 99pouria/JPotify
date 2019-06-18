@@ -12,7 +12,6 @@ public class Save {
 
     public HashMap<String, Boolean> getMusics() {
         return musics;
-
     }
 
     public void setMusics(HashMap<String, Boolean> musics) {
@@ -33,8 +32,9 @@ public class Save {
         }
     }
 
-    public HashMap<String, Boolean> readFile() {
-        try {
+    public HashMap<String,Boolean> readFile(){
+        try
+        {
             FileInputStream fis = new FileInputStream("C:\\Users\\Public\\Documents\\hashmap.ser");
             ObjectInputStream ois = new ObjectInputStream(fis);
             setMusics((HashMap) ois.readObject());
