@@ -3,26 +3,23 @@ package GUI;
 import Logic.RunMusic;
 import Logic.Save;
 import com.mpatric.mp3agic.*;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Map;
-
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 
 public class CentralPanel extends JPanel {
+    private static String path;
+    private static Thread thread=null;
+
     public CentralPanel() throws IOException, InvalidDataException, UnsupportedTagException, JavaLayerException {
         setLayout(new BorderLayout());
 
@@ -32,6 +29,22 @@ public class CentralPanel extends JPanel {
         add(titleBar, BorderLayout.NORTH);
         add(interactivePart, BorderLayout.CENTER);
 
+    }
+
+    public static String getPath() {
+        return path;
+    }
+
+    public static void setPath(String path) {
+        CentralPanel.path = path;
+    }
+
+    public static Thread getThread() {
+        return thread;
+    }
+
+    public static void setThread(Thread thread) {
+        CentralPanel.thread = thread;
     }
 }
 
@@ -95,18 +108,19 @@ class TitleBar extends JPanel implements MouseListener {
         previousBtn.setContentAreaFilled(false);
         previousBtn.setFocusPainted(false);
 
-        RunMusic runMusic=new RunMusic("F:\\Reza Bahram - Az Eshgh Bego.mp3");
-        Thread thread=new Thread(runMusic);
+//        RunMusic runMusic=new RunMusic(CentralPanel.getPath());
+//        Thread thread=new Thread(runMusic);
 
         previousBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (thread.isAlive())
+                if (CentralPanel.getThread().isAlive())
                 {
-                    runMusic.resume(thread);
+//                    runMusic.resume(thread);
+                    CentralPanel.getThread().resume();
                 }
                 else {
-                    thread.start();
+                    CentralPanel.getThread().start();
                 }
             }
         });
@@ -123,8 +137,9 @@ class TitleBar extends JPanel implements MouseListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    runMusic.stopThread(thread);
-                } catch (InterruptedException e1) {
+//                    runMusic.stopThread(thread);
+                    CentralPanel.getThread().stop();
+                } catch (Exception e1) {
                     e1.printStackTrace();
                 }
             }
@@ -226,7 +241,18 @@ class InteractivePart extends JPanel {
             System.out.println(entry.getKey()+"-----------------");
         }
 
+
     }
+
+
+//    Image img = ImageIO.read(getClass().getResource("icons\\fence_notes_music_staff_139053_3840x2160.jpg"));
+//    public void paintComponent(Graphics g)
+//    {
+//        g.drawImage(img,0,0,null);
+//        repaint();
+//    }
+
+
 
     public String findSongInfo(String filePath, int index) throws IOException {
         File file = new File(filePath);
@@ -280,7 +306,7 @@ class InteractivePart extends JPanel {
         constraints.ipadx = 200;
         constraints.ipady = 0;
         gridX++;
-        if (gridX == 4) {
+        if (gridX == 5) {
             gridX = 0;
             gridY++;
         }
@@ -320,5 +346,60 @@ class InteractivePart extends JPanel {
         panel.add(coverImage, BorderLayout.NORTH);
         panel.add(artistName, BorderLayout.CENTER);
         panel.add(albumName, BorderLayout.SOUTH);
+
+        artistName.addActionListener(e -> {
+            if (CentralPanel.getThread()!=null) {
+                CentralPanel.getThread().stop();
+            }
+            CentralPanel.setPath(path);
+            RunMusic runMusic=new RunMusic(CentralPanel.getPath());
+            Thread thread=new Thread(runMusic);
+            CentralPanel.setThread(thread);
+        });
+
+        albumName.addActionListener(e -> {
+            if (CentralPanel.getThread()!=null) {
+                CentralPanel.getThread().stop();
+            }
+            CentralPanel.setPath(path);
+            RunMusic runMusic=new RunMusic(CentralPanel.getPath());
+            Thread thread=new Thread(runMusic);
+            CentralPanel.setThread(thread);
+        });
+
+        coverImage.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (CentralPanel.getThread()!=null) {
+                    CentralPanel.getThread().stop();
+                }
+                CentralPanel.setPath(path);
+                RunMusic runMusic=new RunMusic(CentralPanel.getPath());
+                Thread thread=new Thread(runMusic);
+                CentralPanel.setThread(thread);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+
     }
+
 }

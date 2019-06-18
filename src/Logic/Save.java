@@ -2,7 +2,6 @@ package Logic;
 
 import java.io.*;
 import java.util.HashMap;
-import java.util.Map;
 
 public class Save {
     private static HashMap<String,Boolean> musics=new HashMap<>();

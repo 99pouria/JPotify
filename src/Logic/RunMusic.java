@@ -17,7 +17,7 @@ public class RunMusic implements Runnable{
     public void run() {
         try {
 
-            BufferedInputStream bis=new BufferedInputStream(new FileInputStream("F:\\Reza Bahram - Az Eshgh Bego.mp3"));
+            BufferedInputStream bis=new BufferedInputStream(new FileInputStream(path));
             Player player=new Player(bis);
             try {
                 player.play();
@@ -37,6 +37,7 @@ public class RunMusic implements Runnable{
 
     public void resume(Thread thread)
     {
+        System.out.println("fek konam shoro shod !!!!!!!!!!!!!!!!!!");
         thread.resume();
     }
 
