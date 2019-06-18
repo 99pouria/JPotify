@@ -3,6 +3,7 @@ package GUI;
 import Logic.RunMusic;
 import Logic.Save;
 import com.mpatric.mp3agic.*;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -13,18 +14,20 @@ import java.awt.event.MouseListener;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.Map;
+
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 
 public class CentralPanel extends JPanel {
     private static String path;
-    private static Thread thread=null;
+    private static Thread thread = null;
 
-    public CentralPanel() throws IOException, InvalidDataException, UnsupportedTagException, JavaLayerException {
+
+    public CentralPanel(SongInfo songInfo) throws IOException, InvalidDataException, UnsupportedTagException, JavaLayerException {
         setLayout(new BorderLayout());
 
         TitleBar titleBar = new TitleBar();
-        InteractivePart interactivePart = new InteractivePart();
+        InteractivePart interactivePart = new InteractivePart(songInfo);
 
         add(titleBar, BorderLayout.NORTH);
         add(interactivePart, BorderLayout.CENTER);
@@ -46,6 +49,7 @@ public class CentralPanel extends JPanel {
     public static void setThread(Thread thread) {
         CentralPanel.thread = thread;
     }
+
 }
 
 class TitleBar extends JPanel implements MouseListener {
@@ -114,12 +118,10 @@ class TitleBar extends JPanel implements MouseListener {
         previousBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (CentralPanel.getThread().isAlive())
-                {
+                if (CentralPanel.getThread().isAlive()) {
 //                    runMusic.resume(thread);
                     CentralPanel.getThread().resume();
-                }
-                else {
+                } else {
                     CentralPanel.getThread().start();
                 }
             }
@@ -202,46 +204,31 @@ class TitleBar extends JPanel implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
 
-        }
     }
-
+}
 
 
 class InteractivePart extends JPanel {
-    private static int gridX=0;
-    private static int gridY=0;
+    private static int gridX = 0;
+    private static int gridY = 0;
+    private SongInfo songInfo;
 
-    public InteractivePart() throws IOException, InvalidDataException, UnsupportedTagException {
+    public InteractivePart(SongInfo songInfo) throws IOException, InvalidDataException, UnsupportedTagException {
         super();
+        this.songInfo=songInfo;
+
         setOpaque(true);
         setBackground(Color.GRAY);
-        findSongInfo("C:\\Users\\Pooria\\Downloads\\Music\\Hayedeh - Ashiooneh.mp3", 0);
-        findSongInfo("C:\\Users\\Pooria\\Downloads\\Music\\Hayedeh - Ashiooneh.mp3", 2);
-        findSongInfo("C:\\Users\\Pooria\\Downloads\\Music\\Hayedeh - Ashiooneh.mp3", 1);
-//        showCoverImage();
-
-//        findSongInfo("F:\\Reza Bahram - Az Eshgh Bego.mp3", 0);
-//        findSongInfo("F:\\Reza Bahram - Az Eshgh Bego.mp3", 1);
-//        findSongInfo("F:\\Reza Bahram - Az Eshgh Bego.mp3", 2);
 
         setLayout(new GridBagLayout());
 
-
-//        makeMusicPad("F:\\Reza Bahram - Az Eshgh Bego.mp3");
-//        makeMusicPad("F:\\Reza Bahram - Az Eshgh Bego.mp3");
-//        makeMusicPad();
-//        makeMusicPad();
-//        makeMusicPad();
-//        makeMusicPad();
-        Save save =new Save();
+        Save save = new Save();
         save.readFile();
-        for (Map.Entry<String, Boolean> entry:
-        save.getMusics().entrySet()){
+        for (Map.Entry<String, Boolean> entry :
+                save.getMusics().entrySet()) {
             makeMusicPad(entry.getKey());
-            System.out.println(entry.getKey()+"-----------------");
+            System.out.println(entry.getKey() + "-----------------");
         }
-
-
     }
 
 
@@ -251,7 +238,6 @@ class InteractivePart extends JPanel {
 //        g.drawImage(img,0,0,null);
 //        repaint();
 //    }
-
 
 
     public String findSongInfo(String filePath, int index) throws IOException {
@@ -267,11 +253,11 @@ class InteractivePart extends JPanel {
     }
 
 
-    public void showCoverImage(Container container,String path) throws InvalidDataException, IOException, UnsupportedTagException {
-        JLabel label=new JLabel();
+    public void showCoverImage(Container container, String path) throws InvalidDataException, IOException, UnsupportedTagException {
+        JLabel label = new JLabel();
 
         Mp3File song = new Mp3File(path);
-        if (song.hasId3v2Tag()){
+        if (song.hasId3v2Tag()) {
             ID3v2 id3v2tag = song.getId3v2Tag();
             byte[] imageData = id3v2tag.getAlbumImage();
             if (imageData != null) {
@@ -338,9 +324,9 @@ class InteractivePart extends JPanel {
         albumName.setHorizontalAlignment(SwingConstants.LEFT);
 
 
-        showCoverImage(coverImage,path);
-        artistName.setText(findSongInfo(path,0));
-        albumName.setText(findSongInfo(path,2));
+        showCoverImage(coverImage, path);
+        artistName.setText(findSongInfo(path, 0));
+        albumName.setText(findSongInfo(path, 2));
 
 
         panel.add(coverImage, BorderLayout.NORTH);
@@ -348,35 +334,68 @@ class InteractivePart extends JPanel {
         panel.add(albumName, BorderLayout.SOUTH);
 
         artistName.addActionListener(e -> {
-            if (CentralPanel.getThread()!=null) {
+            if (CentralPanel.getThread() != null) {
                 CentralPanel.getThread().stop();
             }
             CentralPanel.setPath(path);
-            RunMusic runMusic=new RunMusic(CentralPanel.getPath());
-            Thread thread=new Thread(runMusic);
+            RunMusic runMusic = new RunMusic(CentralPanel.getPath());
+            Thread thread = new Thread(runMusic);
             CentralPanel.setThread(thread);
+            try {
+                if (songInfo!=null) {
+                    songInfo.changeSongInfo(path);
+                }
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            } catch (InvalidDataException e1) {
+                e1.printStackTrace();
+            } catch (UnsupportedTagException e1) {
+                e1.printStackTrace();
+            }
         });
 
         albumName.addActionListener(e -> {
-            if (CentralPanel.getThread()!=null) {
+            if (CentralPanel.getThread() != null) {
                 CentralPanel.getThread().stop();
             }
             CentralPanel.setPath(path);
-            RunMusic runMusic=new RunMusic(CentralPanel.getPath());
-            Thread thread=new Thread(runMusic);
+            RunMusic runMusic = new RunMusic(CentralPanel.getPath());
+            Thread thread = new Thread(runMusic);
             CentralPanel.setThread(thread);
+            try {
+                if (songInfo!=null) {
+                    songInfo.changeSongInfo(path);
+                }
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            } catch (InvalidDataException e1) {
+                e1.printStackTrace();
+            } catch (UnsupportedTagException e1) {
+                e1.printStackTrace();
+            }
         });
 
         coverImage.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (CentralPanel.getThread()!=null) {
+                if (CentralPanel.getThread() != null) {
                     CentralPanel.getThread().stop();
                 }
                 CentralPanel.setPath(path);
-                RunMusic runMusic=new RunMusic(CentralPanel.getPath());
-                Thread thread=new Thread(runMusic);
+                RunMusic runMusic = new RunMusic(CentralPanel.getPath());
+                Thread thread = new Thread(runMusic);
                 CentralPanel.setThread(thread);
+                try {
+                    if (songInfo!=null) {
+                        songInfo.changeSongInfo(path);
+                    }
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                } catch (InvalidDataException e1) {
+                    e1.printStackTrace();
+                } catch (UnsupportedTagException e1) {
+                    e1.printStackTrace();
+                }
             }
 
             @Override

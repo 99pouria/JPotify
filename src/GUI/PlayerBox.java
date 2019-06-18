@@ -7,7 +7,6 @@ import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -17,13 +16,16 @@ import java.io.*;
 import java.nio.file.Files;
 
 public class PlayerBox extends JPanel {
+    private SongInfo songInfo;
+
+    private static String filePath;
     public PlayerBox() throws IOException, InvalidDataException, UnsupportedTagException, JavaLayerException {
         setPreferredSize(new Dimension(1200, 70));
         setOpaque(true);
         setBackground(Color.GRAY);
         setLayout(new BorderLayout());
 
-        SongInfo songInfo = new SongInfo();
+        songInfo = new SongInfo("F:\\Reza Bahram - Az Eshgh Bego.mp3");
         PlayerTools playerTools = new PlayerTools();
         VolumeBox volumeBox = new VolumeBox();
 
@@ -33,6 +35,18 @@ public class PlayerBox extends JPanel {
         add(volumeBox, BorderLayout.EAST);
 
     }
+
+    public SongInfo getSongInfo() {
+        return songInfo;
+    }
+
+    public static String getFilePath() {
+        return filePath;
+    }
+
+    public static void setFilePath(String filePath) {
+        PlayerBox.filePath = filePath;
+    }
 }
 
 class SongInfo extends JPanel implements AddIcon {
@@ -40,40 +54,70 @@ class SongInfo extends JPanel implements AddIcon {
     private JPanel info;
     private JPanel like;
     private String filePath;
+    private JLabel label=null;
+    private CreateInfoPanel createInfoPanel;
+    private createArtWorkPanel createArtWorkPanel;
 
-    public SongInfo() throws IOException, InvalidDataException, UnsupportedTagException {
+    public SongInfo(String path) throws IOException, InvalidDataException, UnsupportedTagException {
 
         super();
+        filePath="F:\\Reza Bahram - Az Eshgh Bego.mp3";
         setPreferredSize(new Dimension(250, 70));
         setOpaque(true);
         setBackground(Color.DARK_GRAY);
-
         setLayout(new BorderLayout());
-        createInfoPanel("F:\\Reza Bahram - Az Eshgh Bego.mp3");
+        createInfoPanel=new CreateInfoPanel(path);
         add(info, BorderLayout.CENTER);
         createLikeIcon();
         add(like, BorderLayout.EAST);
-        createArtWorkPanel();
+        createArtWorkPanel=new createArtWorkPanel(path);
         add(artWork, BorderLayout.WEST);
     }
+
+    public void changeSongInfo(String filePath) throws IOException, InvalidDataException, UnsupportedTagException {
+        createInfoPanel.chageSonginfo(filePath);
+        createArtWorkPanel.changeSongInfo(filePath);
+    }
+
+
+
 
     public void setFilePath(String filePath) {
         this.filePath = filePath;
     }
 
-    public void createInfoPanel(String filePath) throws IOException {
-        info = new JPanel(new BorderLayout());
-        info.setLayout(new BorderLayout());
-        JLabel songName = new JLabel(findSongInfo(filePath, 0));
-        JLabel artistName = new JLabel(findSongInfo(filePath, 1));
-        songName.setForeground(Color.WHITE);
-        songName.setPreferredSize(new Dimension(135, 35));
-        artistName.setForeground(Color.WHITE);
-        info.add(songName, BorderLayout.NORTH);
-        info.add(artistName, BorderLayout.CENTER);
-        info.setOpaque(true);
-        info.setBackground(Color.DARK_GRAY);
+
+
+    class CreateInfoPanel {
+
+        JLabel songName;
+        JLabel artistName;
+
+        public CreateInfoPanel(String path) throws IOException {
+            info = new JPanel(new BorderLayout());
+            info.setLayout(new BorderLayout());
+            setFilePath(path);
+            songName = new JLabel(findSongInfo(filePath, 0));
+            artistName = new JLabel(findSongInfo(filePath, 1));
+            songName.setForeground(Color.WHITE);
+            songName.setPreferredSize(new Dimension(135, 35));
+            artistName.setForeground(Color.WHITE);
+            info.add(songName, BorderLayout.NORTH);
+            info.add(artistName, BorderLayout.CENTER);
+            info.setOpaque(true);
+            info.setBackground(Color.DARK_GRAY);
+        }
+
+
+        public void chageSonginfo(String newPath) throws IOException {
+            songName.setText(findSongInfo(newPath,0));
+            artistName.setText(findSongInfo(newPath,1));
+        }
     }
+
+
+
+
 
     public String findSongInfo(String filePath, int index) throws IOException {
         File file = new File(filePath);
@@ -87,18 +131,22 @@ class SongInfo extends JPanel implements AddIcon {
         return name;
     }
 
-    public void createArtWorkPanel() throws InvalidDataException, IOException, UnsupportedTagException {
-        artWork = new JPanel();
-        artWork.setPreferredSize(new Dimension(70, 70));
-        artWork.setOpaque(true);
-        artWork.setBackground(Color.DARK_GRAY);
-        JPanel pic = new JPanel();
-        pic.setPreferredSize(new Dimension(60, 60));
 
-//        artWork.add(pic);
+    class createArtWorkPanel {
+        public createArtWorkPanel(String filePath) throws InvalidDataException, IOException, UnsupportedTagException {
+            artWork = new JPanel();
+            artWork.setPreferredSize(new Dimension(70, 70));
+            artWork.setOpaque(true);
+            artWork.setBackground(Color.DARK_GRAY);
+            JPanel pic = new JPanel();
+            pic.setPreferredSize(new Dimension(60, 60));
 
-        showCoverImage(artWork);
+//            showCoverImage(artWork, filePath);
+        }
 
+        public void changeSongInfo(String path) throws InvalidDataException, IOException, UnsupportedTagException {
+            showCoverImage(artWork,path);
+        }
     }
 
     public void createLikeIcon() throws IOException {
@@ -124,24 +172,44 @@ class SongInfo extends JPanel implements AddIcon {
         ((JButton) container).setFocusPainted(false);
     }
 
-    public void showCoverImage(Container container) throws InvalidDataException, IOException, UnsupportedTagException {
-        JLabel label=new JLabel();
+    public void showCoverImage(Container container,String filePath) throws InvalidDataException, IOException, UnsupportedTagException {
+        if (label==null) {
+            label = new JLabel();
+            Mp3File song = new Mp3File(filePath);
+            if (song.hasId3v2Tag()) {
+                ID3v2 id3v2tag = song.getId3v2Tag();
+                byte[] imageData = id3v2tag.getAlbumImage();
+                if (imageData != null) {
+                    System.out.println("debug:: imageData is not null");
+                    Image img = ImageIO.read(new ByteArrayInputStream(imageData));
+                    img = img.getScaledInstance(65, 65, Image.SCALE_SMOOTH);
+                    ImageIcon icon = new ImageIcon(img);
+                    label.setIcon(icon);
+                }
+            }
+        }
+        else
+        {
+            label.setIcon(null);
+            Mp3File song = new Mp3File(filePath);
+            if (song.hasId3v2Tag()) {
+                ID3v2 id3v2tag = song.getId3v2Tag();
+                byte[] imageData = id3v2tag.getAlbumImage();
+                if (imageData != null) {
+                    System.out.println("debug:: imageData is not null");
+                    Image img = ImageIO.read(new ByteArrayInputStream(imageData));
+                    img = img.getScaledInstance(65, 65, Image.SCALE_SMOOTH);
+                    ImageIcon icon = new ImageIcon(img);
+                    label.setIcon(icon);
 
-        Mp3File song = new Mp3File("F:\\Reza Bahram - Az Eshgh Bego.mp3");
-        if (song.hasId3v2Tag()){
-            ID3v2 id3v2tag = song.getId3v2Tag();
-            byte[] imageData = id3v2tag.getAlbumImage();
-            if (imageData!=null){
-                System.out.println("debug:: imageData is not null");
-                Image img = ImageIO.read(new ByteArrayInputStream(imageData));
-                img=  img.getScaledInstance(65,65, Image.SCALE_SMOOTH);
-                ImageIcon icon = new ImageIcon(img);
-                label.setIcon(icon);
+                }
             }
         }
 
         container.add(label);
+
     }
+
 }
 
 class PlayerTools extends JPanel implements AddIcon {
@@ -216,7 +284,6 @@ class PlayerTools extends JPanel implements AddIcon {
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                System.out.println("sfdsdfsdfssdfsdf");
 
                 if (icon2.equals(icon4)) {
                     try {
