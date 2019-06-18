@@ -26,7 +26,7 @@ public class FormGUI extends JFrame {
         FriendActivity friendActivity = new FriendActivity();
         add(friendActivity, BorderLayout.EAST);
 
-        SelectionPanel selectionPanel = new SelectionPanel();
+        SelectionPanel selectionPanel = new SelectionPanel(getCentralPanel().getInteractivePart());
         add(selectionPanel, BorderLayout.WEST);
 
         pack();
@@ -37,12 +37,16 @@ public class FormGUI extends JFrame {
         return playerBox;
     }
 
+    public CentralPanel getCentralPanel() {
+        return centralPanel;
+    }
+
     public static void main(String[] args) throws Exception {
         FormGUI formGUI = new FormGUI();
 
-        Save save=new Save();
-        save.addMusic("F:\\Reza Bahram - Az Eshgh Bego.mp3",false);
-        save.addMusic("C:\\Users\\asus\\Downloads\\Music\\Reza Bahram - Shabhaye Bad Az To.mp3",false);
-        save.saveToFile();
+//        Save save=new Save();
+//        save.addMusic("F:\\Reza Bahram - Az Eshgh Bego.mp3",false);
+//        save.addMusic("C:\\Users\\asus\\Downloads\\Music\\Reza Bahram - Shabhaye Bad Az To.mp3",false);
+//        save.saveToFile();
     }
 }

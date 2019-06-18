@@ -21,13 +21,13 @@ import javazoom.jl.player.Player;
 public class CentralPanel extends JPanel {
     private static String path;
     private static Thread thread = null;
-
+    private InteractivePart interactivePart;
 
     public CentralPanel(SongInfo songInfo) throws IOException, InvalidDataException, UnsupportedTagException, JavaLayerException {
         setLayout(new BorderLayout());
 
         TitleBar titleBar = new TitleBar();
-        InteractivePart interactivePart = new InteractivePart(songInfo);
+        interactivePart = new InteractivePart(songInfo);
 
         add(titleBar, BorderLayout.NORTH);
         add(interactivePart, BorderLayout.CENTER);
@@ -50,6 +50,9 @@ public class CentralPanel extends JPanel {
         CentralPanel.thread = thread;
     }
 
+    public InteractivePart getInteractivePart() {
+        return interactivePart;
+    }
 }
 
 class TitleBar extends JPanel implements MouseListener {

@@ -1,6 +1,9 @@
 package GUI;
 
 import Logic.Save;
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.UnsupportedTagException;
+import sun.plugin2.util.PluginTrace;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -10,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
 
 public class SwitchPanel extends JPanel implements ActionListener {
 
@@ -17,9 +21,11 @@ public class SwitchPanel extends JPanel implements ActionListener {
     private JButton browseBtn;
     private JFileChooser fileChooser;
     private Save save;
+    private InteractivePart interactivePart;
 
-    public SwitchPanel() {
+    public SwitchPanel(InteractivePart interactivePart) {
         super();
+        this.interactivePart=interactivePart;
 
         setLayout(new GridLayout(2, 1));
 
@@ -81,8 +87,16 @@ public class SwitchPanel extends JPanel implements ActionListener {
             } else
                 l.setText("the user cancelled the operation");
             add(l);
-            save.addMusic(fileChooser.getSelectedFile().getAbsolutePath(),true);
-            save.saveToFile();
+
+            try {
+                interactivePart.makeMusicPad(fileChooser.getSelectedFile().getAbsolutePath());
+                save.addMusic(fileChooser.getSelectedFile().getAbsolutePath(),true);
+                save.saveToFile();
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+
+            updateUI();
         }
     }
 

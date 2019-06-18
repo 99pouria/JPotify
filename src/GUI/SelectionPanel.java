@@ -5,7 +5,7 @@ import java.awt.*;
 import java.io.IOException;
 
 public class SelectionPanel extends JPanel {
-    public SelectionPanel() throws IOException {
+    public SelectionPanel(InteractivePart interactivePart) throws IOException {
         super();
         setPreferredSize(new Dimension(250,600));
         setOpaque(true);
@@ -14,7 +14,7 @@ public class SelectionPanel extends JPanel {
         MenuBar menu = new MenuBar();
         Libraries libraries = new Libraries();
         PlayLists playLists = new PlayLists();
-        SwitchPanel switchPanel=new SwitchPanel();
+        SwitchPanel switchPanel=new SwitchPanel(interactivePart);
 
         SpringLayout springLayout = new SpringLayout();
         setLayout(springLayout);
