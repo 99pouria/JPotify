@@ -1,5 +1,7 @@
 package Logic;
 
+import GUI.PlayerBox;
+import GUI.PlayerTools;
 import javazoom.jl.player.Player;
 
 import java.io.BufferedInputStream;
@@ -21,6 +23,20 @@ public class RunMusic implements Runnable {
             Player player = new Player(bis);
             try {
                 player.play();
+                if (PlayerTools.isIsRepeat())
+                {
+                    while (PlayerTools.isIsRepeat())
+                    {
+                        if (player.isComplete())
+                        {
+                            player.close();
+                            bis = new BufferedInputStream(new FileInputStream(path));
+                            player = new Player(bis);
+                            System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+                            player.play();
+                        }
+                    }
+                }
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
@@ -34,7 +50,6 @@ public class RunMusic implements Runnable {
     }
 
     public void resume(Thread thread) {
-        System.out.println("fek konam shoro shod !!!!!!!!!!!!!!!!!!");
         thread.resume();
     }
 

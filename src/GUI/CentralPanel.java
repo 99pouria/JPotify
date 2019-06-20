@@ -227,10 +227,14 @@ class InteractivePart extends JPanel {
 
         Save save = new Save();
         save.readFile();
-        for (Map.Entry<String, Boolean> entry :
-                save.getMusics().entrySet()) {
-            makeMusicPad(entry.getKey());
-            System.out.println(entry.getKey() + "-----------------");
+//        for (Map.Entry<String, Boolean> entry :
+//                save.getMusics().entrySet()) {
+//            makeMusicPad(entry.getKey());
+//            System.out.println(entry.getKey() + "-----------------");
+//        }
+
+        for (int i = 0; i < save.getSortedMusics().size(); i++) {
+            makeMusicPad(save.getSortedMusics().get(i));
         }
     }
 
@@ -336,6 +340,9 @@ class InteractivePart extends JPanel {
         panel.add(artistName, BorderLayout.CENTER);
         panel.add(albumName, BorderLayout.SOUTH);
 
+        Save save=new Save();
+        save.readFile();
+
         artistName.addActionListener(e -> {
             if (CentralPanel.getThread() != null) {
                 CentralPanel.getThread().stop();
@@ -355,6 +362,9 @@ class InteractivePart extends JPanel {
             } catch (UnsupportedTagException e1) {
                 e1.printStackTrace();
             }
+            save.deleteAndReAddMusic(path);
+            save.saveToFile();
+
         });
 
         albumName.addActionListener(e -> {
@@ -376,6 +386,9 @@ class InteractivePart extends JPanel {
             } catch (UnsupportedTagException e1) {
                 e1.printStackTrace();
             }
+            save.deleteAndReAddMusic(path);
+            save.saveToFile();
+
         });
 
         coverImage.addMouseListener(new MouseListener() {
@@ -399,6 +412,8 @@ class InteractivePart extends JPanel {
                 } catch (UnsupportedTagException e1) {
                     e1.printStackTrace();
                 }
+                save.deleteAndReAddMusic(path);
+                save.saveToFile();
             }
 
             @Override
