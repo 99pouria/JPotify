@@ -1,5 +1,6 @@
 package GUI;
 
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -8,39 +9,48 @@ import java.awt.event.MouseListener;
 public class PlayLists extends JPanel {
     public PlayLists() {
         super();
-        setLayout(new GridLayout(3,1));
+        BoxLayout layout = new BoxLayout(this, BoxLayout.Y_AXIS);
+        setLayout(layout);
 
         Font font = new Font("MyFont", 1, 17);
-        Font font1=new Font("Font1",Font.ITALIC,15);
-
-        JButton[] buttons = new JButton[2];
         JLabel title = new JLabel("      PLAYLISTS");
         title.setForeground(Color.white);
         title.setFont(font);
 
-        title.setPreferredSize(new Dimension(250, 45));
+        JButton[] buttons = new JButton[50];
+        JButton addPlaylistButton = new JButton();
+        createButton(addPlaylistButton, "+ Add playlist");
         add(title);
+        add(Box.createVerticalStrut(25));
 
         for (int i = 0; i < 2; i++) {
             buttons[i] = new JButton();
-            buttons[i].setPreferredSize(new Dimension(250, 45));
-            buttons[i].setHorizontalAlignment(SwingConstants.LEFT);
-            buttons[i].setText("  playlist " + (i+1));
-            buttons[i].setContentAreaFilled(false);
-            buttons[i].setFocusPainted(false);
-            buttons[i].setBorderPainted(false);
-            buttons[i].setFont(font1);
-            buttons[i].setForeground(Color.WHITE);
-            buttonEventHandler(buttons[i]);
+            createButton(buttons[i], "playList" + i);
             add(buttons[i]);
+            add(Box.createVerticalStrut(25));
         }
 
-
+        add(addPlaylistButton);
+        add(Box.createVerticalStrut(25));
         setOpaque(true);
         setBackground(Color.BLACK);
     }
 
-    public void buttonEventHandler(JButton button){
+    public void createButton(JButton button, String name) {
+
+        Font font1 = new Font("Font1", Font.ITALIC, 15);
+
+        button.setHorizontalAlignment(SwingConstants.LEFT);
+        button.setText("  " + name);
+        button.setContentAreaFilled(false);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setFont(font1);
+        button.setForeground(Color.WHITE);
+        buttonEventHandler(button);
+    }
+
+    public void buttonEventHandler(JButton button) {
         button.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -48,7 +58,7 @@ public class PlayLists extends JPanel {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                button.setForeground(Color.getHSBColor(104,69,55));
+                button.setForeground(Color.getHSBColor(104, 69, 55));
             }
 
             @Override

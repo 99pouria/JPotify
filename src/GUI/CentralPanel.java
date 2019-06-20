@@ -230,7 +230,7 @@ class InteractivePart extends JPanel {
         for (Map.Entry<String, Boolean> entry :
                 save.getMusics().entrySet()) {
             makeMusicPad(entry.getKey());
-            System.out.println(entry.getKey() + "-----------------");
+            System.out.println(entry.getKey() + "-----------------k");
         }
     }
 

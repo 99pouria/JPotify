@@ -39,6 +39,7 @@ public class MenuBar extends JMenuBar {
 
         Border border = BorderFactory.createEmptyBorder();
         menu = new JMenu("   ...");
+        menu.setAlignmentX(SwingConstants.LEFT);
         menu.setFont(font);
         menu.setForeground(Color.WHITE);
         menu.setBackground(Color.BLACK);
