@@ -90,7 +90,7 @@ public class SwitchPanel extends JPanel implements ActionListener {
 
             try {
                 interactivePart.makeMusicPad(fileChooser.getSelectedFile().getAbsolutePath());
-                save.addMusic(fileChooser.getSelectedFile().getAbsolutePath(),true);
+                save.addMusic(fileChooser.getSelectedFile().getAbsolutePath(),false);
                 save.saveToFile();
             } catch (Exception e1) {
                 e1.printStackTrace();
