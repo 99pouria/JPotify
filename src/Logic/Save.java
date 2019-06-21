@@ -136,6 +136,21 @@ public class Save {
         return playListsName;
     }
 
+    public void deletePlayList(String name) throws IOException {
+        getPlayListsName().remove(name);
+        FileOutputStream fosOfPlayLists =
+                new FileOutputStream("C:\\Users\\Public\\Documents\\playlistsName.ser");
+        ObjectOutputStream oosOfPlayLists = new ObjectOutputStream(fosOfPlayLists);
+        oosOfPlayLists.writeObject(getPlayListsName());
+        oosOfPlayLists.close();
+        fosOfPlayLists.close();
+    }
+
+    public void deletTile(String path){
+        getMusics().remove(path);
+        getSortedMusics().remove(path);
+        getSortedMusicsCopy().remove(path);
+    }
 }
 
 
