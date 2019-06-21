@@ -3,13 +3,15 @@ package Logic;
 import GUI.PlayerBox;
 import GUI.PlayerTools;
 import javazoom.jl.player.Player;
+import javazoom.jl.player.PlayerApplet;
+import javazoom.jl.player.advanced.AdvancedPlayer;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 
 public class RunMusic implements Runnable {
     private String path;
-
+    private Player player;
 
     public RunMusic(String path) {
         this.path = path;
@@ -20,9 +22,11 @@ public class RunMusic implements Runnable {
         try {
 
             BufferedInputStream bis = new BufferedInputStream(new FileInputStream(path));
-            Player player = new Player(bis);
+//            AdvancedPlayer player=new AdvancedPlayer(bis);
+            player = new Player(bis);
             try {
                 player.play();
+
                 if (PlayerTools.isIsRepeat())
                 {
                     while (PlayerTools.isIsRepeat())
@@ -32,7 +36,6 @@ public class RunMusic implements Runnable {
                             player.close();
                             bis = new BufferedInputStream(new FileInputStream(path));
                             player = new Player(bis);
-                            System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
                             player.play();
                         }
                     }
@@ -55,5 +58,9 @@ public class RunMusic implements Runnable {
 
     public String getPath() {
         return path;
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 }

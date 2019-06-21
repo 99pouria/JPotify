@@ -3,9 +3,9 @@ package GUI;
 import Logic.RunMusic;
 import Logic.Save;
 import com.mpatric.mp3agic.*;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,23 +14,26 @@ import java.awt.event.MouseListener;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.Map;
-
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 
 public class CentralPanel extends JPanel {
     private static String path;
     private static Thread thread = null;
-    private InteractivePart interactivePart;
+    private MusicController musicController;
+    private static boolean Playing=false;
+//    private InteractivePart interactivePart;
 
     public CentralPanel(SongInfo songInfo) throws IOException, InvalidDataException, UnsupportedTagException, JavaLayerException {
         setLayout(new BorderLayout());
 
         TitleBar titleBar = new TitleBar();
-        interactivePart = new InteractivePart(songInfo);
+        musicController=new MusicController(songInfo);
+//        interactivePart = new InteractivePart(songInfo);
 
         add(titleBar, BorderLayout.NORTH);
-        add(interactivePart, BorderLayout.CENTER);
+        add(musicController,BorderLayout.CENTER);
+//        add(interactivePart, BorderLayout.CENTER);
 
     }
 
@@ -50,10 +53,74 @@ public class CentralPanel extends JPanel {
         CentralPanel.thread = thread;
     }
 
+    public MusicController getMusicController() {
+        return musicController;
+    }
+
+    public static boolean isPlaying() {
+        return Playing;
+    }
+
+    public static void setPlaying(boolean isPlaying) {
+        CentralPanel.Playing = isPlaying;
+    }
+
+    //    public InteractivePart getInteractivePart() {
+//        return interactivePart;
+//    }
+}
+
+
+
+
+
+
+
+
+
+
+class MusicController extends JPanel{
+    private JPanel title;
+    private InteractivePart interactivePart;
+
+    public MusicController(SongInfo songInfo) throws InvalidDataException, IOException, UnsupportedTagException {
+        setLayout(new BorderLayout());
+
+        title=new JPanel();
+        interactivePart=new InteractivePart(songInfo);
+
+        title.setPreferredSize(new Dimension(700,100));
+        title.setOpaque(true);
+        title.setBackground(Color.gray);
+
+        add(title,BorderLayout.NORTH);
+        add(interactivePart,BorderLayout.CENTER);
+    }
+
     public InteractivePart getInteractivePart() {
         return interactivePart;
     }
+
+    public JPanel getTitle() {
+        return title;
+    }
+
+    public void clearMusidControler(){
+        getTitle().removeAll();
+        getInteractivePart().clearPanel();
+        revalidate();
+        repaint();
+    }
 }
+
+
+
+
+
+
+
+
+
 
 class TitleBar extends JPanel implements MouseListener {
     private JPanel searchBar;
@@ -124,8 +191,10 @@ class TitleBar extends JPanel implements MouseListener {
                 if (CentralPanel.getThread().isAlive()) {
 //                    runMusic.resume(thread);
                     CentralPanel.getThread().resume();
+                    CentralPanel.setPlaying(true);
                 } else {
                     CentralPanel.getThread().start();
+                    CentralPanel.setPlaying(true);
                 }
             }
         });
@@ -144,6 +213,7 @@ class TitleBar extends JPanel implements MouseListener {
                 try {
 //                    runMusic.stopThread(thread);
                     CentralPanel.getThread().stop();
+                    CentralPanel.setPlaying(false);
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
@@ -211,10 +281,35 @@ class TitleBar extends JPanel implements MouseListener {
 }
 
 
+
+
+
+
+
+
+
+
 class InteractivePart extends JPanel {
     private static int gridX = 0;
     private static int gridY = 0;
     private SongInfo songInfo;
+    private Save save = new Save();
+
+    public static int getGridX() {
+        return gridX;
+    }
+
+    public static void setGridX(int gridX) {
+        InteractivePart.gridX = gridX;
+    }
+
+    public static int getGridY() {
+        return gridY;
+    }
+
+    public static void setGridY(int gridY) {
+        InteractivePart.gridY = gridY;
+    }
 
     public InteractivePart(SongInfo songInfo) throws IOException, InvalidDataException, UnsupportedTagException {
         super();
@@ -225,7 +320,6 @@ class InteractivePart extends JPanel {
 
         setLayout(new GridBagLayout());
 
-        Save save = new Save();
         save.readFile();
 //        for (Map.Entry<String, Boolean> entry :
 //                save.getMusics().entrySet()) {
@@ -233,9 +327,7 @@ class InteractivePart extends JPanel {
 //            System.out.println(entry.getKey() + "-----------------");
 //        }
 
-        for (int i = 0; i < save.getSortedMusics().size(); i++) {
-            makeMusicPad(save.getSortedMusics().get(i));
-        }
+
     }
 
 
@@ -268,7 +360,6 @@ class InteractivePart extends JPanel {
             ID3v2 id3v2tag = song.getId3v2Tag();
             byte[] imageData = id3v2tag.getAlbumImage();
             if (imageData != null) {
-                System.out.println("debug:: imageData is not null");
                 Image img = ImageIO.read(new ByteArrayInputStream(imageData));
                 img = img.getScaledInstance(400, 230, Image.SCALE_SMOOTH);
                 ImageIcon icon = new ImageIcon(img);
@@ -283,8 +374,10 @@ class InteractivePart extends JPanel {
 
         JPanel panel = new JPanel();
         JPanel coverImage = new JPanel();
+        JPanel coverImageJust = new JPanel();
         JButton artistName = new JButton();
         JButton albumName = new JButton();
+
 
         panel.setLayout(new BorderLayout());
 
@@ -311,7 +404,7 @@ class InteractivePart extends JPanel {
         albumName.setPreferredSize(new Dimension(200, 35));
 
         coverImage.setOpaque(true);
-        coverImage.setBackground(Color.GRAY);
+        coverImage.setBackground(Color.DARK_GRAY);
 
         artistName.setOpaque(true);
         artistName.setBackground(Color.DARK_GRAY);
@@ -330,17 +423,69 @@ class InteractivePart extends JPanel {
         albumName.setBorderPainted(false);
         albumName.setHorizontalAlignment(SwingConstants.LEFT);
 
-
-        showCoverImage(coverImage, path);
+        showCoverImage(coverImageJust, path);
         artistName.setText(findSongInfo(path, 0));
         albumName.setText(findSongInfo(path, 2));
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+        Font font2 = new Font("Font2", Font.BOLD, 20);
+        coverImageJust.setOpaque(true);
+        coverImageJust.setBackground(Color.gray);
+        coverImage.setLayout(new BorderLayout());
+        coverImage.add(coverImageJust, BorderLayout.CENTER);
+        JButton delete = new JButton();
+        delete.setOpaque(true);
+        delete.setBackground(Color.gray);
+        delete.setBorderPainted(false);
+        delete.setFocusPainted(false);
+        coverImage.add(delete, BorderLayout.NORTH);
+
+        focusListener(coverImage,delete);
+        focusListener(artistName,delete);
+        focusListener(albumName,delete);
+
+        delete.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                deleteMusicTiles(panel);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                delete.setFont(font2);
+                delete.setText("_");
+                delete.setHorizontalAlignment(SwingConstants.RIGHT);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                delete.setText("");
+            }
+        });
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//        focusListener(coverImage);
+//        focusListener(artistName);
+//        focusListener(albumName);
+//        focusListener(artistName);
 
         panel.add(coverImage, BorderLayout.NORTH);
         panel.add(artistName, BorderLayout.CENTER);
         panel.add(albumName, BorderLayout.SOUTH);
 
-        Save save=new Save();
+
+        Save save = new Save();
         save.readFile();
 
         artistName.addActionListener(e -> {
@@ -355,39 +500,32 @@ class InteractivePart extends JPanel {
                 if (songInfo != null) {
                     songInfo.changeSongInfo(path);
                 }
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            } catch (InvalidDataException e1) {
-                e1.printStackTrace();
-            } catch (UnsupportedTagException e1) {
+            } catch (Exception e1) {
                 e1.printStackTrace();
             }
             save.deleteAndReAddMusic(path);
             save.saveToFile();
-
         });
 
         albumName.addActionListener(e -> {
             if (CentralPanel.getThread() != null) {
                 CentralPanel.getThread().stop();
             }
-            CentralPanel.setPath(path);
-            RunMusic runMusic = new RunMusic(CentralPanel.getPath());
-            Thread thread = new Thread(runMusic);
-            CentralPanel.setThread(thread);
-            try {
-                if (songInfo != null) {
-                    songInfo.changeSongInfo(path);
+//            while (true) {
+                CentralPanel.setPath(path);
+                RunMusic runMusic = new RunMusic(CentralPanel.getPath());
+                Thread thread = new Thread(runMusic);
+                CentralPanel.setThread(thread);
+                try {
+                    if (songInfo != null) {
+                        songInfo.changeSongInfo(path);
+                    }
+                } catch (Exception e1) {
+                    e1.printStackTrace();
                 }
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            } catch (InvalidDataException e1) {
-                e1.printStackTrace();
-            } catch (UnsupportedTagException e1) {
-                e1.printStackTrace();
-            }
-            save.deleteAndReAddMusic(path);
-            save.saveToFile();
+                save.deleteAndReAddMusic(path);
+                save.saveToFile();
+//            }
 
         });
 
@@ -437,6 +575,75 @@ class InteractivePart extends JPanel {
             }
         });
 
+    }
+
+    public void makeMusicTiles(int choice) throws InvalidDataException, IOException, UnsupportedTagException, InterruptedException {
+        if (choice == 1) {
+            for (int i = 0; i < save.getSortedMusics().size(); i++) {
+                makeMusicPad(save.getSortedMusics().get(i));
+            }
+            revalidate();
+            repaint();
+            updateUI();
+        }
+        if (choice == 2) {
+            for (int i = 0; i < save.getSortedMusicsCopy().size(); i++) {
+
+                for (Map.Entry<String, Boolean> entry :
+                        save.getMusics().entrySet()) {
+                    if (entry.getKey().equals(save.getSortedMusics().get(i))) {
+                        if (entry.getValue())
+                            makeMusicPad(entry.getKey());
+                        break;
+                    }
+                }
+            }
+            revalidate();
+            repaint();
+            updateUI();
+        }
+    }
+
+    public void deleteMusicTiles(JPanel panel) {
+        remove(panel);
+        revalidate();
+        repaint();
+    }
+
+    public void clearPanel() {
+        this.removeAll();
+        setGridX(0);
+        setGridY(0);
+        System.gc();
+    }
+
+    public void focusListener(Container container,JButton button){
+        container.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setBackground(Color.lightGray);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setBackground(Color.gray);
+
+            }
+        });
     }
 
 }

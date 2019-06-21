@@ -1,19 +1,29 @@
 package GUI;
 
 import Logic.Save;
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.UnsupportedTagException;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
 import java.util.Map;
 
 public class Libraries extends JPanel {
     private JButton[] buttons;
     private Save save=new Save();
+//    private InteractivePart interactivePart;
+    private MusicController musicController;
+    private JLabel label;
+    private Font font1=new Font("Font1",2,70);
 
-    public Libraries() {
+
+    public Libraries(MusicController musicController) {
         super();
+        this.musicController=musicController;
+//        this.interactivePart=interactivePart;
         setLayout(new GridLayout(5,1));
 
         Font font = new Font("MyFont", 1, 17);
@@ -29,8 +39,8 @@ public class Libraries extends JPanel {
 
         buttons = new JButton[4];
         buttons[0] = new JButton("Songs");
-        buttons[1] = new JButton("Albums");
-        buttons[2] = new JButton("Artists");
+        buttons[1] = new JButton("Favourits");
+        buttons[2] = new JButton("Albums");
         buttons[3] = new JButton("Add To Library");
 
         for (int i = 0; i < 4; i++) {
@@ -51,6 +61,14 @@ public class Libraries extends JPanel {
         setBackground(Color.BLACK);
     }
 
+//    public InteractivePart getInteractivePart() {
+//        return interactivePart;
+//    }
+
+
+    public MusicController getMusicController() {
+        return musicController;
+    }
 
     public void buttonEventHandler(JButton button){
         button.addMouseListener(new MouseListener() {
@@ -62,6 +80,36 @@ public class Libraries extends JPanel {
 //                         save.readFile().entrySet()) {
 //                        System.out.println(entry.getKey());
 //                    }
+                    try {
+//                        getMusicController().getInteractivePart().clearPanel();
+                        getMusicController().clearMusidControler();
+                        save.setSortedMusicsCopy(save.getSortedMusics());
+
+                        label=new JLabel("............ All Songs ............");
+                        label.setHorizontalAlignment(SwingConstants.CENTER);
+                        label.setFont(font1);
+                        getMusicController().getTitle().add(label,BorderLayout.CENTER);
+
+                        getMusicController().getInteractivePart().makeMusicTiles(1);
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
+                }
+                if (e.getSource()==buttons[1])
+                {
+                    try {
+//                        getMusicController().getInteractivePart().clearPanel();
+                        getMusicController().clearMusidControler();
+
+                        label=new JLabel("............ Fovourits ............");
+                        label.setHorizontalAlignment(SwingConstants.CENTER);
+                        label.setFont(font1);
+                        getMusicController().getTitle().add(label,BorderLayout.CENTER);
+
+                        getMusicController().getInteractivePart().makeMusicTiles(2);
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
                 }
             }
 
@@ -87,7 +135,5 @@ public class Libraries extends JPanel {
         });
     }
 
-    public void allSongsPage(){
 
-    }
 }

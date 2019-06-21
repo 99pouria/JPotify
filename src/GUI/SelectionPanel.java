@@ -5,7 +5,7 @@ import java.awt.*;
 import java.io.IOException;
 
 public class SelectionPanel extends JPanel {
-    public SelectionPanel(InteractivePart interactivePart) throws IOException {
+    public SelectionPanel(MusicController musicController) throws IOException, ClassNotFoundException {
         super();
         BoxLayout layout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setOpaque(true);
@@ -14,9 +14,9 @@ public class SelectionPanel extends JPanel {
 
         MenuBar menu = new MenuBar();
         menu.setAlignmentX(SwingConstants.RIGHT);
-        Libraries libraries = new Libraries();
-        PlayLists playLists = new PlayLists();
-        SwitchPanel switchPanel = new SwitchPanel(interactivePart);
+        Libraries libraries = new Libraries(musicController);
+        PlayLists playLists = new PlayLists(musicController);
+        SwitchPanel switchPanel = new SwitchPanel(musicController);
 
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(null);

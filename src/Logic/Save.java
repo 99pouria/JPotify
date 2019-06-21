@@ -1,5 +1,7 @@
 package Logic;
 
+import com.sun.xml.internal.ws.api.ha.StickyFeature;
+
 import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
@@ -9,7 +11,12 @@ public class Save {
     private static HashMap<String, Boolean> musics = new HashMap<>();
     private static ArrayList<String> sortedMusics = new ArrayList<>();
     private static ArrayList<String> sortedMusicsCopy = new ArrayList<>();
+    private static ArrayList<String> playListsName=new ArrayList<>();
     private static boolean isCopied = true;
+//    private static String[][] allPlayLists=new String[20][30];
+//    private static ArrayList<ArrayList<String>> allPlayLists=new ArrayList<>();
+//    private static HashMap<String,ArrayList<String>> allPlayLists=new HashMap<>();
+
 
     public Save() {
         if (isCopied) {
@@ -65,7 +72,6 @@ public class Save {
             oosOfArreyList.writeObject(getSortedMusics());
             fosOfArreyList.close();
             oosOfArreyList.close();
-            System.out.printf("Serialized HashMap data is saved in hashmap.ser");
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
@@ -89,11 +95,9 @@ public class Save {
             ioe.printStackTrace();
             return null;
         } catch (ClassNotFoundException c) {
-            System.out.println("Class not found");
             c.printStackTrace();
             return null;
         }
-        System.out.println("Deserialized HashMap..");
 //        setSortedMusicsCopy(getSortedMusics());
         return getSortedMusics();
     }
@@ -105,6 +109,33 @@ public class Save {
     public ArrayList<String> getSortedMusicsCopy() {
         return sortedMusicsCopy;
     }
+
+    public void addPlayList(String name) throws IOException {
+        playListsName.add(name);
+        FileOutputStream fosOfPlayLists =
+                new FileOutputStream("C:\\Users\\Public\\Documents\\playlistsName.ser");
+        ObjectOutputStream oosOfPlayLists = new ObjectOutputStream(fosOfPlayLists);
+        oosOfPlayLists.writeObject(getPlayListsName());
+        oosOfPlayLists.close();
+        fosOfPlayLists.close();
+    }
+
+    public void readPlayListsName() throws IOException, ClassNotFoundException {
+        FileInputStream fis = new FileInputStream("C:\\Users\\Public\\Documents\\PlaylistsName.ser");
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        setPlayListsName((ArrayList) ois.readObject());
+        ois.close();
+        fis.close();
+    }
+
+    public static void setPlayListsName(ArrayList<String> playListsName) {
+        Save.playListsName = playListsName;
+    }
+
+    public  ArrayList<String> getPlayListsName() {
+        return playListsName;
+    }
+
 }
 
 

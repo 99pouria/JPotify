@@ -9,7 +9,10 @@ import com.mpatric.mp3agic.UnsupportedTagException;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.*;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -262,7 +265,6 @@ class SongInfo extends JPanel implements AddIcon {
         public void changeLikeIcon(String newPath) throws IOException {
             Save save = new Save();
             save.readFile();
-            System.out.println(save.getMusics().get(newPath) + "000000000000000000000000000000000000000000000000000000000000000000");
             if (save.getMusics().get(newPath)) {
                 createIcon(button, "icons\\colored-buttons-2\\png\\003-favorite-heart-button.png", 18, 18);
             } else {
@@ -291,7 +293,6 @@ class SongInfo extends JPanel implements AddIcon {
                 ID3v2 id3v2tag = song.getId3v2Tag();
                 byte[] imageData = id3v2tag.getAlbumImage();
                 if (imageData != null) {
-                    System.out.println("debug:: imageData is not null");
                     Image img = ImageIO.read(new ByteArrayInputStream(imageData));
                     img = img.getScaledInstance(65, 65, Image.SCALE_SMOOTH);
                     ImageIcon icon = new ImageIcon(img);
@@ -305,7 +306,6 @@ class SongInfo extends JPanel implements AddIcon {
                 ID3v2 id3v2tag = song.getId3v2Tag();
                 byte[] imageData = id3v2tag.getAlbumImage();
                 if (imageData != null) {
-                    System.out.println("debug:: imageData is not null");
                     Image img = ImageIO.read(new ByteArrayInputStream(imageData));
                     img = img.getScaledInstance(65, 65, Image.SCALE_SMOOTH);
                     ImageIcon icon = new ImageIcon(img);
@@ -350,5 +350,45 @@ class VolumeBox extends JPanel {
 
         add(volumeButton);
         add(volumeSlider);
+
+
+
+       /* javax.sound.sampled.Mixer.Info[] mixers = AudioSystem.getMixerInfo();
+
+        Mixer.Info mixerInfo = mixers[4];
+        Mixer mixer = AudioSystem.getMixer(mixerInfo);
+        Line.Info[] lineinfos = mixer.getTargetLineInfo();
+
+        try {
+            Line line = mixer.getLine(lineinfos[0]);
+            line.open();
+            if(line.isControlSupported(FloatControl.Type.VOLUME)){
+                control = (FloatControl) line.getControl(FloatControl.Type.VOLUME);
+
+                control.setValue((float) 0.7);
+                int value = (int) (control.getValue()*100);
+
+                volumeSlider = new JSlider((int)control.getMinimum()*100,(int)control.getMaximum()*100, value);
+                volumeSlider.setMajorTickSpacing(10);
+                volumeSlider.setPaintLabels(true);
+                System.out.println("Volume:"+control.getValue());
+
+                j.add(slider);
+                j.pack();
+            }
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        }
+
+        slider.addChangeListener(new ChangeListener() {
+
+            @Override
+            public void stateChanged(ChangeEvent arg0) {
+                control.setValue(slider.getValue()/100f);
+
+            }
+        });*/
     }
 }

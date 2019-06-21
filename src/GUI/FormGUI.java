@@ -27,7 +27,7 @@ public class FormGUI extends JFrame {
         FriendActivity friendActivity = new FriendActivity();
         add(friendActivity, BorderLayout.EAST);
 
-        SelectionPanel selectionPanel = new SelectionPanel(getCentralPanel().getInteractivePart());
+        SelectionPanel selectionPanel = new SelectionPanel(getCentralPanel().getMusicController());
         add(selectionPanel, BorderLayout.WEST);
 
         pack();

@@ -21,11 +21,12 @@ public class SwitchPanel extends JPanel implements ActionListener {
     private JButton browseBtn;
     private JFileChooser fileChooser;
     private Save save;
-    private InteractivePart interactivePart;
+//    private InteractivePart interactivePart;
+    private MusicController musicController;
 
-    public SwitchPanel(InteractivePart interactivePart) {
+    public SwitchPanel(MusicController musicController) {
         super();
-        this.interactivePart=interactivePart;
+        this.musicController=musicController;
 
         setLayout(new GridLayout(2, 1));
 
@@ -71,6 +72,10 @@ public class SwitchPanel extends JPanel implements ActionListener {
         browseBtn.addActionListener(this);
     }
 
+    public MusicController getMusicController() {
+        return musicController;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         JLabel l = new JLabel();
@@ -86,12 +91,15 @@ public class SwitchPanel extends JPanel implements ActionListener {
                 l.setText(fileChooser.getSelectedFile().getAbsolutePath());
             } else
                 l.setText("the user cancelled the operation");
-            add(l);
+//            add(l);
 
             try {
-                interactivePart.makeMusicPad(fileChooser.getSelectedFile().getAbsolutePath());
-                save.addMusic(fileChooser.getSelectedFile().getAbsolutePath(),false);
-                save.saveToFile();
+                if (!save.getMusics().containsKey(fileChooser.getSelectedFile().getAbsolutePath())) {
+                    getMusicController().getInteractivePart().makeMusicPad(fileChooser.getSelectedFile().getAbsolutePath());
+                    save.addMusic(fileChooser.getSelectedFile().getAbsolutePath(), false);
+                    save.saveToFile();
+                }
+                else;
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
