@@ -191,10 +191,10 @@ class TitleBar extends JPanel implements MouseListener {
                 if (CentralPanel.getThread().isAlive()) {
 //                    runMusic.resume(thread);
                     CentralPanel.getThread().resume();
-                    CentralPanel.setPlaying(true);
+//                    CentralPanel.setPlaying(true);
                 } else {
                     CentralPanel.getThread().start();
-                    CentralPanel.setPlaying(true);
+//                    CentralPanel.setPlaying(true);
                 }
             }
         });
@@ -212,7 +212,7 @@ class TitleBar extends JPanel implements MouseListener {
             public void actionPerformed(ActionEvent e) {
                 try {
 //                    runMusic.stopThread(thread);
-                    CentralPanel.getThread().stop();
+                    CentralPanel.getThread().suspend();
                     CentralPanel.setPlaying(false);
                 } catch (Exception e1) {
                     e1.printStackTrace();
@@ -292,6 +292,7 @@ class TitleBar extends JPanel implements MouseListener {
 class InteractivePart extends JPanel {
     private static int gridX = 0;
     private static int gridY = 0;
+    private static int part=0;
     private SongInfo songInfo;
     private Save save = new Save();
 
@@ -448,7 +449,20 @@ class InteractivePart extends JPanel {
         delete.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                deleteMusicTiles(panel);
+                if (getPart()==0) {
+                    deleteMusicTiles(panel, path, InteractivePart.getPart());
+                }
+                if (getPart()==1)
+                {
+                    System.out.println("gegegegegegegegegegege");
+                    try {
+                        deleteMusicTilesInPlayList(panel,PlayLists.getTheCurrentFilePath(),path);
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    } catch (ClassNotFoundException e1) {
+                        e1.printStackTrace();
+                    }
+                }
             }
 
             @Override
@@ -604,8 +618,22 @@ class InteractivePart extends JPanel {
         }
     }
 
-    public void deleteMusicTiles(JPanel panel) {
+    public void deleteMusicTiles(JPanel panel,String path,int index) {
         remove(panel);
+        if (index==0) {
+            save.deletTile(path);
+            save.saveToFile();
+        }
+        revalidate();
+        repaint();
+    }
+
+    public void deleteMusicTilesInPlayList(JPanel panel,String filename,String path) throws IOException, ClassNotFoundException {
+        remove(panel);
+        PlayLists.getSongs().clear();
+        PlayLists.readFile(filename);
+        PlayLists.getSongs().remove(path);
+        PlayLists.creatAndSaveFile(filename);
         revalidate();
         repaint();
     }
@@ -646,4 +674,11 @@ class InteractivePart extends JPanel {
         });
     }
 
+    public static void setPart(int part) {
+        InteractivePart.part = part;
+    }
+
+    public static int getPart() {
+        return part;
+    }
 }

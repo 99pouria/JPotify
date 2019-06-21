@@ -76,6 +76,7 @@ public class Libraries extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 if (e.getSource()==buttons[0])
                 {
+                    InteractivePart.setPart(0);
 //                    for (Map.Entry<String,Boolean> entry:
 //                         save.readFile().entrySet()) {
 //                        System.out.println(entry.getKey());
@@ -98,6 +99,7 @@ public class Libraries extends JPanel {
                 if (e.getSource()==buttons[1])
                 {
                     try {
+                        InteractivePart.setPart(0);
 //                        getMusicController().getInteractivePart().clearPanel();
                         getMusicController().clearMusidControler();
 

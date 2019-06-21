@@ -31,6 +31,8 @@ public class PlayLists extends JPanel {
     private JButton allMusidsInNewFrame[];
     private String fileName;
     private String clickedButtonName;
+    private JButton deletePlayList;
+    private static String theCurrentFilePath;
     private int i;
 
     public PlayLists(MusicController musicController) throws IOException, ClassNotFoundException {
@@ -46,6 +48,14 @@ public class PlayLists extends JPanel {
         JLabel title = new JLabel("      PLAYLISTS");
         title.setForeground(Color.white);
         title.setFont(font);
+
+        deletePlayList = new JButton("-");
+        deletePlayList.setFont(font2);
+        deletePlayList.setPreferredSize(new Dimension(100, 100));
+        deletePlayList.setOpaque(true);
+        deletePlayList.setBackground(Color.gray);
+        deletePlayList.setFocusPainted(false);
+        deletePlayList.setBorderPainted(false);
 
         addToPlaylist = new JButton("+");
         addToPlaylist.setFont(font2);
@@ -131,7 +141,7 @@ public class PlayLists extends JPanel {
                     add(Box.createVerticalStrut(20));
                     getSongs().clear();
                     try {
-                        creatAndSaveFile(button.getText());
+                        creatAndSaveFile(button.getText().trim());
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
@@ -143,6 +153,7 @@ public class PlayLists extends JPanel {
                         System.out.println(save.getPlayListsName().get(i));
                     }
                 } else {
+                    InteractivePart.setPart(1);
                     getMusicController().clearMusidControler();
 
                     getMusicController().getTitle().setLayout(new BorderLayout());
@@ -151,11 +162,13 @@ public class PlayLists extends JPanel {
                     label.setHorizontalAlignment(SwingConstants.CENTER);
                     label.setFont(font1);
 
-                    setClickedButtonName(clickedButton.getText());
+                    setTheCurrentFilePath(clickedButton.getText().trim());
+
+                    setClickedButtonName(clickedButton.getText().trim());
 
                     try {
                         getSongs().clear();
-                        readFile(clickedButton.getText());
+                        readFile(clickedButton.getText().trim());
 
                         //////////////////////////////////////////////////////
                         save.setSortedMusicsCopy(getSongs());
@@ -168,14 +181,12 @@ public class PlayLists extends JPanel {
                         e1.printStackTrace();
                     }
 
-                    if (getSongs().size()==0)
-                    {
-                        JLabel sorryLable=new JLabel("Sorry , but there is no music in the playlist ...!");
+                    if (getSongs().size() == 0) {
+                        JLabel sorryLable = new JLabel("Sorry , but there is no music in the playlist ...!");
                         sorryLable.setFont(font2);
                         sorryLable.setHorizontalAlignment(SwingConstants.CENTER);
                         getMusicController().getInteractivePart().add(sorryLable);
-                    }
-                    else {
+                    } else {
                         for (int j = 0; j < save.getSortedMusics().size(); j++) {
                             if (getSongs().contains(save.getSortedMusics().get(j))) {
                                 try {
@@ -193,20 +204,40 @@ public class PlayLists extends JPanel {
 
 
                     getMusicController().getTitle().add(addToPlaylist, BorderLayout.EAST);
+                    getMusicController().getTitle().add(deletePlayList, BorderLayout.WEST);
                     getMusicController().getTitle().add(label, BorderLayout.CENTER);
-                    addToPlaylist.addActionListener(new ActionListener() {
+
+                    deletePlayList.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            chooseFrame = new JFrame("All Songs");
-                            chooseFrame.setVisible(true);
-                            chooseFrame.setSize(600, 600);
-                            chooseFrame.setLayout(new FlowLayout());
+                            try {
+                                save.deletePlayList(clickedButton.getText().trim());
+                                refreshPlayList();
+                                getMusicController().getInteractivePart().removeAll();
+                                getMusicController().getTitle().removeAll();
+                                Files.delete(Paths.get("C:\\Users\\Public\\Documents\\" + clickedButton.getText().trim() + ".ser"));
+                                save.getPlayListsName().trimToSize();
+                                getMusicController().getInteractivePart().setBackground(Color.gray);
+                                getMusicController().getTitle().setBackground(Color.gray);
+                                revalidate();
+                                repaint();
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
+                    });
 
-                            for (int counter = 0; counter < save.getSortedMusics().size(); counter++) {
-                                try {
-                                    allMusidsInNewFrame[counter] = new JButton(getMusicController().getInteractivePart().findSongInfo(save.getSortedMusics().get(counter), 0));
-                                    chooseFrame.add(allMusidsInNewFrame[counter]);
-                                    buttonHandler(allMusidsInNewFrame[counter]);
+                    addToPlaylist.addActionListener(e12 -> {
+                        chooseFrame = new JFrame("All Songs");
+                        chooseFrame.setVisible(true);
+                        chooseFrame.setSize(600, 600);
+                        chooseFrame.setLayout(new FlowLayout());
+
+                        for (int counter = 0; counter < save.getSortedMusics().size(); counter++) {
+                            try {
+                                allMusidsInNewFrame[counter] = new JButton(getMusicController().getInteractivePart().findSongInfo(save.getSortedMusics().get(counter), 0));
+                                chooseFrame.add(allMusidsInNewFrame[counter]);
+                                buttonHandler(allMusidsInNewFrame[counter]);
 //                                    allMusidsInNewFrame[counter].addActionListener(e12 -> {
 //                                        try {
 //                                            getMusicController().getInteractivePart().makeMusicPad(save.getSortedMusics().get(counter-1));
@@ -221,9 +252,8 @@ public class PlayLists extends JPanel {
 //                                        }
 //                                    });
 
-                                } catch (IOException e1) {
-                                    e1.printStackTrace();
-                                }
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
                             }
                         }
                     });
@@ -280,7 +310,7 @@ public class PlayLists extends JPanel {
         }
     }
 
-    public void creatAndSaveFile(String fileName) throws IOException {
+    public static void creatAndSaveFile(String fileName) throws IOException {
         FileOutputStream fos = new FileOutputStream("C:\\Users\\Public\\Documents\\" + fileName + ".ser");
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(getSongs());
@@ -293,7 +323,7 @@ public class PlayLists extends JPanel {
         PlayLists.songs = songs;
     }
 
-    public void readFile(String fileName) throws IOException, ClassNotFoundException {
+    public static void readFile(String fileName) throws IOException, ClassNotFoundException {
         FileInputStream fisOfArreyList = new FileInputStream("C:\\Users\\Public\\Documents\\" + fileName + ".ser");
         ObjectInputStream oisOfArreyList = new ObjectInputStream(fisOfArreyList);
         setSongs((ArrayList) oisOfArreyList.readObject());
@@ -339,6 +369,68 @@ public class PlayLists extends JPanel {
 
     public void setClickedButtonName(String clickedButtonName) {
         this.clickedButtonName = clickedButtonName;
+    }
+
+    public void refreshPlayList(){
+        this.removeAll();
+        layout = new BoxLayout(this, BoxLayout.Y_AXIS);
+        setLayout(layout);
+
+        Font font = new Font("MyFont", 1, 17);
+        JLabel title = new JLabel("      PLAYLISTS");
+        title.setForeground(Color.white);
+        title.setFont(font);
+
+        deletePlayList = new JButton("-");
+        deletePlayList.setFont(font2);
+        deletePlayList.setPreferredSize(new Dimension(100, 100));
+        deletePlayList.setOpaque(true);
+        deletePlayList.setBackground(Color.gray);
+        deletePlayList.setFocusPainted(false);
+        deletePlayList.setBorderPainted(false);
+
+        addToPlaylist = new JButton("+");
+        addToPlaylist.setFont(font2);
+        addToPlaylist.setPreferredSize(new Dimension(100, 100));
+        addToPlaylist.setOpaque(true);
+        addToPlaylist.setBackground(Color.gray);
+        addToPlaylist.setFocusPainted(false);
+        addToPlaylist.setBorderPainted(false);
+
+        allMusidsInNewFrame = new JButton[100];
+
+        JButton[] buttons = new JButton[50];
+        addPlaylistButton = new JButton();
+        createButton(addPlaylistButton, "+ Add playlist");
+        add(title);
+        add(Box.createVerticalStrut(20));
+
+        for (int i = 0; i < save.getPlayListsName().size(); i++) {
+            if (i != 0) {
+                add(Box.createVerticalStrut(20));
+            }
+            buttons[i] = new JButton();
+            createButton(buttons[i], save.getPlayListsName().get(i));
+            add(buttons[i]);
+//            if (i==save.getPlayListsName().size()-1)
+//                add(Box.createVerticalStrut(25));
+//            addPlayList();
+        }
+
+        add(addPlaylistButton);
+        add(Box.createVerticalStrut(20));
+        setOpaque(true);
+        setBackground(Color.BLACK);
+        revalidate();
+        repaint();
+    }
+
+    public static void setTheCurrentFilePath(String theCurrentFilePath) {
+        PlayLists.theCurrentFilePath = theCurrentFilePath;
+    }
+
+    public static String getTheCurrentFilePath() {
+        return theCurrentFilePath;
     }
 }
 
