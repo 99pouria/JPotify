@@ -20,7 +20,7 @@ public class FormGUI extends JFrame {
         playerBox = new PlayerBox();
         add(playerBox, BorderLayout.SOUTH);
 
-        centralPanel = new CentralPanel(getPlayerBox().getSongInfo());
+        centralPanel = new CentralPanel(getPlayerBox().getSongInfo(), playerBox);
         add(centralPanel, BorderLayout.CENTER);
 //        centralPanel.setPreferredSize(new Dimension(200, 350));
 

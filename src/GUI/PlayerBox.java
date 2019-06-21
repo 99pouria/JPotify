@@ -21,8 +21,12 @@ import java.nio.file.Files;
 
 public class PlayerBox extends JPanel {
     private SongInfo songInfo;
-
+    private PlayerTools playerTools;
     private static String filePath;
+
+    public PlayerTools getPlayerTools() {
+        return playerTools;
+    }
 
     public PlayerBox() throws IOException, InvalidDataException, UnsupportedTagException, JavaLayerException {
         setPreferredSize(new Dimension(1200, 70));
@@ -30,8 +34,8 @@ public class PlayerBox extends JPanel {
         setBackground(Color.GRAY);
         setLayout(new BorderLayout());
 
-        songInfo = new SongInfo("C:\\Users\\asus\\Music\\Reza Bahram - Az Eshgh Bego.mp3");
-        PlayerTools playerTools = new PlayerTools(getSongInfo());
+        songInfo = new SongInfo("C:\\Users\\Pooria\\Downloads\\Music\\06 Mojezeyeh Khamoosh.mp3");
+        playerTools = new PlayerTools(getSongInfo());
         VolumeBox volumeBox = new VolumeBox();
 
 
@@ -67,7 +71,7 @@ class SongInfo extends JPanel implements AddIcon {
     public SongInfo(String path) throws IOException, InvalidDataException, UnsupportedTagException {
 
         super();
-        filePath = "F:\\Reza Bahram - Az Eshgh Bego.mp3";
+        filePath = "C:\\Users\\Pooria\\Downloads\\Music\\06 Mojezeyeh Khamoosh.mp3";
         setPreferredSize(new Dimension(250, 70));
         setOpaque(true);
         setBackground(Color.DARK_GRAY);
@@ -175,7 +179,7 @@ class SongInfo extends JPanel implements AddIcon {
             Save save = new Save();
             playedSongPath = path;
             save.readFile();
-            save.addMusic("C:\\Users\\asus\\Music\\Reza Bahram - Az Eshgh Bego.mp3",true);
+            save.addMusic("C:\\Users\\Pooria\\Downloads\\Music\\06 Mojezeyeh Khamoosh.mp3",true);
             if (save.getMusics().get(path)) {
                 createIcon(button, "icons\\colored-buttons-2\\png\\003-favorite-heart-button.png", 18, 18);
             } else {

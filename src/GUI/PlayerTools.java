@@ -21,12 +21,14 @@ public class PlayerTools extends JPanel implements AddIcon {
     private JButton shuffle;
     private JButton repeat;
     private SongInfo songInfo;
-    private boolean isPlayed = false;
     private boolean isShuffle = false;
     private static boolean isRepeat = false;
 
+    public JButton getPlay() {
+        return play;
+    }
 
-    public PlayerTools(SongInfo songInfo) throws IOException, JavaLayerException {
+    public PlayerTools(SongInfo songInfo) throws IOException {
         super();
         this.songInfo = songInfo;
         progressBar = new JSlider(0, 100, 0);
@@ -42,8 +44,15 @@ public class PlayerTools extends JPanel implements AddIcon {
         next = new JButton("");
         shuffle = new JButton("");
         repeat = new JButton("");
+        String playButton;
 
-        createIcon(play, "icons\\my-icons-collection-2\\png\\002-play-button.png", 35, 35);
+        if (!CentralPanel.isPlaying()) {
+            playButton = "icons\\my-icons-collection-2\\png\\002-play-button.png";
+        } else {
+            playButton = "icons\\my-icons-collection-2\\png\\001-pause.png";
+        }
+
+        createIcon(play, playButton, 35, 35);
         createIcon(next, "icons\\my-icons-collection-2\\png\\010-skip-track-option.png", 14, 14);
         createIcon(shuffle, "icons\\my-icons-collection-2\\png\\003-suffle-option.png", 14, 14);
         createIcon(repeat, "icons\\my-icons-collection-2\\png\\008-clockwise-refresh-arrow.png", 14, 14);
@@ -84,11 +93,13 @@ public class PlayerTools extends JPanel implements AddIcon {
         button.addMouseListener(new MouseListener() {
             @Override
             public void mouseReleased(MouseEvent e) {
+                mouseEntered(e);
             }
 
 
             @Override
             public void mousePressed(MouseEvent e) {
+                mouseEntered(e);
             }
 
             @Override
@@ -101,7 +112,7 @@ public class PlayerTools extends JPanel implements AddIcon {
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
-                } else if (!isPlayed) {
+                } else if (!CentralPanel.isPlaying()) {
                     try {
                         System.out.println("2");
                         createIcon(button, icon1, 35, 35);
@@ -133,7 +144,7 @@ public class PlayerTools extends JPanel implements AddIcon {
                         Save save = new Save();
                         for (int i = 0; i < save.getSortedMusicsCopy().size(); i++) {
                             if (CentralPanel.getPath().equals(save.getSortedMusicsCopy().get(i))) {
-                                if (i + 1 == save.getSortedMusicsCopy().size() && j==1) {
+                                if (i + 1 == save.getSortedMusicsCopy().size() && j == 1) {
                                     i = -1;
                                 }
                                 if (i + j == -1) {
@@ -155,6 +166,9 @@ public class PlayerTools extends JPanel implements AddIcon {
                                 }
                                 save.deleteAndReAddMusic(save.getSortedMusicsCopy().get(i + j));
                                 save.saveToFile();
+                                createIcon(play, "icons\\my-icons-collection-2\\png\\001-pause.png", 35, 35);
+                                CentralPanel.getThread().start();
+                                CentralPanel.setPlaying(true);
                                 break;
                             }
                         }
@@ -163,50 +177,36 @@ public class PlayerTools extends JPanel implements AddIcon {
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
-                } else if (!isPlayed) {
+                } else if (!CentralPanel.isPlaying()) {
                     try {
+                        if (CentralPanel.getThread().isAlive()) {
+//                    runMusic.resume(thread);
+                            CentralPanel.getThread().resume();
+                            CentralPanel.setPlaying(true);
+                        } else {
+                            CentralPanel.getThread().start();
+                            CentralPanel.setPlaying(true);
+                        }
+                        try {
+                            System.out.println("2");
+                            createIcon(button, icon1, 35, 35);
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
                         createIcon(button, icon4, 35, 35);
-                        isPlayed = true;
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
                 } else {
                     try {
+//                    runMusic.stopThread(thread);
+                        CentralPanel.getThread().suspend();
+                        CentralPanel.setPlaying(false);
                         createIcon(button, icon2, 35, 35);
-                        isPlayed = false;
-                    } catch (IOException e1) {
+                    } catch (Exception e1) {
                         e1.printStackTrace();
                     }
                 }
-
-/*
-
-                Save save = new Save();
-                for (int i = 0; i < save.getSortedMusicsCopy().size(); i++) {
-                    if (CentralPanel.getPath().equals(save.getSortedMusicsCopy().get(i))) {
-                        if (i + 1 == save.getSortedMusicsCopy().size()) {
-                            i = -1;
-                        }
-                        if (CentralPanel.getThread() != null) {
-                            CentralPanel.getThread().stop();
-                        }
-                        CentralPanel.setPath(save.getSortedMusicsCopy().get(i + 1));
-                        RunMusic runMusic = new RunMusic(CentralPanel.getPath());
-                        Thread thread = new Thread(runMusic);
-                        CentralPanel.setThread(thread);
-                        try {
-                            if (getSongInfo() != null) {
-                                getSongInfo().changeSongInfo(save.getSortedMusicsCopy().get(i + 1));
-                            }
-                        } catch (Exception e1) {
-                            e1.printStackTrace();
-                        }
-                        save.deleteAndReAddMusic(save.getSortedMusicsCopy().get(i + 1));
-                        save.saveToFile();
-                        break;
-                    }
-                }
-*/
 
             }
 
@@ -218,7 +218,7 @@ public class PlayerTools extends JPanel implements AddIcon {
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
-                } else if (!isPlayed) {
+                } else if (!CentralPanel.isPlaying()) {
                     try {
                         createIcon(button, icon2, 35, 35);
                     } catch (IOException e1) {

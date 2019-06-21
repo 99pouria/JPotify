@@ -3,6 +3,7 @@ package GUI;
 import Logic.RunMusic;
 import Logic.Save;
 import com.mpatric.mp3agic.*;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -14,6 +15,7 @@ import java.awt.event.MouseListener;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.Map;
+
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 
@@ -21,18 +23,18 @@ public class CentralPanel extends JPanel {
     private static String path;
     private static Thread thread = null;
     private MusicController musicController;
-    private static boolean Playing=false;
+    private static boolean Playing = false;
 //    private InteractivePart interactivePart;
 
-    public CentralPanel(SongInfo songInfo) throws IOException, InvalidDataException, UnsupportedTagException, JavaLayerException {
+    public CentralPanel(SongInfo songInfo, PlayerBox playerBox) throws IOException, InvalidDataException, UnsupportedTagException, JavaLayerException {
         setLayout(new BorderLayout());
 
         TitleBar titleBar = new TitleBar();
-        musicController=new MusicController(songInfo);
+        musicController = new MusicController(songInfo, playerBox);
 //        interactivePart = new InteractivePart(songInfo);
 
         add(titleBar, BorderLayout.NORTH);
-        add(musicController,BorderLayout.CENTER);
+        add(musicController, BorderLayout.CENTER);
 //        add(interactivePart, BorderLayout.CENTER);
 
     }
@@ -71,30 +73,25 @@ public class CentralPanel extends JPanel {
 }
 
 
-
-
-
-
-
-
-
-
-class MusicController extends JPanel{
+class MusicController extends JPanel {
     private JPanel title;
     private InteractivePart interactivePart;
+    private JScrollPane scrollableInteractive;
 
-    public MusicController(SongInfo songInfo) throws InvalidDataException, IOException, UnsupportedTagException {
+    public MusicController(SongInfo songInfo, PlayerBox playerBox) throws InvalidDataException, IOException, UnsupportedTagException {
         setLayout(new BorderLayout());
 
-        title=new JPanel();
-        interactivePart=new InteractivePart(songInfo);
+        title = new JPanel();
+        interactivePart = new InteractivePart(songInfo, playerBox);
+        scrollableInteractive = new JScrollPane(interactivePart, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollableInteractive.setBorder(null);
 
-        title.setPreferredSize(new Dimension(700,100));
+        title.setPreferredSize(new Dimension(700, 100));
         title.setOpaque(true);
         title.setBackground(Color.gray);
 
-        add(title,BorderLayout.NORTH);
-        add(interactivePart,BorderLayout.CENTER);
+        add(title, BorderLayout.NORTH);
+        add(scrollableInteractive, BorderLayout.CENTER);
     }
 
     public InteractivePart getInteractivePart() {
@@ -105,21 +102,13 @@ class MusicController extends JPanel{
         return title;
     }
 
-    public void clearMusidControler(){
+    public void clearMusidControler() {
         getTitle().removeAll();
         getInteractivePart().clearPanel();
         revalidate();
         repaint();
     }
 }
-
-
-
-
-
-
-
-
 
 
 class TitleBar extends JPanel implements MouseListener {
@@ -212,7 +201,7 @@ class TitleBar extends JPanel implements MouseListener {
             public void actionPerformed(ActionEvent e) {
                 try {
 //                    runMusic.stopThread(thread);
-                    CentralPanel.getThread().stop();
+                    CentralPanel.getThread().suspend();
                     CentralPanel.setPlaying(false);
                 } catch (Exception e1) {
                     e1.printStackTrace();
@@ -281,18 +270,11 @@ class TitleBar extends JPanel implements MouseListener {
 }
 
 
-
-
-
-
-
-
-
-
-class InteractivePart extends JPanel {
+class InteractivePart extends JPanel implements AddIcon {
     private static int gridX = 0;
     private static int gridY = 0;
     private SongInfo songInfo;
+    private PlayerBox playerBox;
     private Save save = new Save();
 
     public static int getGridX() {
@@ -311,9 +293,10 @@ class InteractivePart extends JPanel {
         InteractivePart.gridY = gridY;
     }
 
-    public InteractivePart(SongInfo songInfo) throws IOException, InvalidDataException, UnsupportedTagException {
+    public InteractivePart(SongInfo songInfo ,PlayerBox playerBox) throws IOException, InvalidDataException, UnsupportedTagException {
         super();
         this.songInfo = songInfo;
+        this.playerBox = playerBox;
 
         setOpaque(true);
         setBackground(Color.GRAY);
@@ -441,9 +424,9 @@ class InteractivePart extends JPanel {
         delete.setFocusPainted(false);
         coverImage.add(delete, BorderLayout.NORTH);
 
-        focusListener(coverImage,delete);
-        focusListener(artistName,delete);
-        focusListener(albumName,delete);
+        focusListener(coverImage, delete);
+        focusListener(artistName, delete);
+        focusListener(albumName, delete);
 
         delete.addMouseListener(new MouseListener() {
             @Override
@@ -512,19 +495,19 @@ class InteractivePart extends JPanel {
                 CentralPanel.getThread().stop();
             }
 //            while (true) {
-                CentralPanel.setPath(path);
-                RunMusic runMusic = new RunMusic(CentralPanel.getPath());
-                Thread thread = new Thread(runMusic);
-                CentralPanel.setThread(thread);
-                try {
-                    if (songInfo != null) {
-                        songInfo.changeSongInfo(path);
-                    }
-                } catch (Exception e1) {
-                    e1.printStackTrace();
+            CentralPanel.setPath(path);
+            RunMusic runMusic = new RunMusic(CentralPanel.getPath());
+            Thread thread = new Thread(runMusic);
+            CentralPanel.setThread(thread);
+            try {
+                if (songInfo != null) {
+                    songInfo.changeSongInfo(path);
                 }
-                save.deleteAndReAddMusic(path);
-                save.saveToFile();
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+            save.deleteAndReAddMusic(path);
+            save.saveToFile();
 //            }
 
         });
@@ -543,15 +526,18 @@ class InteractivePart extends JPanel {
                     if (songInfo != null) {
                         songInfo.changeSongInfo(path);
                     }
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                } catch (InvalidDataException e1) {
-                    e1.printStackTrace();
-                } catch (UnsupportedTagException e1) {
+                } catch (IOException | InvalidDataException | UnsupportedTagException e1) {
                     e1.printStackTrace();
                 }
                 save.deleteAndReAddMusic(path);
                 save.saveToFile();
+                try {
+                    createIcon(playerBox.getPlayerTools().getPlay(), "icons\\my-icons-collection-2\\png\\001-pause.png", 35, 35);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                CentralPanel.getThread().start();
+                CentralPanel.setPlaying(true);
             }
 
             @Override
@@ -577,7 +563,7 @@ class InteractivePart extends JPanel {
 
     }
 
-    public void makeMusicTiles(int choice) throws InvalidDataException, IOException, UnsupportedTagException, InterruptedException {
+    public void makeMusicTiles(int choice) throws InvalidDataException, IOException, UnsupportedTagException {
         if (choice == 1) {
             for (int i = 0; i < save.getSortedMusics().size(); i++) {
                 makeMusicPad(save.getSortedMusics().get(i));
@@ -617,7 +603,7 @@ class InteractivePart extends JPanel {
         System.gc();
     }
 
-    public void focusListener(Container container,JButton button){
+    public void focusListener(Container container, JButton button) {
         container.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -646,4 +632,14 @@ class InteractivePart extends JPanel {
         });
     }
 
+    @Override
+    public void createIcon(Container container, String iconAddress, int width, int height) throws IOException {
+        Image img = ImageIO.read(getClass().getResource(iconAddress));
+        img = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        ((JButton) container).setIcon(new ImageIcon(img));
+        container.setPreferredSize(new Dimension(40, 40));
+        ((JButton) container).setBorderPainted(false);
+        ((JButton) container).setContentAreaFilled(false);
+        ((JButton) container).setFocusPainted(false);
+    }
 }
