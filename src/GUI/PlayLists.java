@@ -28,7 +28,7 @@ public class PlayLists extends JPanel {
     private Font font2 = new Font("Font2", Font.BOLD, 30);
     private JButton addToPlaylist;
     private JFrame chooseFrame;
-    private JButton allMusidsInNewFrame[];
+    private JButton allMusicsInNewFrame[];
     private String fileName;
     private String clickedButtonName;
     private JButton deletePlayList;
@@ -65,7 +65,7 @@ public class PlayLists extends JPanel {
         addToPlaylist.setFocusPainted(false);
         addToPlaylist.setBorderPainted(false);
 
-        allMusidsInNewFrame = new JButton[100];
+        allMusicsInNewFrame = new JButton[100];
 
         JButton[] buttons = new JButton[50];
         addPlaylistButton = new JButton();
@@ -141,7 +141,7 @@ public class PlayLists extends JPanel {
                     add(Box.createVerticalStrut(20));
                     getSongs().clear();
                     try {
-                        creatAndSaveFile(button.getText().trim());
+                        createAndSaveFile(button.getText().trim());
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
@@ -172,30 +172,24 @@ public class PlayLists extends JPanel {
 
                         //////////////////////////////////////////////////////
                         save.setSortedMusicsCopy(getSongs());
-                        ////////////////////////////////////////////////////////
+                        //////////////////////////////////////////////////////
 
 
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    } catch (ClassNotFoundException e1) {
+                    } catch (IOException | ClassNotFoundException e1) {
                         e1.printStackTrace();
                     }
 
                     if (getSongs().size() == 0) {
-                        JLabel sorryLable = new JLabel("Sorry , but there is no music in the playlist ...!");
-                        sorryLable.setFont(font2);
-                        sorryLable.setHorizontalAlignment(SwingConstants.CENTER);
-                        getMusicController().getInteractivePart().add(sorryLable);
+                        JLabel sorryLabel = new JLabel("Sorry , but there is no music in the playlist ...!");
+                        sorryLabel.setFont(font2);
+                        sorryLabel.setHorizontalAlignment(SwingConstants.CENTER);
+                        getMusicController().getInteractivePart().add(sorryLabel);
                     } else {
                         for (int j = 0; j < save.getSortedMusics().size(); j++) {
                             if (getSongs().contains(save.getSortedMusics().get(j))) {
                                 try {
                                     getMusicController().getInteractivePart().makeMusicPad(save.getSortedMusics().get(j));
-                                } catch (InvalidDataException e1) {
-                                    e1.printStackTrace();
-                                } catch (IOException e1) {
-                                    e1.printStackTrace();
-                                } catch (UnsupportedTagException e1) {
+                                } catch (InvalidDataException | IOException | UnsupportedTagException e1) {
                                     e1.printStackTrace();
                                 }
                             }
@@ -207,38 +201,56 @@ public class PlayLists extends JPanel {
                     getMusicController().getTitle().add(deletePlayList, BorderLayout.WEST);
                     getMusicController().getTitle().add(label, BorderLayout.CENTER);
 
-                    deletePlayList.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            try {
-                                save.deletePlayList(clickedButton.getText().trim());
-                                refreshPlayList();
-                                getMusicController().getInteractivePart().removeAll();
-                                getMusicController().getTitle().removeAll();
-                                Files.delete(Paths.get("C:\\Users\\Public\\Documents\\" + clickedButton.getText().trim() + ".ser"));
-                                save.getPlayListsName().trimToSize();
-                                getMusicController().getInteractivePart().setBackground(Color.gray);
-                                getMusicController().getTitle().setBackground(Color.gray);
-                                revalidate();
-                                repaint();
-                            } catch (IOException e1) {
-                                e1.printStackTrace();
-                            }
+                    deletePlayList.addActionListener(e13 -> {
+                        try {
+                            save.deletePlayList(clickedButton.getText().trim());
+                            refreshPlayList();
+                            getMusicController().getInteractivePart().removeAll();
+                            getMusicController().getTitle().removeAll();
+                            Files.delete(Paths.get("C:\\Users\\Public\\Documents\\" + clickedButton.getText().trim() + ".ser"));
+                            save.getPlayListsName().trimToSize();
+                            getMusicController().getInteractivePart().setBackground(Color.gray);
+                            getMusicController().getTitle().setBackground(Color.gray);
+                            revalidate();
+                            repaint();
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
                         }
                     });
 
                     addToPlaylist.addActionListener(e12 -> {
                         chooseFrame = new JFrame("All Songs");
                         chooseFrame.setVisible(true);
+                        JPanel panel = new JPanel();
+                        BoxLayout layout = new BoxLayout(panel, BoxLayout.Y_AXIS);
+                        panel.setLayout(layout);
+                        JScrollPane scrollPane = new JScrollPane(panel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
                         chooseFrame.setSize(600, 600);
-                        chooseFrame.setLayout(new FlowLayout());
+                        panel.setBackground(Color.black);
+                        Font font1 = new Font("Font2", Font.ITALIC, 20);
+                        Font font2 = new Font("Font2", Font.BOLD, 20);
+                        JLabel label = new JLabel("  Choose song to add to playlist: ");
+                        panel.add(Box.createVerticalStrut(25));
+                        panel.add(label);
+                        label.setFont(font2);
+                        panel.add(Box.createVerticalStrut(25));
+                        chooseFrame.pack();
 
                         for (int counter = 0; counter < save.getSortedMusics().size(); counter++) {
                             try {
-                                allMusidsInNewFrame[counter] = new JButton(getMusicController().getInteractivePart().findSongInfo(save.getSortedMusics().get(counter), 0));
-                                chooseFrame.add(allMusidsInNewFrame[counter]);
-                                buttonHandler(allMusidsInNewFrame[counter]);
-//                                    allMusidsInNewFrame[counter].addActionListener(e12 -> {
+                                String songInfo = " +         " + getMusicController().getInteractivePart().findSongInfo(save.getSortedMusics().get(counter), 0) + " - " + getMusicController().getInteractivePart().findSongInfo(save.getSortedMusics().get(counter), 1);
+                                allMusicsInNewFrame[counter] = new JButton(songInfo);
+                                allMusicsInNewFrame[counter].setHorizontalAlignment(SwingConstants.LEFT);
+                                allMusicsInNewFrame[counter].setBorderPainted(false);
+                                allMusicsInNewFrame[counter].setFocusPainted(false);
+                                allMusicsInNewFrame[counter].setFont(font1);
+                                allMusicsInNewFrame[counter].setContentAreaFilled(false);
+                                allMusicsInNewFrame[counter].setBackground(Color.GRAY);
+                                allMusicsInNewFrame[counter].setForeground(Color.WHITE);
+                                panel.add(allMusicsInNewFrame[counter]);
+                                panel.add(Box.createVerticalStrut(25));
+                                buttonHandler(allMusicsInNewFrame[counter]);
+//                                    allMusicsInNewFrame[counter].addActionListener(e12 -> {
 //                                        try {
 //                                            getMusicController().getInteractivePart().makeMusicPad(save.getSortedMusics().get(counter-1));
 //                                            getMusicController().getInteractivePart().revalidate();
@@ -256,6 +268,7 @@ public class PlayLists extends JPanel {
                                 e1.printStackTrace();
                             }
                         }
+                        chooseFrame.add(scrollPane);
                     });
                 }
             }
@@ -306,11 +319,11 @@ public class PlayLists extends JPanel {
     public void addAndSave(String path, String filename) throws IOException {
         if (!getSongs().contains(path)) {
             getSongs().add(path);
-            creatAndSaveFile(filename);
+            createAndSaveFile(filename);
         }
     }
 
-    public static void creatAndSaveFile(String fileName) throws IOException {
+    public static void createAndSaveFile(String fileName) throws IOException {
         FileOutputStream fos = new FileOutputStream("C:\\Users\\Public\\Documents\\" + fileName + ".ser");
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(getSongs());
@@ -335,23 +348,42 @@ public class PlayLists extends JPanel {
 
     /////////////////////////////////////////////////////////////////////////////////////
     public void buttonHandler(JButton button) {
-        button.addActionListener(e -> {
-            for (i = 0; i < save.getSortedMusics().size(); i++) {
-                if (e.getSource() == allMusidsInNewFrame[i]) {
-                    try {
-                        getMusicController().getInteractivePart().makeMusicPad(save.getSortedMusics().get(i));
-                        addAndSave(save.getSortedMusics().get(i), getClickedButtonName());
-                    } catch (InvalidDataException e1) {
-                        e1.printStackTrace();
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    } catch (UnsupportedTagException e1) {
-                        e1.printStackTrace();
+        button.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked (MouseEvent e) {
+                for (i = 0; i < save.getSortedMusics().size(); i++) {
+                    if (e.getSource() == allMusicsInNewFrame[i]) {
+                        try {
+                            PlayLists.this.getMusicController().getInteractivePart().makeMusicPad(save.getSortedMusics().get(i));
+                            PlayLists.this.addAndSave(save.getSortedMusics().get(i), PlayLists.this.getClickedButtonName());
+                        } catch (InvalidDataException | IOException | UnsupportedTagException e1) {
+                            e1.printStackTrace();
+                        }
+                        PlayLists.this.getMusicController().getInteractivePart().revalidate();
+                        PlayLists.this.getMusicController().getInteractivePart().repaint();
                     }
-                    getMusicController().getInteractivePart().revalidate();
-                    getMusicController().getInteractivePart().repaint();
                 }
             }
+            @Override
+            public void mousePressed(MouseEvent e) {
+                button.setForeground(Color.getHSBColor(104, 69, 55));
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                button.setForeground(Color.GREEN);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setForeground(Color.GREEN);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setForeground(Color.WHITE);
+            }
+
         });
     }
 
@@ -371,7 +403,7 @@ public class PlayLists extends JPanel {
         this.clickedButtonName = clickedButtonName;
     }
 
-    public void refreshPlayList(){
+    public void refreshPlayList() {
         this.removeAll();
         layout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(layout);
@@ -397,7 +429,7 @@ public class PlayLists extends JPanel {
         addToPlaylist.setFocusPainted(false);
         addToPlaylist.setBorderPainted(false);
 
-        allMusidsInNewFrame = new JButton[100];
+        allMusicsInNewFrame = new JButton[100];
 
         JButton[] buttons = new JButton[50];
         addPlaylistButton = new JButton();

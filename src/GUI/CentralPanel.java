@@ -174,17 +174,14 @@ class TitleBar extends JPanel implements MouseListener {
 //        RunMusic runMusic=new RunMusic(CentralPanel.getPath());
 //        Thread thread=new Thread(runMusic);
 
-        previousBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (CentralPanel.getThread().isAlive()) {
+        previousBtn.addActionListener(e -> {
+            if (CentralPanel.getThread().isAlive()) {
 //                    runMusic.resume(thread);
-                    CentralPanel.getThread().resume();
+                CentralPanel.getThread().resume();
 //                    CentralPanel.setPlaying(true);
-                } else {
-                    CentralPanel.getThread().start();
+            } else {
+                CentralPanel.getThread().start();
 //                    CentralPanel.setPlaying(true);
-                }
             }
         });
 
@@ -618,7 +615,7 @@ class InteractivePart extends JPanel implements AddIcon {
         PlayLists.getSongs().clear();
         PlayLists.readFile(filename);
         PlayLists.getSongs().remove(path);
-        PlayLists.creatAndSaveFile(filename);
+        PlayLists.createAndSaveFile(filename);
         revalidate();
         repaint();
     }

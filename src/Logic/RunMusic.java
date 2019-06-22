@@ -22,7 +22,7 @@ public class RunMusic implements Runnable {
         try {
 
             BufferedInputStream bis = new BufferedInputStream(new FileInputStream(path));
-//            AdvancedPlayer player=new AdvancedPlayer(bis);
+//            AdvanceKdPlayer player=new AdvancedPlayer(bis);
             player = new Player(bis);
             try {
                 player.play();
