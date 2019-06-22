@@ -8,6 +8,7 @@ import java.awt.*;
 
 public class FormGUI extends JFrame {
 //    private final int WIDTH = 1500, HEIGHT = 1500;
+    private static FormGUI formGUI;
     private PlayerBox playerBox;
     private CentralPanel centralPanel;
 
@@ -32,6 +33,11 @@ public class FormGUI extends JFrame {
 
         pack();
         this.setVisible(true);
+
+    }
+
+    public static FormGUI getFormGUI() {
+        return formGUI;
     }
 
     public PlayerBox getPlayerBox() {
@@ -43,8 +49,9 @@ public class FormGUI extends JFrame {
     }
 
     public static void main(String[] args) throws Exception {
-
-        FormGUI formGUI = new FormGUI();
+        System.out.println(PlayerTools.getThread());
+//        PlayerTools.getThread().start();
+        formGUI = new FormGUI();
 
 //        Save save=new Save();
 //        save.addMusic("F:\\Reza Bahram - Az Eshgh Bego.mp3",false);

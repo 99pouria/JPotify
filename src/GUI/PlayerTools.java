@@ -6,6 +6,8 @@ import javazoom.jl.decoder.JavaLayerException;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -13,7 +15,10 @@ import java.io.IOException;
 
 public class PlayerTools extends JPanel implements AddIcon {
 
-    private JSlider progressBar;
+    private RunMusic runMusic;
+//    private static JSlider progressBar;
+    private static ProgressBar progressBar;
+    private static Thread thread;
     private JPanel buttonsPanel;
     private JButton play;
     private JButton back;
@@ -31,9 +36,9 @@ public class PlayerTools extends JPanel implements AddIcon {
     public PlayerTools(SongInfo songInfo) throws IOException {
         super();
         this.songInfo = songInfo;
-        progressBar = new JSlider(0, 100, 0);
+        progressBar = new ProgressBar(0, 100, 0);
+        thread=new Thread(getProgressBar());
         buttonsPanel = new JPanel();
-
         setLayout(new BorderLayout());
 
         setOpaque(true);
@@ -76,6 +81,12 @@ public class PlayerTools extends JPanel implements AddIcon {
         progressBar.setOpaque(true);
         progressBar.setBackground(Color.DARK_GRAY);
         progressBar.setSnapToTicks(true);
+        progressBar.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+
+            }
+        });
 
         add(progressBar, BorderLayout.CENTER);
         add(buttonsPanel, BorderLayout.NORTH);
@@ -150,13 +161,15 @@ public class PlayerTools extends JPanel implements AddIcon {
                                 if (i + j == -1) {
                                     i = save.getSortedMusicsCopy().size();
                                 }
-                                if (CentralPanel.getThread() != null) {
-                                    CentralPanel.getThread().stop();
+                                if (CentralPanel.getRunMusic() != null) {
+                                    CentralPanel.getRunMusic().mp3Pause();
+//                     //////////////////////               CentralPanel.getThread().stop();
                                 }
                                 CentralPanel.setPath(save.getSortedMusicsCopy().get(i + j));
-                                RunMusic runMusic = new RunMusic(CentralPanel.getPath());
-                                Thread thread = new Thread(runMusic);
-                                CentralPanel.setThread(thread);
+                                runMusic = new RunMusic(CentralPanel.getPath(),songInfo);
+//                              ////////  Thread thread = new Thread(runMusic);
+                                ///////////CentralPanel.setThread(thread);
+                                CentralPanel.setRunMusic(runMusic);
                                 try {
                                     if (getSongInfo() != null) {
                                         getSongInfo().changeSongInfo(save.getSortedMusicsCopy().get(i + j));
@@ -167,7 +180,7 @@ public class PlayerTools extends JPanel implements AddIcon {
                                 save.deleteAndReAddMusic(save.getSortedMusicsCopy().get(i + j));
                                 save.saveToFile();
                                 createIcon(play, "icons\\my-icons-collection-2\\png\\001-pause.png", 35, 35);
-                                CentralPanel.getThread().start();
+                                CentralPanel.getRunMusic().start();/////////////////////
                                 CentralPanel.setPlaying(true);
                                 break;
                             }
@@ -179,12 +192,12 @@ public class PlayerTools extends JPanel implements AddIcon {
                     }
                 } else if (!CentralPanel.isPlaying()) {
                     try {
-                        if (CentralPanel.getThread().isAlive()) {
+                        if (CentralPanel.getRunMusic().isAlive()) {
 //                    runMusic.resume(thread);
-                            CentralPanel.getThread().resume();
+                            CentralPanel.getRunMusic().mp3Resume();////////////////////
                             CentralPanel.setPlaying(true);
                         } else {
-                            CentralPanel.getThread().start();
+                            CentralPanel.getRunMusic().start();
                             CentralPanel.setPlaying(true);
                         }
                         try {
@@ -200,7 +213,7 @@ public class PlayerTools extends JPanel implements AddIcon {
                 } else {
                     try {
 //                    runMusic.stopThread(thread);
-                        CentralPanel.getThread().suspend();
+                        CentralPanel.getRunMusic().mp3Pause();//////////////
                         CentralPanel.setPlaying(false);
                         createIcon(button, icon2, 35, 35);
                     } catch (Exception e1) {
@@ -377,6 +390,51 @@ public class PlayerTools extends JPanel implements AddIcon {
         ((JButton) container).setContentAreaFilled(false);
         ((JButton) container).setFocusPainted(false);
 
+    }
+
+    public static void timer(){
+        int moving=0;
+        String progress = Integer.toString(0);
+        while (moving<=100)
+        {
+            progress = Integer.toString(moving);
+            progressBar.setValue(moving);
+            moving++;
+        }
+    }
+
+    public static Thread getThread() {
+        return thread;
+    }
+
+    public static ProgressBar getProgressBar() {
+        return progressBar;
+    }
+}
+
+class ProgressBar extends JSlider implements Runnable{
+    private int moving=0;
+
+    public ProgressBar(int min, int max, int value) {
+        super(min, max, value);
+    }
+
+    String progress = Integer.toString(0);
+
+    @Override
+    public void run() {
+        while (moving<=100)
+        {
+            System.out.println("fwfwfwfwffffffff");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            progress = Integer.toString(moving);
+            this.setValue(moving);
+            moving++;
+        }
     }
 
 
