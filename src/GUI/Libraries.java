@@ -13,21 +13,21 @@ import java.util.Map;
 
 public class Libraries extends JPanel {
     private JButton[] buttons;
-    private Save save=new Save();
-//    private InteractivePart interactivePart;
+    private Save save = new Save();
+    //    private InteractivePart interactivePart;
     private MusicController musicController;
     private JLabel label;
-    private Font font1=new Font("Font1",2,70);
+    private Font font1 = new Font("Font1", 2, 70);
 
 
     public Libraries(MusicController musicController) {
         super();
-        this.musicController=musicController;
+        this.musicController = musicController;
 //        this.interactivePart=interactivePart;
-        setLayout(new GridLayout(5,1));
+        setLayout(new GridLayout(5, 1));
 
         Font font = new Font("MyFont", 1, 17);
-        Font font1=new Font("Font1",Font.ITALIC,15);
+        Font font1 = new Font("Font1", Font.ITALIC, 15);
 
         JLabel title = new JLabel("     YOUR LIBRARY");
         title.setForeground(Color.white);
@@ -54,8 +54,7 @@ public class Libraries extends JPanel {
             buttonEventHandler(buttons[i]);
             add(buttons[i]);
         }
-        
-        
+
 
         setOpaque(true);
         setBackground(Color.BLACK);
@@ -70,12 +69,11 @@ public class Libraries extends JPanel {
         return musicController;
     }
 
-    public void buttonEventHandler(JButton button){
+    public void buttonEventHandler(JButton button) {
         button.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getSource()==buttons[0])
-                {
+                if (e.getSource() == buttons[0]) {
                     InteractivePart.setPart(0);
 //                    for (Map.Entry<String,Boolean> entry:
 //                         save.readFile().entrySet()) {
@@ -86,27 +84,26 @@ public class Libraries extends JPanel {
                         getMusicController().clearMusidControler();
                         save.setSortedMusicsCopy(save.getSortedMusics());
 
-                        label=new JLabel("............ All Songs ............");
+                        label = new JLabel("............ All Songs ............");
                         label.setHorizontalAlignment(SwingConstants.CENTER);
                         label.setFont(font1);
-                        getMusicController().getTitle().add(label,BorderLayout.CENTER);
+                        getMusicController().getTitle().add(label, BorderLayout.CENTER);
 
                         getMusicController().getInteractivePart().makeMusicTiles(1);
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
                 }
-                if (e.getSource()==buttons[1])
-                {
+                if (e.getSource() == buttons[1]) {
                     try {
                         InteractivePart.setPart(0);
 //                        getMusicController().getInteractivePart().clearPanel();
                         getMusicController().clearMusidControler();
 
-                        label=new JLabel("............ Fovourits ............");
+                        label = new JLabel("............ Fovourits ............");
                         label.setHorizontalAlignment(SwingConstants.CENTER);
                         label.setFont(font1);
-                        getMusicController().getTitle().add(label,BorderLayout.CENTER);
+                        getMusicController().getTitle().add(label, BorderLayout.CENTER);
 
                         getMusicController().getInteractivePart().makeMusicTiles(2);
                     } catch (Exception e1) {
@@ -117,7 +114,7 @@ public class Libraries extends JPanel {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                button.setForeground(Color.getHSBColor(104,69,55));
+                button.setForeground(Color.getHSBColor(104, 69, 55));
             }
 
             @Override
