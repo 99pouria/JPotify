@@ -15,8 +15,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 
+
+
 public class SwitchPanel extends JPanel implements ActionListener {
 
+    private JPanel buttonsPanel;
     private JButton homeBtn;
     private JButton browseBtn;
     private JFileChooser fileChooser;
@@ -24,11 +27,20 @@ public class SwitchPanel extends JPanel implements ActionListener {
 //    private InteractivePart interactivePart;
     private MusicController musicController;
 
-    public SwitchPanel(MusicController musicController) {
+    public SwitchPanel(MusicController musicController) throws IOException {
         super();
         this.musicController=musicController;
 
-        setLayout(new GridLayout(2, 1));
+        setLayout(new BorderLayout());
+
+        MenuBar menu = new MenuBar();
+        menu.setAlignmentX(SwingConstants.RIGHT);
+        menu.setPreferredSize(new Dimension(250,70));
+        menu.setOpaque(true);
+        menu.setBackground(Color.black);
+
+        buttonsPanel=new JPanel();
+        buttonsPanel.setLayout(new GridLayout(2, 1));
 
         fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
         homeBtn = new JButton("Home");
@@ -66,8 +78,15 @@ public class SwitchPanel extends JPanel implements ActionListener {
 
 //        homeBtn.addActionListener(this);
 
-        add(homeBtn);
-        add(browseBtn);
+        buttonsPanel.add(homeBtn);
+        buttonsPanel.add(browseBtn);
+        buttonsPanel.setPreferredSize(new Dimension(250,100));
+        buttonsPanel.setOpaque(true);
+        buttonsPanel.setBackground(Color.black);
+
+
+        add(menu,BorderLayout.NORTH);
+        add(buttonsPanel,BorderLayout.SOUTH);
 
         browseBtn.addActionListener(this);
     }

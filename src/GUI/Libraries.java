@@ -26,8 +26,8 @@ public class Libraries extends JPanel {
 //        this.interactivePart=interactivePart;
         setLayout(new GridLayout(5, 1));
 
-        Font font = new Font("MyFont", 1, 17);
-        Font font1 = new Font("Font1", Font.ITALIC, 15);
+        Font font = new Font("MyFont", 1, 19);
+        Font font1 = new Font("Font1", Font.ITALIC, 17);
 
         JLabel title = new JLabel("     YOUR LIBRARY");
         title.setForeground(Color.white);
@@ -44,7 +44,7 @@ public class Libraries extends JPanel {
         buttons[3] = new JButton("Add To Library");
 
         for (int i = 0; i < 4; i++) {
-            buttons[i].setPreferredSize(new Dimension(250, 50));
+            buttons[i].setPreferredSize(new Dimension(250, 60));
             buttons[i].setHorizontalAlignment(SwingConstants.LEFT);
             buttons[i].setContentAreaFilled(false);
             buttons[i].setFocusPainted(false);

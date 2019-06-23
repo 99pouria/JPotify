@@ -42,7 +42,7 @@ public class RunMusic extends Thread {
 
             while (player.play(1)) {
                 if (isPaused) {
-                    PlayerTools.getThread().start();
+//                    PlayerTools.getThread().start();
                     synchronized (player) {
                         player.wait();
                     }

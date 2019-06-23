@@ -692,7 +692,7 @@ class InteractivePart extends JPanel implements AddIcon {
         PlayLists.getSongs().clear();
         PlayLists.readFile(filename);
         PlayLists.getSongs().remove(path);
-        PlayLists.creatAndSaveFile(filename);
+        PlayLists.createAndSaveFile(filename);
         revalidate();
         repaint();
     }

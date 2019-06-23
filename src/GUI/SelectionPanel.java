@@ -7,13 +7,13 @@ import java.io.IOException;
 public class SelectionPanel extends JPanel {
     public SelectionPanel(MusicController musicController) throws IOException, ClassNotFoundException {
         super();
-        BoxLayout layout = new BoxLayout(this, BoxLayout.Y_AXIS);
+//        BoxLayout layout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setOpaque(true);
         setBackground(Color.BLACK);
-        setLayout(layout);
+        setLayout(new BorderLayout());
 
-        MenuBar menu = new MenuBar();
-        menu.setAlignmentX(SwingConstants.RIGHT);
+//        MenuBar menu = new MenuBar();
+//        menu.setAlignmentX(SwingConstants.RIGHT);
         Libraries libraries = new Libraries(musicController);
         PlayLists playLists = new PlayLists(musicController);
         SwitchPanel switchPanel = new SwitchPanel(musicController);
@@ -44,10 +44,12 @@ public class SelectionPanel extends JPanel {
         springLayout.putConstraint(SpringLayout.NORTH, playLists, 20, SpringLayout.SOUTH, libraries);
         */
 
-        add(menu);
-        add(Box.createVerticalStrut(25));
-        add(switchPanel);
-        add(Box.createVerticalStrut(35));
+//        add(menu,BorderLayout.NORTH);
+//        add(Box.createVerticalStrut(25));
+
+        add(switchPanel,BorderLayout.NORTH);
+        switchPanel.setPreferredSize(new Dimension(250,170));
+//        add(Box.createVerticalStrut(35));
         add(scrollPane);
     }
 }

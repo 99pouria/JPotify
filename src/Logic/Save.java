@@ -4,6 +4,8 @@ import com.sun.xml.internal.ws.api.ha.StickyFeature;
 
 import javax.swing.*;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -136,7 +138,7 @@ public class Save {
         return playListsName;
     }
 
-    public void deletePlayList(String name) throws IOException {
+    public void eliminatePlayList(String name) throws IOException {
         getPlayListsName().remove(name);
         FileOutputStream fosOfPlayLists =
                 new FileOutputStream("C:\\Users\\Public\\Documents\\playlistsName.ser");
