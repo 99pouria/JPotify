@@ -29,7 +29,7 @@ public class SongInfo extends JPanel implements AddIcon {
     public SongInfo(String path) throws IOException, InvalidDataException, UnsupportedTagException {
 
         super();
-        filePath = "F:\\Reza Bahram - Az Eshgh Bego.mp3";
+        filePath = "C:\\Users\\Pooria\\Downloads\\Music\\Hamid Askari - Baraye Akharin Bar.mp3";
         setPreferredSize(new Dimension(250, 70));
         setOpaque(true);
         setBackground(Color.DARK_GRAY);
@@ -140,7 +140,7 @@ public class SongInfo extends JPanel implements AddIcon {
 
             save.readFile();
 
-            save.addMusic("F:\\Reza Bahram - Az Eshgh Bego.mp3",true);
+            save.addMusic("C:\\Users\\Pooria\\Downloads\\Music\\Hamid Askari - Baraye Akharin Bar.mp3",true);
             if (save.getMusics().get(path)) {
                 createIcon(button, "icons\\colored-buttons-2\\png\\003-favorite-heart-button.png", 18, 18);
             } else {
