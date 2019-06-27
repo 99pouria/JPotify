@@ -321,7 +321,7 @@ public class PlayLists extends JPanel implements AddIcon {
                                 refreshPlayList();
                                 getMusicController().getInteractivePart().removeAll();
                                 getMusicController().getTitle().removeAll();
-                                Files.deleteIfExists(Paths.get("C:\\Users\\Public\\Documents\\" + theWantedPlayList + ".ser"));
+                                Files.deleteIfExists(Paths.get( "C:\\Users\\Public\\Documents\\" + theWantedPlayList + ".ser"));
                                 System.out.println(theWantedPlayList);
 //                                save.getPlayListsName().trimToSize();
                                 getMusicController().getInteractivePart().setBackground(Color.gray);
