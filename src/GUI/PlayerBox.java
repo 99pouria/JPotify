@@ -34,7 +34,7 @@ public class PlayerBox extends JPanel {
         setBackground(Color.GRAY);
         setLayout(new BorderLayout());
 
-        songInfo = new SongInfo("C:\\Users\\Pooria\\Downloads\\Music\\Hamid Askari - Baraye Akharin Bar.mp3");
+        songInfo = new SongInfo(null);
 //        songInfo=new SongInfo();
         playerTools = new PlayerTools(getSongInfo());
         VolumeBox volumeBox = new VolumeBox();
