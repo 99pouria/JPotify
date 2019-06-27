@@ -11,6 +11,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -376,7 +378,9 @@ class InteractivePart extends JPanel implements AddIcon {
 
         setLayout(new GridBagLayout());
 
-        save.readFile();
+        if (Files.exists(Paths.get("C:\\Users\\Public\\Documents\\hashmap.ser"))) {
+            save.readFile();
+        }
 //        for (Map.Entry<String, Boolean> entry :
 //                save.getMusics().entrySet()) {
 //            makeMusicPad(entry.getKey());
@@ -508,7 +512,13 @@ class InteractivePart extends JPanel implements AddIcon {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (getPart() == 0) {
-                    deleteMusicTiles(panel, path, InteractivePart.getPart());
+                    try {
+                        deleteMusicTiles(panel, path, InteractivePart.getPart());
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    } catch (ClassNotFoundException e1) {
+                        e1.printStackTrace();
+                    }
                 }
                 if (getPart() == 1) {
                     System.out.println("gegegegegegegegegegege");
@@ -557,7 +567,8 @@ class InteractivePart extends JPanel implements AddIcon {
 
 
         Save save = new Save();
-        save.readFile();
+        if (Files.exists(Paths.get("C:\\Users\\Public\\Documents\\hashmap.ser")))
+            save.readFile();
 
         artistName.addActionListener(e -> {
             if (CentralPanel.getRunMusic() != null) {
@@ -681,7 +692,7 @@ class InteractivePart extends JPanel implements AddIcon {
         }
     }
 
-    public void deleteMusicTiles(JPanel panel, String path, int index) {
+    public void deleteMusicTiles(JPanel panel, String path, int index) throws IOException, ClassNotFoundException {
         remove(panel);
         if (index == 0) {
             save.deletTile(path);

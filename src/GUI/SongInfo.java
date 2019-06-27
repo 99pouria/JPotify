@@ -15,6 +15,8 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class SongInfo extends JPanel implements AddIcon {
     private JPanel artWork;
@@ -29,14 +31,13 @@ public class SongInfo extends JPanel implements AddIcon {
     public SongInfo(String path) throws IOException, InvalidDataException, UnsupportedTagException {
 
         super();
-        filePath = "F:\\Reza Bahram - Az Eshgh Bego.mp3";
         setPreferredSize(new Dimension(250, 70));
         setOpaque(true);
         setBackground(Color.DARK_GRAY);
         setLayout(new BorderLayout());
         createInfoPanel = new CreateInfoPanel(path);
         add(info, BorderLayout.CENTER);
-        likeIcon = new likeIcon(filePath);
+        likeIcon = new likeIcon(null);
         add(like, BorderLayout.EAST);
         createArtWorkPanel = new createArtWorkPanel(path);
         add(artWork, BorderLayout.WEST);
@@ -96,15 +97,18 @@ public class SongInfo extends JPanel implements AddIcon {
 
 
     public String findSongInfo(String filePath, int index) throws IOException {
-        File file = new File(filePath);
-        byte[] songName = new byte[30];
-        byte[] fileContent = Files.readAllBytes(file.toPath());
-        for (int i = 0; i < 30; i++) {
-            songName[i] = fileContent[i + fileContent.length - 125 + index * 30];
+        if (filePath!=null) {
+            File file = new File(filePath);
+            byte[] songName = new byte[30];
+            byte[] fileContent = Files.readAllBytes(file.toPath());
+            for (int i = 0; i < 30; i++) {
+                songName[i] = fileContent[i + fileContent.length - 125 + index * 30];
+            }
+            String name = new String(songName);
+            System.out.println(name);
+            return name;
         }
-        String name = new String(songName);
-        System.out.println(name);
-        return name;
+        return "no music choosed";
     }
 
 
@@ -138,14 +142,21 @@ public class SongInfo extends JPanel implements AddIcon {
             Save save = new Save();
             playedSongPath = path;
 
-            save.readFile();
-
-            save.addMusic("F:\\Reza Bahram - Az Eshgh Bego.mp3",true);
-            if (save.getMusics().get(path)) {
-                createIcon(button, "icons\\colored-buttons-2\\png\\003-favorite-heart-button.png", 18, 18);
-            } else {
-                createIcon(button, "icons\\my-icons-collection-2\\png\\004-heart.png", 18, 18);
+            if (Files.exists(Paths.get("C:\\Users\\Public\\Documents\\hashmap.ser"))) {
+                save.readFile();
             }
+
+//            save.addMusic("F:\\Reza Bahram - Az Eshgh Bego.mp3",true);
+            if (path!=null) {
+                if (save.getMusics().get(path)) {
+                    createIcon(button, "icons\\colored-buttons-2\\png\\003-favorite-heart-button.png", 18, 18);
+                } else {
+                    createIcon(button, "icons\\my-icons-collection-2\\png\\004-heart.png", 18, 18);
+                }
+            }
+            else
+                createIcon(button, "icons\\my-icons-collection-2\\png\\004-heart.png", 18, 18);
+
 
 
             likeEventHandler("icons\\colored-buttons-1\\png\\003-favorite-heart-button.png", "icons\\colored-buttons-2\\png\\003-favorite-heart-button.png", "icons\\my-icons-collection-3\\png\\004-heart.png", "icons\\my-icons-collection-2\\png\\004-heart.png");
@@ -158,7 +169,8 @@ public class SongInfo extends JPanel implements AddIcon {
 
         public void likeEventHandler(String icon1, String icon2, String icon3, String icon4) {
             Save save = new Save();
-            save.readFile();
+            if (Files.exists(Paths.get("C:\\Users\\Public\\Documents\\hashmap.ser")))
+                save.readFile();
             button.addMouseListener(new MouseListener() {
                 @Override
                 public void mouseReleased(MouseEvent e) {

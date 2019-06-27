@@ -34,7 +34,7 @@ public class PlayerBox extends JPanel {
         setBackground(Color.GRAY);
         setLayout(new BorderLayout());
 
-        songInfo = new SongInfo("F:\\Reza Bahram - Az Eshgh Bego.mp3");
+        songInfo = new SongInfo(null);
 //        songInfo=new SongInfo();
         playerTools = new PlayerTools(getSongInfo());
         VolumeBox volumeBox = new VolumeBox();

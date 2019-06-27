@@ -50,7 +50,9 @@ public class PlayLists extends JPanel {
         super();
         this.musicController = musicController;
 
-        save.readPlayListsName();
+        if (Files.exists(Paths.get("C:\\Users\\Public\\Documents\\PlaylistsName.ser"))) {
+            save.readPlayListsName();
+        }
 
         layout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(layout);

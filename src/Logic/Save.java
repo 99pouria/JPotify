@@ -1,5 +1,6 @@
 package Logic;
 
+import GUI.PlayLists;
 import com.sun.xml.internal.ws.api.ha.StickyFeature;
 
 import javax.swing.*;
@@ -23,9 +24,11 @@ public class Save {
 
     public Save() {
         if (isCopied) {
-            readFile();
-            setSortedMusicsCopy(getSortedMusics());
-            isCopied=false;
+            if (Files.exists(Paths.get("C:\\Users\\Public\\Documents\\hashmap.ser"))) {
+                readFile();
+                setSortedMusicsCopy(getSortedMusics());
+                isCopied = false;
+            }
         }
     }
 
@@ -149,12 +152,17 @@ public class Save {
         fosOfPlayLists.close();
     }
 
-    public void deletTile(String path){
+    public void deletTile(String path) throws IOException, ClassNotFoundException {
         getMusics().remove(path);
         getSortedMusics().remove(path);
         getSortedMusicsCopy().remove(path);
         for (int i = 0; i <playListsName.size() ; i++) {
-
+            PlayLists.readFile(playListsName.get(i));
+            if (PlayLists.getSongs().contains(path))
+            {
+                PlayLists.getSongs().remove(path);
+                PlayLists.createAndSaveFile(playListsName.get(i));
+            }
         }
     }
 }
