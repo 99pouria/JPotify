@@ -38,9 +38,10 @@ public class RunMusic extends Thread {
 
             bis = new BufferedInputStream(new FileInputStream(path));
             player = new AdvancedPlayer(bis);
-            player1 = new Player(bis);
+            PlayerTools.setMaximum(path);
 
             while (player.play(1)) {
+                PlayerTools.setPosition(player.getPosition());
                 if (isPaused) {
 //                    PlayerTools.getThread().start();
                     synchronized (player) {
@@ -53,7 +54,10 @@ public class RunMusic extends Thread {
                 player.close();
                 bis = new BufferedInputStream(new FileInputStream(path));
                 player = new AdvancedPlayer(bis);
+
                 while (player.play(1)) {
+                    PlayerTools.setPosition(player.getPosition());
+
                     if (isPaused) {
                         synchronized (player) {
                             player.wait();
@@ -77,7 +81,9 @@ public class RunMusic extends Thread {
                 }
                 save.deleteAndReAddMusic(CentralPanel.getPath());
                 save.saveToFile();
+                PlayerTools.setMaximum(path);
                 while (player.play(1)) {
+                    PlayerTools.setPosition(player.getPosition());
                     if (isPaused) {
                         synchronized (player) {
                             player.wait();
@@ -90,6 +96,8 @@ public class RunMusic extends Thread {
                     bis = new BufferedInputStream(new FileInputStream(path));
                     player = new AdvancedPlayer(bis);
                     while (player.play(1)) {
+                        PlayerTools.setPosition(player.getPosition());
+
                         if (isPaused) {
                             synchronized (player) {
                                 player.wait();
@@ -99,60 +107,6 @@ public class RunMusic extends Thread {
                 }
             }
 
-//            RunMusic2 runMusic2=new RunMusic2(save.getSortedMusicsCopy().get(randomNumber),songInfo);
-//            Thread thread=new Thread(runMusic2);
-//            CentralPanel.setThread(thread);
-//            CentralPanel.setPath(save.getSortedMusicsCopy().get(randomNumber));
-//            try {
-//                if (songInfo != null) {
-//                    songInfo.changeSongInfo(CentralPanel.getPath());
-//                }
-//            } catch (IOException | InvalidDataException | UnsupportedTagException e1) {
-//                e1.printStackTrace();
-//            }
-//            save.deleteAndReAddMusic(CentralPanel.getPath());
-//            save.saveToFile();
-//            thread.start();
-
-            /*try {
-                player.play();
-
-                if (PlayerTools.isIsRepeat())
-                {
-                    while (PlayerTools.isIsRepeat())
-                    {
-                        if (player.isComplete())
-                        {
-                            player.close();
-                            bis = new BufferedInputStream(new FileInputStream(path));
-                            player = new Player(bis);
-                            player.play();
-                        }
-                    }
-                    wait();
-                }
-
-                if (player.isComplete())
-                {
-                    randomNumber=random.nextInt(save.getSortedMusics().size());
-                    RunMusic2 runMusic2=new RunMusic2(save.getSortedMusicsCopy().get(randomNumber),songInfo);
-                    Thread thread=new Thread(runMusic2);
-                    CentralPanel.setThread(thread);
-                    CentralPanel.setPath(save.getSortedMusicsCopy().get(randomNumber));
-                    try {
-                        if (songInfo != null) {
-                            songInfo.changeSongInfo(CentralPanel.getPath());
-                        }
-                    } catch (IOException | InvalidDataException | UnsupportedTagException e1) {
-                        e1.printStackTrace();
-                    }
-                    save.deleteAndReAddMusic(CentralPanel.getPath());
-                    save.saveToFile();
-                    thread.start();
-                }
-//            } catch (Exception e1) {
-//                e1.printStackTrace();
-//            }*/
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -178,20 +132,8 @@ public class RunMusic extends Thread {
         }
     }
 
-
-//    public void stopThread(Thread thread) throws InterruptedException {
-//        thread.suspend();
-//    }
-
-//    public void resume(Thread thread) {
-//        thread.resume();
-//    }
-
     public String getPath() {
         return path;
     }
 
-//    public Player getPlayer() {
-//        return player;
-//    }
 }

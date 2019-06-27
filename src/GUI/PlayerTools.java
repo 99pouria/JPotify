@@ -2,6 +2,9 @@ package GUI;
 
 import Logic.RunMusic;
 import Logic.Save;
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.Mp3File;
+import com.mpatric.mp3agic.UnsupportedTagException;
 import javazoom.jl.decoder.JavaLayerException;
 
 import javax.imageio.ImageIO;
@@ -16,9 +19,8 @@ import java.io.IOException;
 public class PlayerTools extends JPanel implements AddIcon {
 
     private RunMusic runMusic;
-//    private static JSlider progressBar;
-    private static ProgressBar progressBar;
-    private static Thread thread;
+    private static JSlider progressBar;
+//    private static ProgressBar progressBar;
     private JPanel buttonsPanel;
     private JButton play;
     private JButton back;
@@ -36,8 +38,8 @@ public class PlayerTools extends JPanel implements AddIcon {
     public PlayerTools(SongInfo songInfo) throws IOException {
         super();
         this.songInfo = songInfo;
-        progressBar = new ProgressBar(0, 100, 0);
-        thread=new Thread(getProgressBar());
+//        progressBar = new ProgressBar(0, 100, 0);
+        progressBar=new JSlider(0,0,0);
         buttonsPanel = new JPanel();
         setLayout(new BorderLayout());
 
@@ -81,12 +83,12 @@ public class PlayerTools extends JPanel implements AddIcon {
         progressBar.setOpaque(true);
         progressBar.setBackground(Color.DARK_GRAY);
         progressBar.setSnapToTicks(true);
-        progressBar.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-
-            }
-        });
+//        progressBar.addChangeListener(new ChangeListener() {
+//            @Override
+//            public void stateChanged(ChangeEvent e) {
+//
+//            }
+//        });
 
         add(progressBar, BorderLayout.CENTER);
         add(buttonsPanel, BorderLayout.NORTH);
@@ -403,39 +405,38 @@ public class PlayerTools extends JPanel implements AddIcon {
         }
     }
 
-    public static Thread getThread() {
-        return thread;
-    }
 
-    public static ProgressBar getProgressBar() {
+//    public static ProgressBar getProgressBar() {
+//        return progressBar;
+//    }
+
+
+    public static JSlider getProgressBar() {
         return progressBar;
     }
-}
 
-class ProgressBar extends JSlider implements Runnable{
-    private int moving=0;
-
-    public ProgressBar(int min, int max, int value) {
-        super(min, max, value);
+    public static void setMaximum(String path) throws InvalidDataException, IOException, UnsupportedTagException {
+        Mp3File song = new Mp3File(path);
+        long time= song.getLengthInSeconds();
+        progressBar.setMaximum((int) time*1000);
     }
 
-    String progress = Integer.toString(0);
-
-    @Override
-    public void run() {
-        while (moving<=100)
-        {
-            System.out.println("fwfwfwfwffffffff");
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            progress = Integer.toString(moving);
-            this.setValue(moving);
-            moving++;
-        }
+    public static void setPosition(float position){
+        progressBar.setValue((int)position);
     }
-
-
 }
+
+//class ProgressBar extends JSlider {
+//
+//    public ProgressBar(int min, int max, int value) {
+//        super(min, max, value);
+//    }
+//
+//
+//    public static void setMaximum(String path) throws InvalidDataException, IOException, UnsupportedTagException {
+//        Mp3File song = new Mp3File(path);
+//        long time= song.getLengthInSeconds();
+//        setMaximum((int) time*1000);
+//    }
+//
+//}

@@ -49,7 +49,7 @@ public class FormGUI extends JFrame {
     }
 
     public static void main(String[] args) throws Exception {
-        System.out.println(PlayerTools.getThread());
+//        System.out.println(PlayerTools.getThread());
 //        PlayerTools.getThread().start();
         formGUI = new FormGUI();
 

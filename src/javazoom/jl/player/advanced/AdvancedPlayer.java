@@ -137,6 +137,17 @@ public class AdvancedPlayer
 		}
 	}
 
+	public int getPosition()
+	{
+		int position = lastPosition;
+
+		AudioDevice out = audio;
+		if (out!=null)
+		{
+			position = out.getPosition();
+		}
+		return position;
+	}
 	/**
 	 * Decodes a single frame.
 	 *

@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Map;
 
 import javazoom.jl.decoder.JavaLayerException;
@@ -22,11 +23,14 @@ public class CentralPanel extends JPanel {
     private MusicController musicController;
     private static boolean Playing = false;
     private static RunMusic runMusic;
+    private static ArrayList<String> currentList;
 
 //    private InteractivePart interactivePart;
 
     public CentralPanel(SongInfo songInfo, PlayerBox playerBox) throws IOException, InvalidDataException, UnsupportedTagException, JavaLayerException {
         setLayout(new BorderLayout());
+
+        currentList=new ArrayList<>();
 
         musicController = new MusicController(songInfo, playerBox);
         TitleBar titleBar = new TitleBar(getMusicController(),getMusicController().getInteractivePart());
