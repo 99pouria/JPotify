@@ -19,7 +19,6 @@ import java.util.Random;
 public class RunMusic extends Thread {
     private BufferedInputStream bis;
     private String path;
-    private Player player1;
     private AdvancedPlayer player;
     private Save save = new Save();
     private Random random = new Random();

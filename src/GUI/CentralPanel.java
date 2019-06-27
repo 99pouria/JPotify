@@ -664,7 +664,7 @@ class InteractivePart extends JPanel implements AddIcon {
             updateUI();
         }
         if (choice == 2) {
-            for (int i = 0; i < save.getSortedMusicsCopy().size(); i++) {
+            for (int i = 0; i < save.getSortedMusics().size(); i++) {
 
                 for (Map.Entry<String, Boolean> entry :
                         save.getMusics().entrySet()) {

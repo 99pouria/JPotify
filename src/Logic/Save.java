@@ -15,6 +15,7 @@ public class Save {
     private static ArrayList<String> sortedMusicsCopy = new ArrayList<>();
     private static ArrayList<String> playListsName=new ArrayList<>();
     private static boolean isCopied = true;
+    private ArrayList<String> forDeleting=new ArrayList<>();
 //    private static String[][] allPlayLists=new String[20][30];
 //    private static ArrayList<ArrayList<String>> allPlayLists=new ArrayList<>();
 //    private static HashMap<String,ArrayList<String>> allPlayLists=new HashMap<>();
@@ -152,6 +153,9 @@ public class Save {
         getMusics().remove(path);
         getSortedMusics().remove(path);
         getSortedMusicsCopy().remove(path);
+        for (int i = 0; i <playListsName.size() ; i++) {
+
+        }
     }
 }
 
