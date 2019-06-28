@@ -9,8 +9,6 @@ public class Server implements Runnable {
 
     private Socket socket;
     private ServerSocket server;
-    private OutputStream outputStream;
-    private ObjectOutputStream objectOutputStream;
     private volatile HashMap<String, ArrayList<Music>> hashMap;
 
     public Server(int port) {
@@ -22,16 +20,30 @@ public class Server implements Runnable {
     }
 
     @Override
-    public void run() {
+    public  void run() {
         try {
             socket = server.accept();
 
-            outputStream = socket.getOutputStream();
-            objectOutputStream = new ObjectOutputStream(outputStream);
-            objectOutputStream.writeObject(hashMap);
-            outputStream.flush();
+            OutputStream outputStream = socket.getOutputStream();
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+            ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
 
-        } catch (IOException e) {
+            while (true) {
+                String request = (String) objectInputStream.readObject();
+
+
+                if (request.equals("playlist")) {
+
+                    objectOutputStream.writeObject(hashMap);
+                    outputStream.flush();
+
+                } else if (request.equals("song")) {
+
+                }
+            }
+
+
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
