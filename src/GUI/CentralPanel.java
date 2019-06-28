@@ -766,4 +766,69 @@ class InteractivePart extends JPanel implements AddIcon {
     public static int getPart() {
         return part;
     }
+
+    public void makeSharedMusicTile(String sharedSongName,String sharedArtistName){
+
+        JPanel panel = new JPanel();
+        JPanel coverImage = new JPanel();
+        JPanel coverImageJust = new JPanel();
+        JButton artistName = new JButton();
+        JButton albumName = new JButton();
+
+
+        panel.setLayout(new BorderLayout());
+
+        panel.setOpaque(true);
+        panel.setBackground(Color.DARK_GRAY);
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new Insets(10, 10, 10, 10);
+//        constraints.fill = GridBagConstraints.BOTH;
+        constraints.weightx = 2;
+        constraints.gridx = gridX;
+        constraints.gridy = gridY;
+        constraints.ipadx = 0;
+        constraints.ipady = 0;
+        gridX++;
+        if (gridX == 4) {
+            gridX = 0;
+            gridY++;
+        }
+        add(panel, constraints);
+
+        Font font = new Font("font", 1, 17);
+
+        coverImage.setPreferredSize(new Dimension(330, 250));
+        albumName.setPreferredSize(new Dimension(330, 35));
+        artistName.setPreferredSize(new Dimension(330,30));
+
+        coverImage.setOpaque(true);
+        coverImage.setBackground(Color.DARK_GRAY);
+
+        artistName.setOpaque(true);
+        artistName.setBackground(Color.DARK_GRAY);
+        artistName.setForeground(Color.white);
+        artistName.setContentAreaFilled(false);
+        artistName.setFocusPainted(false);
+        artistName.setBorderPainted(false);
+        artistName.setFont(font);
+        artistName.setHorizontalAlignment(SwingConstants.LEFT);
+        artistName.setAutoscrolls(true);
+
+        albumName.setOpaque(true);
+        albumName.setBackground(Color.DARK_GRAY);
+        albumName.setForeground(Color.white);
+        albumName.setContentAreaFilled(false);
+        albumName.setFocusPainted(false);
+        albumName.setBorderPainted(false);
+        albumName.setHorizontalAlignment(SwingConstants.LEFT);
+        albumName.setAutoscrolls(true);
+
+//        showCoverImage(coverImageJust, path);
+        artistName.setText(sharedSongName);
+        albumName.setText(sharedSongName);
+
+        panel.add(coverImage, BorderLayout.NORTH);
+        panel.add(artistName, BorderLayout.CENTER);
+        panel.add(albumName, BorderLayout.SOUTH);
+    }
 }
