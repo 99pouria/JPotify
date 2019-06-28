@@ -1,5 +1,6 @@
 package GUI;
 
+import Logic.Audio;
 import Logic.RunMusic;
 import Logic.Save;
 import com.mpatric.mp3agic.ID3v2;
@@ -8,6 +9,7 @@ import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
+
 import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
 import javax.swing.*;
@@ -61,8 +63,9 @@ public class PlayerBox extends JPanel {
 
 class VolumeBox extends JPanel {
 
-    JSlider volumeSlider;
-    JButton volumeButton;
+    private JSlider volumeSlider;
+    private JButton volumeButton;
+    private boolean isMute = false;
 
     public VolumeBox() throws IOException {
         super();
@@ -73,62 +76,119 @@ class VolumeBox extends JPanel {
         setOpaque(true);
         setBackground(Color.DARK_GRAY);
 
-        Image img = ImageIO.read(getClass().getResource("icons\\my-icons-collection-2\\png\\006-speaker-1.png"));
+        createIcon("icons\\my-icons-collection-2\\png\\006-speaker-1.png");
+
+        volumeSlider.setOpaque(true);
+        volumeSlider.setBackground(Color.DARK_GRAY);
+        volumeSlider.putClientProperty( "Slider.paintThumbArrowShape", Boolean.TRUE );
+
+        add(volumeButton);
+        add(volumeSlider);
+
+        addAction();
+    }
+
+    public void addAction() {
+        volumeSlider.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                Audio.setMasterOutputVolume((float) volumeSlider.getValue() / 100);
+                if (volumeSlider.getValue() == 0) {
+                    try {
+                        createIcon("icons\\my-icons-collection-2\\png\\007-speaker-2.png");
+                        isMute = true;
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                } else {
+                    try {
+                        createIcon("icons\\my-icons-collection-2\\png\\006-speaker-1.png");
+                        isMute = false;
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+        });
+        volumeButton.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (isMute || volumeSlider.getValue() == 0) {
+                    isMute = false;
+                    Audio.setMasterOutputMute(false);
+                    try {
+                        createIcon("icons\\my-icons-collection-2\\png\\006-speaker-1.png");
+                        if (volumeSlider.getValue() == 0) {
+                            Audio.setMasterOutputVolume((float) 0.2);
+                            volumeSlider.setValue(20);
+                        }
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                } else {
+                    isMute = true;
+                    Audio.setMasterOutputMute(true);
+                    try {
+                        createIcon("icons\\my-icons-collection-1\\png\\008-speaker-2.png");
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                if (isMute || volumeSlider.getValue() == 0) {
+                    try {
+                        createIcon("icons\\my-icons-collection-1\\png\\008-speaker-2.png");
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                } else {
+                    try {
+                        createIcon("icons\\my-icons-collection-1\\png\\007-speaker-1.png");
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if (isMute || volumeSlider.getValue() == 0) {
+                    try {
+                        createIcon("icons\\my-icons-collection-2\\png\\007-speaker-2.png");
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                } else {
+                    try {
+                        createIcon("icons\\my-icons-collection-2\\png\\006-speaker-1.png");
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    public void createIcon(String path) throws IOException {
+        Image img = ImageIO.read(getClass().getResource(path));
         img = img.getScaledInstance(14, 14, java.awt.Image.SCALE_SMOOTH);
         volumeButton.setIcon(new ImageIcon(img));
         volumeButton.setPreferredSize(new Dimension(40, 40));
         volumeButton.setBorderPainted(false);
         volumeButton.setContentAreaFilled(false);
         volumeButton.setFocusPainted(false);
-
-        volumeSlider.setOpaque(true);
-        volumeSlider.setBackground(Color.DARK_GRAY);
-        volumeSlider.putClientProperty( "Slider.paintThumbArrowShape", Boolean.TRUE );
-
-
-//        volumeSlider.setExtent(50);
-
-        add(volumeButton);
-        add(volumeSlider);
-
-
-
-       /* javax.sound.sampled.Mixer.Info[] mixers = AudioSystem.getMixerInfo();
-
-        Mixer.Info mixerInfo = mixers[4];
-        Mixer mixer = AudioSystem.getMixer(mixerInfo);
-        Line.Info[] lineinfos = mixer.getTargetLineInfo();
-
-        try {
-            Line line = mixer.getLine(lineinfos[0]);
-            line.open();
-            if(line.isControlSupported(FloatControl.Type.VOLUME)){
-                control = (FloatControl) line.getControl(FloatControl.Type.VOLUME);
-
-                control.setValue((float) 0.7);
-                int value = (int) (control.getValue()*100);
-
-                volumeSlider = new JSlider((int)control.getMinimum()*100,(int)control.getMaximum()*100, value);
-                volumeSlider.setMajorTickSpacing(10);
-                volumeSlider.setPaintLabels(true);
-                System.out.println("Volume:"+control.getValue());
-
-                j.add(slider);
-                j.pack();
-            }
-        } catch (LineUnavailableException e) {
-            e.printStackTrace();
-        } catch (LineUnavailableException e) {
-            e.printStackTrace();
-        }
-
-        slider.addChangeListener(new ChangeListener() {
-
-            @Override
-            public void stateChanged(ChangeEvent arg0) {
-                control.setValue(slider.getValue()/100f);
-
-            }
-        });*/
     }
 }

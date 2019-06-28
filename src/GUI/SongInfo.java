@@ -97,7 +97,7 @@ public class SongInfo extends JPanel implements AddIcon {
 
 
     public String findSongInfo(String filePath, int index) throws IOException {
-        if (filePath!=null) {
+        if (filePath != null) {
             File file = new File(filePath);
             byte[] songName = new byte[30];
             byte[] fileContent = Files.readAllBytes(file.toPath());
@@ -147,16 +147,14 @@ public class SongInfo extends JPanel implements AddIcon {
             }
 
 //            save.addMusic("F:\\Reza Bahram - Az Eshgh Bego.mp3",true);
-            if (path!=null) {
+            if (path != null) {
                 if (save.getMusics().get(path)) {
                     createIcon(button, "icons\\colored-buttons-2\\png\\003-favorite-heart-button.png", 18, 18);
                 } else {
                     createIcon(button, "icons\\my-icons-collection-2\\png\\004-heart.png", 18, 18);
                 }
-            }
-            else
+            } else
                 createIcon(button, "icons\\my-icons-collection-2\\png\\004-heart.png", 18, 18);
-
 
 
             likeEventHandler("icons\\colored-buttons-1\\png\\003-favorite-heart-button.png", "icons\\colored-buttons-2\\png\\003-favorite-heart-button.png", "icons\\my-icons-collection-3\\png\\004-heart.png", "icons\\my-icons-collection-2\\png\\004-heart.png");

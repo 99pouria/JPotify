@@ -230,7 +230,7 @@ public class PlayerTools extends JPanel implements AddIcon {
                             }
                         }
 
-                        createIcon(button, icon2, 14, 14);
+                        createIcon(button, icon1, 14, 14);
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
@@ -246,11 +246,11 @@ public class PlayerTools extends JPanel implements AddIcon {
                         }
                         try {
                             System.out.println("2");
-                            createIcon(button, icon1, 35, 35);
+                            createIcon(button, icon2, 35, 35);
                         } catch (IOException e1) {
                             e1.printStackTrace();
                         }
-                        createIcon(button, icon4, 35, 35);
+                        createIcon(button, icon3, 35, 35);
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
@@ -259,7 +259,7 @@ public class PlayerTools extends JPanel implements AddIcon {
 //                    runMusic.stopThread(thread);
                         CentralPanel.getRunMusic().mp3Pause();//////////////
                         CentralPanel.setPlaying(false);
-                        createIcon(button, icon2, 35, 35);
+                        createIcon(button, icon1, 35, 35);
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
@@ -324,14 +324,14 @@ public class PlayerTools extends JPanel implements AddIcon {
             public void mouseClicked(MouseEvent e) {
                 if (!isRepeat) {
                     try {
-                        createIcon(repeat, icon4, 14, 14);
+                        createIcon(repeat, icon3, 14, 14);
                         isRepeat = true;
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
                 } else {
                     try {
-                        createIcon(repeat, icon2, 14, 14);
+                        createIcon(repeat, icon1, 14, 14);
                         isRepeat = false;
                     } catch (IOException e1) {
                         e1.printStackTrace();
@@ -390,14 +390,14 @@ public class PlayerTools extends JPanel implements AddIcon {
             public void mouseClicked(MouseEvent e) {
                 if (!isShuffle) {
                     try {
-                        createIcon(shuffle, icon4, 14, 14);
+                        createIcon(shuffle, icon3, 14, 14);
                         isShuffle = true;
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
                 } else {
                     try {
-                        createIcon(shuffle, icon2, 14, 14);
+                        createIcon(shuffle, icon1, 14, 14);
                         isShuffle = false;
                     } catch (IOException e1) {
                         e1.printStackTrace();

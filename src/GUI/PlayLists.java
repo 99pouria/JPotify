@@ -320,7 +320,7 @@ public class PlayLists extends JPanel implements AddIcon {
                                 refreshPlayList();
                                 getMusicController().getInteractivePart().removeAll();
                                 getMusicController().getTitle().removeAll();
-                                Files.deleteIfExists(Paths.get( "C:\\Users\\Public\\Documents\\" + theWantedPlayList + ".ser"));
+                                Files.deleteIfExists(Paths.get("C:\\Users\\Public\\Documents\\" + theWantedPlayList + ".ser"));
                                 System.out.println(theWantedPlayList);
 //                                save.getPlayListsName().trimToSize();
                                 getMusicController().getInteractivePart().setBackground(Color.gray);
@@ -654,21 +654,47 @@ public class PlayLists extends JPanel implements AddIcon {
         exchangePannel = new JFrame("Exchange Pannel");
         exchangePannel.setVisible(true);
         exchangePannel.setSize(600, 600);
-        exchangePannel.setLayout(new FlowLayout());
+//        chooseFrame.setSize(600, 600);
+//        exchangePannel.setLayout(new FlowLayout());
+        JPanel panel = new JPanel();
+        BoxLayout layout = new BoxLayout(panel, BoxLayout.Y_AXIS);
+        panel.setLayout(layout);
+        JScrollPane scrollPane = new JScrollPane(panel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        panel.setBackground(Color.black);
+        Font font1 = new Font("Font2", Font.ITALIC, 20);
+        Font font2 = new Font("Font2", Font.BOLD, 20);
+        JLabel label = new JLabel("  Choose two songs to exchange:");
+        panel.add(Box.createVerticalStrut(200));
+        panel.add(label);
+        label.setFont(font2);
+        panel.add(Box.createVerticalStrut(20));
+//
         filepath1 = "";
         filepath2 = "";
 
+        label.setFont(font2);
+        panel.add(Box.createVerticalStrut(20));
+
         for (int counter = 0; counter < arrayList.size(); counter++) {
             try {
-                allMusicsInNewFrame[counter] = new JButton(getMusicController().getInteractivePart().findSongInfo(arrayList.get(counter), 0));
-                exchangePannel.add(allMusicsInNewFrame[counter]);
+                allMusicsInNewFrame[counter] = new JButton("    +   " + getMusicController().getInteractivePart().findSongInfo(arrayList.get(counter), 0));
+                allMusicsInNewFrame[counter].setFont(font1);
+                allMusicsInNewFrame[counter].setHorizontalAlignment(SwingConstants.LEFT);
+                allMusicsInNewFrame[counter].setBorderPainted(false);
+                allMusicsInNewFrame[counter].setFocusPainted(false);
+                allMusicsInNewFrame[counter].setFont(font1);
+                allMusicsInNewFrame[counter].setContentAreaFilled(false);
+                allMusicsInNewFrame[counter].setBackground(Color.GRAY);
+                allMusicsInNewFrame[counter].setForeground(Color.WHITE);
+                panel.add(allMusicsInNewFrame[counter]);
+                panel.add(Box.createVerticalStrut(20));
                 exchangeEventHandler(fileName, allMusicsInNewFrame[counter], arrayList, 1);
                 exchangeEventHandler(fileName, allMusicsInNewFrame[counter], arrayList, 2);
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
         }
-
+        exchangePannel.add(scrollPane);
 
     }
 
@@ -719,6 +745,76 @@ public class PlayLists extends JPanel implements AddIcon {
                 }
             }
         });
+        /*button.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                for (i = 0; i < arrayList.size(); i++) {
+                    if (e.getSource() == allMusicsInNewFrame[i]) {
+                        if (index == 1) {
+                            if (filepath1.equals("")) {
+                                filepath1 = arrayList.get(i);
+                                filepath2 = "";
+                            }
+                        } else if (index == 2) {
+                            if (filepath2.equals("") && !filepath2.equals(filepath1)) {
+                                filepath2 = arrayList.get(i);
+                                int index1 = 0, index2 = 0;
+                                for (int j = 0; j < arrayList.size(); j++) {
+                                    if (arrayList.get(j).equals(filepath1)) {
+                                        index1 = j;
+                                    }
+                                    if (arrayList.get(j).equals(filepath2)) {
+                                        index2 = j;
+                                    }
+                                }
+                                Collections.swap(arrayList, index1, index2);
+                                try {
+                                    createAndSaveFile(fileName);
+                                } catch (IOException e1) {
+                                    e1.printStackTrace();
+                                }
+                                getMusicController().getInteractivePart().clearPanel();
+                                for (int j = 0; j < getSongs().size(); j++) {
+                                    try {
+                                        getMusicController().getInteractivePart().makeMusicPad(getSongs().get(j));
+                                        exchangePannel.dispose();
+                                    } catch (InvalidDataException | UnsupportedTagException | IOException e1) {
+                                        e1.printStackTrace();
+                                    }
+                                }
+                                filepath1 = "";
+                                filepath2 = "";
+                                revalidate();
+                                repaint();
+                                SwingUtilities.updateComponentTreeUI(FormGUI.getFormGUI());
+
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+//                button.setForeground(Color.getHSBColor(104, 69, 55));
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+//                button.setForeground(Color.GREEN);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+//                button.setForeground(Color.GREEN);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+//                button.setForeground(Color.WHITE);
+            }
+
+        });*/
     }
 
     @Override
