@@ -1,16 +1,12 @@
 package Logic;
 
 import GUI.CentralPanel;
-import GUI.PlayerBox;
 import GUI.PlayerTools;
 import GUI.SongInfo;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.Player;
-import javazoom.jl.player.PlayerApplet;
 import javazoom.jl.player.advanced.AdvancedPlayer;
-
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -51,33 +47,44 @@ public class RunMusic extends Thread {
                 if (doesSeek)
                 {
                     System.out.println((int)PlayerTools.getNewVal());
-                    seekTo((int) PlayerTools.getNewVal());
+                    seekTo((int) PlayerTools.getNewVal(),path);
                     doesSeek=false;
                 }
                 PlayerTools.setPosition(player.getPosition()+(float) PlayerTools.getThePosition()*100);
             }
 
             while (PlayerTools.isIsRepeat()) {
+                PlayerTools.setThePosition(0);
                 player.close();
                 bis = new BufferedInputStream(new FileInputStream(path));
                 player = new AdvancedPlayer(bis);
+                PlayerTools.setMaximum(path);
 
                 while (player.play(1)) {
-                    PlayerTools.setPosition(player.getPosition());
 
                     if (isPaused) {
                         synchronized (player) {
                             player.wait();
                         }
                     }
+                    if (doesSeek)
+                    {
+                        System.out.println((int)PlayerTools.getNewVal());
+                        seekTo((int) PlayerTools.getNewVal(),path);
+                        doesSeek=false;
+                    }
+                    PlayerTools.setPosition(player.getPosition()+(float) PlayerTools.getThePosition()*100);
                 }
             }
 
             while (true) {
                 randomNumber = random.nextInt(save.getSortedMusics().size());
+                PlayerTools.setThePosition(0);
                 player.close();
                 bis = new BufferedInputStream(new FileInputStream(save.getSortedMusicsCopy().get(randomNumber)));
                 player = new AdvancedPlayer(bis);
+                PlayerTools.setMaximum(save.getSortedMusicsCopy().get(randomNumber));
+
                 CentralPanel.setPath(save.getSortedMusicsCopy().get(randomNumber));
                 try {
                     if (songInfo != null) {
@@ -88,7 +95,6 @@ public class RunMusic extends Thread {
                 }
                 save.deleteAndReAddMusic(CentralPanel.getPath());
                 save.saveToFile();
-                PlayerTools.setMaximum(path);
                 while (player.play(1)) {
                     PlayerTools.setPosition(player.getPosition());
                     if (isPaused) {
@@ -96,12 +102,22 @@ public class RunMusic extends Thread {
                             player.wait();
                         }
                     }
+                    if (doesSeek)
+                    {
+                        System.out.println((int)PlayerTools.getNewVal());
+                        seekTo((int) PlayerTools.getNewVal(),save.getSortedMusicsCopy().get(randomNumber));
+                        doesSeek=false;
+                    }
+                    PlayerTools.setPosition(player.getPosition()+(float) PlayerTools.getThePosition()*100);
                 }
 
                 while (PlayerTools.isIsRepeat()) {
+                    PlayerTools.setThePosition(0);
                     player.close();
                     bis = new BufferedInputStream(new FileInputStream(path));
                     player = new AdvancedPlayer(bis);
+                    PlayerTools.setMaximum(save.getSortedMusicsCopy().get(randomNumber));
+
                     while (player.play(1)) {
                         PlayerTools.setPosition(player.getPosition());
 
@@ -110,6 +126,13 @@ public class RunMusic extends Thread {
                                 player.wait();
                             }
                         }
+                        if (doesSeek)
+                        {
+                            System.out.println((int)PlayerTools.getNewVal());
+                            seekTo((int) PlayerTools.getNewVal(),save.getSortedMusicsCopy().get(randomNumber));
+                            doesSeek=false;
+                        }
+                        PlayerTools.setPosition(player.getPosition()+(float) PlayerTools.getThePosition()*100);
                     }
                 }
             }
@@ -131,7 +154,7 @@ public class RunMusic extends Thread {
     }
 
 
-    public void seekTo(int frame) throws JavaLayerException, FileNotFoundException {
+    public void seekTo(int frame,String path) throws JavaLayerException, FileNotFoundException {
         synchronized (player) {
             player.close();
             bis = new BufferedInputStream(new FileInputStream(path));

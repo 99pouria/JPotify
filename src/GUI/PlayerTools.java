@@ -19,7 +19,6 @@ import java.io.IOException;
 public class PlayerTools extends JPanel implements AddIcon {
 
     private RunMusic runMusic;
-    private static JSlider progressBar;
     private JPanel buttonsPanel;
     private JButton play;
     private JButton back;
@@ -28,11 +27,12 @@ public class PlayerTools extends JPanel implements AddIcon {
     private JButton repeat;
     private SongInfo songInfo;
     private boolean isShuffle = false;
+
+    private static JSlider progressBar;
     private static boolean isRepeat = false;
-    private static double newVal=0;
-    private static int frame;
+    private static double newVal = 0;
     private static double totalFrames;
-    private static double thePosition=0;
+    private static double thePosition = 0;
 
     public JButton getPlay() {
         return play;
@@ -41,8 +41,7 @@ public class PlayerTools extends JPanel implements AddIcon {
     public PlayerTools(SongInfo songInfo) throws IOException {
         super();
         this.songInfo = songInfo;
-//        progressBar = new ProgressBar(0, 100, 0);
-        progressBar=new JSlider(0,0,0);
+        progressBar = new JSlider(0, 0, 0);
         buttonsPanel = new JPanel();
         setLayout(new BorderLayout());
 
@@ -86,15 +85,15 @@ public class PlayerTools extends JPanel implements AddIcon {
         progressBar.setOpaque(true);
         progressBar.setBackground(Color.DARK_GRAY);
         progressBar.setSnapToTicks(true);
-        progressBar.putClientProperty( "Slider.paintThumbArrowShape", Boolean.FALSE );
+        progressBar.putClientProperty("Slider.paintThumbArrowShape", Boolean.FALSE);
         progressBar.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 Point p = e.getPoint();
                 double percent = p.x / (double) progressBar.getWidth();
                 double range = progressBar.getMaximum();
-                thePosition = percent * range/100.0f;
-                newVal =  percent *  totalFrames;
+                thePosition = percent * range / 100.0f;
+                newVal = percent * totalFrames;
 //                progressBar.setValue((int)newVal);
 
                 System.out.println(newVal);
@@ -123,13 +122,6 @@ public class PlayerTools extends JPanel implements AddIcon {
 
             }
         });
-
-//        progressBar.addChangeListener(new ChangeListener() {
-//            @Override
-//            public void stateChanged(ChangeEvent e) {
-//
-//            }
-//        });
 
         add(progressBar, BorderLayout.CENTER);
         add(buttonsPanel, BorderLayout.NORTH);
@@ -162,22 +154,18 @@ public class PlayerTools extends JPanel implements AddIcon {
 
                 if (icon2.equals(icon4)) {
                     try {
-                        System.out.println("1");
                         createIcon(button, icon1, 14, 14);
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
                 } else if (!CentralPanel.isPlaying()) {
                     try {
-                        System.out.println("2");
                         createIcon(button, icon1, 35, 35);
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
                 } else {
                     try {
-                        System.out.println("3");
-
                         createIcon(button, icon3, 35, 35);
                     } catch (IOException e1) {
                         e1.printStackTrace();
@@ -207,12 +195,9 @@ public class PlayerTools extends JPanel implements AddIcon {
                                 }
                                 if (CentralPanel.getRunMusic() != null) {
                                     CentralPanel.getRunMusic().mp3Pause();
-//                     //////////////////////               CentralPanel.getThread().stop();
                                 }
                                 CentralPanel.setPath(save.getSortedMusicsCopy().get(i + j));
-                                runMusic = new RunMusic(CentralPanel.getPath(),songInfo);
-//                              ////////  Thread thread = new Thread(runMusic);
-                                ///////////CentralPanel.setThread(thread);
+                                runMusic = new RunMusic(CentralPanel.getPath(), songInfo);
                                 CentralPanel.setRunMusic(runMusic);
                                 try {
                                     if (getSongInfo() != null) {
@@ -237,8 +222,7 @@ public class PlayerTools extends JPanel implements AddIcon {
                 } else if (!CentralPanel.isPlaying()) {
                     try {
                         if (CentralPanel.getRunMusic().isAlive()) {
-//                    runMusic.resume(thread);
-                            CentralPanel.getRunMusic().mp3Resume();////////////////////
+                            CentralPanel.getRunMusic().mp3Resume();
                             CentralPanel.setPlaying(true);
                         } else {
                             CentralPanel.getRunMusic().start();
@@ -256,8 +240,7 @@ public class PlayerTools extends JPanel implements AddIcon {
                     }
                 } else {
                     try {
-//                    runMusic.stopThread(thread);
-                        CentralPanel.getRunMusic().mp3Pause();//////////////
+                        CentralPanel.getRunMusic().mp3Pause();
                         CentralPanel.setPlaying(false);
                         createIcon(button, icon1, 35, 35);
                     } catch (Exception e1) {
@@ -436,37 +419,19 @@ public class PlayerTools extends JPanel implements AddIcon {
 
     }
 
-    public static void timer(){
-        int moving=0;
-        String progress = Integer.toString(0);
-        while (moving<=100)
-        {
-            progress = Integer.toString(moving);
-            progressBar.setValue(moving);
-            moving++;
-        }
-    }
-
-
-//    public static ProgressBar getProgressBar() {
-//        return progressBar;
-//    }
-
-
     public static JSlider getProgressBar() {
         return progressBar;
     }
 
     public static void setMaximum(String path) throws InvalidDataException, IOException, UnsupportedTagException {
         Mp3File song = new Mp3File(path);
-        long time= song.getLengthInSeconds();
-        progressBar.setMaximum((int) time*1000);
-        totalFrames=song.getFrameCount();
+        long time = song.getLengthInSeconds();
+        progressBar.setMaximum((int) time * 1000);
+        totalFrames = song.getFrameCount();
     }
 
-    public static void setPosition(float position){
-        System.out.println(position+"fwfwfwfwf");
-        progressBar.setValue((int)position);
+    public static void setPosition(float position) {
+        progressBar.setValue((int) position);
     }
 
     public static double getNewVal() {
@@ -481,18 +446,3 @@ public class PlayerTools extends JPanel implements AddIcon {
         PlayerTools.thePosition = thePosition;
     }
 }
-
-//class ProgressBar extends JSlider {
-//
-//    public ProgressBar(int min, int max, int value) {
-//        super(min, max, value);
-//    }
-//
-//
-//    public static void setMaximum(String path) throws InvalidDataException, IOException, UnsupportedTagException {
-//        Mp3File song = new Mp3File(path);
-//        long time= song.getLengthInSeconds();
-//        setMaximum((int) time*1000);
-//    }
-//
-//}

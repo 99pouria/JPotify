@@ -1,43 +1,30 @@
 package GUI;
 
 import Logic.Audio;
-import Logic.RunMusic;
-import Logic.Save;
-import com.mpatric.mp3agic.ID3v2;
-import com.mpatric.mp3agic.InvalidDataException;
-import com.mpatric.mp3agic.Mp3File;
-import com.mpatric.mp3agic.UnsupportedTagException;
-import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.Player;
-
 import javax.imageio.ImageIO;
-import javax.sound.sampled.*;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.*;
-import java.nio.file.Files;
 
 public class PlayerBox extends JPanel {
     private SongInfo songInfo;
     private PlayerTools playerTools;
+
     private static String filePath;
 
     public PlayerTools getPlayerTools() {
         return playerTools;
     }
 
-    public PlayerBox() throws IOException, InvalidDataException, UnsupportedTagException, JavaLayerException {
+    public PlayerBox() throws IOException {
         setPreferredSize(new Dimension(1200, 70));
         setOpaque(true);
         setBackground(Color.GRAY);
         setLayout(new BorderLayout());
 
         songInfo = new SongInfo(null);
-//        songInfo=new SongInfo();
         playerTools = new PlayerTools(getSongInfo());
         VolumeBox volumeBox = new VolumeBox();
 
@@ -70,6 +57,7 @@ class VolumeBox extends JPanel {
     public VolumeBox() throws IOException {
         super();
         volumeSlider = new JSlider(0, 100, 25);
+        Audio.setMasterOutputVolume((float) 0.25);
         volumeButton = new JButton();
 
         Icon icon = new ImageIcon("icons\\circle.png");
@@ -93,24 +81,21 @@ class VolumeBox extends JPanel {
     }
 
     public void addAction() {
-        volumeSlider.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                Audio.setMasterOutputVolume((float) volumeSlider.getValue() / 100);
-                if (volumeSlider.getValue() == 0) {
-                    try {
-                        createIcon("icons\\my-icons-collection-2\\png\\007-speaker-2.png");
-                        isMute = true;
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                } else {
-                    try {
-                        createIcon("icons\\my-icons-collection-2\\png\\006-speaker-1.png");
-                        isMute = false;
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
+        volumeSlider.addChangeListener(e -> {
+            Audio.setMasterOutputVolume((float) volumeSlider.getValue() / 100);
+            if (volumeSlider.getValue() == 0) {
+                try {
+                    createIcon("icons\\my-icons-collection-2\\png\\007-speaker-2.png");
+                    isMute = true;
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            } else {
+                try {
+                    createIcon("icons\\my-icons-collection-2\\png\\006-speaker-1.png");
+                    isMute = false;
+                } catch (IOException e1) {
+                    e1.printStackTrace();
                 }
             }
         });

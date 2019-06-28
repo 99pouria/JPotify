@@ -51,21 +51,4 @@ public class Server implements Runnable {
     public HashMap<String, ArrayList<Music>> getHashMap() {
         return hashMap;
     }
-
-    public static void main(String[] args) throws IOException {
-        Server server = new Server( 1234);
-        Client client = new Client("127.0.0.1", 1234);
-
-        HashMap<String, ArrayList<Music>> test = new HashMap<>();
-        ArrayList<Music> arrayList = new ArrayList<>();
-        test.put("pooria", arrayList);
-
-        server .setHashMap(test);
-
-        Thread thread1 = new Thread(server);
-        Thread thread2 = new Thread(client);
-
-        thread1.start();
-        thread2.start();
-    }
 }

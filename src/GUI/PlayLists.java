@@ -22,15 +22,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class PlayLists extends JPanel implements AddIcon {
+    private static ArrayList<String> songs ;
+    private static ArrayList<String> sortedSongs ;
+    private static String theCurrentFilePath;
+
     private BoxLayout layout;
     private JButton addPlaylistButton;
-    private Save save = new Save();
-    private static ArrayList<String> songs = new ArrayList<>();
-    private static ArrayList<String> sortedSongs = new ArrayList<>();
+    private Save save ;
     private MusicController musicController;
     private JLabel label;
-    private Font font1 = new Font("Font1", Font.ITALIC, 50);
-    private Font font2 = new Font("Font2", Font.BOLD, 30);
     private JButton addToPlaylist;
     private JFrame chooseFrame;
     private JFrame exchangePannel;
@@ -38,7 +38,6 @@ public class PlayLists extends JPanel implements AddIcon {
     private String fileName;
     private String clickedButtonName;
     private JButton deletePlayList;
-    private static String theCurrentFilePath;
     private JLabel sorryLable;
     private JPanel playListsButton;
     private JButton changeTiles;
@@ -47,9 +46,16 @@ public class PlayLists extends JPanel implements AddIcon {
     private String theWantedPlayList;
     private int i;
 
+    private Font font1 = new Font("Font1", Font.ITALIC, 50);
+    private Font font2 = new Font("Font2", Font.BOLD, 30);
+
     public PlayLists(MusicController musicController) throws IOException, ClassNotFoundException {
         super();
         this.musicController = musicController;
+
+        songs = new ArrayList<>();
+        sortedSongs = new ArrayList<>();
+        save = new Save();
 
         if (Files.exists(Paths.get("C:\\Users\\Public\\Documents\\PlaylistsName.ser"))) {
             save.readPlayListsName();
@@ -90,7 +96,9 @@ public class PlayLists extends JPanel implements AddIcon {
         deletePlayList.setContentAreaFilled(false);
         createIcon(deletePlayList, "icons\\playlist-icons-2\\png\\001-garbage.png", 35, 35);
 
-        addToPlaylist = new JButton();
+        if (addToPlaylist==null) {
+            addToPlaylist = new JButton();
+        }
         addToPlaylist.setFont(font2);
         addToPlaylist.setPreferredSize(new Dimension(60, 50));
         addToPlaylist.setOpaque(true);
@@ -122,18 +130,13 @@ public class PlayLists extends JPanel implements AddIcon {
             add(buttons[i]);
             if (i == save.getPlayListsName().size() - 1)
                 add(Box.createVerticalStrut(20));
-//            addPlayList();
         }
 
         add(addPlaylistButton);
-//        add(Box.createVerticalStrut(20));
         setOpaque(true);
         setBackground(Color.BLACK);
     }
 
-//    public InteractivePart getInteractivePart() {
-//        return interactivePart;
-//    }
 
 
     public static ArrayList<String> getSongs() {
@@ -158,6 +161,8 @@ public class PlayLists extends JPanel implements AddIcon {
         buttonEventHandler(button);
     }
 
+
+
     public void buttonEventHandler(JButton clickedButton) {
         clickedButton.addMouseListener(new MouseListener() {
             @Override
@@ -175,10 +180,7 @@ public class PlayLists extends JPanel implements AddIcon {
                     remove(addPlaylistButton);
                     add(button);
                     add(Box.createVerticalStrut(20));
-//                    revalidate();
-//                    repaint();
                     add(addPlaylistButton);
-//                    add(Box.createVerticalStrut(25));
                     getSongs().clear();
                     try {
                         createAndSaveFile(button.getText().trim());
@@ -189,9 +191,6 @@ public class PlayLists extends JPanel implements AddIcon {
                     revalidate();
                     repaint();
 
-                    for (int i = 0; i < save.getPlayListsName().size(); i++) {
-                        System.out.println(save.getPlayListsName().get(i));
-                    }
                 } else {
                     InteractivePart.setPart(1);
                     getMusicController().clearMusidControler();
@@ -212,15 +211,7 @@ public class PlayLists extends JPanel implements AddIcon {
                         getSongs().clear();
                         readFile(clickedButton.getText().trim());
 
-                        //////////////////////////////////////////////////////
-//                        for (int j = 0; j < save.getSortedMusics().size(); j++) {
-//                            if (getSongs().contains(save.getSortedMusics().get(i)))
-//                            {
-//                                getSortedSongs().add(save.getSortedMusics().get(i));
-//                            }
-//                        }
                         save.setSortedMusicsCopy(getSongs());
-                        //////////////////////////////////////////////////////
 
 
                     } catch (IOException | ClassNotFoundException e1) {
@@ -240,24 +231,9 @@ public class PlayLists extends JPanel implements AddIcon {
                                 e1.printStackTrace();
                             }
                         }
-//                        for (int j = 0; j < save.getSortedMusics().size(); j++) {
-//                            if (getSongs().contains(save.getSortedMusics().get(j))) {
-//                                try {
-//                                    getMusicController().getInteractivePart().makeMusicPad(save.getSortedMusics().get(j));
-//                                } catch (InvalidDataException e1) {
-//                                    e1.printStackTrace();
-//                                } catch (IOException e1) {
-//                                    e1.printStackTrace();
-//                                } catch (UnsupportedTagException e1) {
-//                                    e1.printStackTrace();
-//                                }
-//                            }
-//                        }
                     }
 
 
-//                    getMusicController().getTitle().add(addToPlaylist, BorderLayout.EAST);
-//                    getMusicController().getTitle().add(deletePlayList, BorderLayout.WEST);
                     getMusicController().getTitle().add(playListsButton, BorderLayout.EAST);
                     getMusicController().getTitle().add(label, BorderLayout.CENTER);
 
@@ -295,23 +271,6 @@ public class PlayLists extends JPanel implements AddIcon {
                         }
                     });
 
-                    /*if (theWantedPlayList.equals("Shared"))
-                    {
-                        deletePlayList.setText("");
-                        revalidate();
-                        repaint();
-                        deletePlayList.setBackground(Color.gray);
-                        deletePlayList.setOpaque(true);
-                        deletePlayList.addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                System.out.println("Sorry you can not delete shared playlist !");
-                            }
-                        });
-                        SwingUtilities.updateComponentTreeUI(FormGUI.getFormGUI());
-                    }*/
-
-//                        deletePlayList.setText("-");
                     deletePlayList.addMouseListener(new MouseListener() {
                         @Override
                         public void mouseClicked(MouseEvent e) {
@@ -321,13 +280,12 @@ public class PlayLists extends JPanel implements AddIcon {
                                 getMusicController().getInteractivePart().removeAll();
                                 getMusicController().getTitle().removeAll();
                                 Files.deleteIfExists(Paths.get("C:\\Users\\Public\\Documents\\" + theWantedPlayList + ".ser"));
-                                System.out.println(theWantedPlayList);
-//                                save.getPlayListsName().trimToSize();
                                 getMusicController().getInteractivePart().setBackground(Color.gray);
                                 getMusicController().getTitle().setBackground(Color.gray);
                                 revalidate();
                                 repaint();
-                                SwingUtilities.updateComponentTreeUI(FormGUI.getFormGUI());
+                                getMusicController().getScrollableInteractive().setBorder(null);
+                                SwingUtilities.updateComponentTreeUI(getMusicController().getInteractivePart());
                                 try {
                                     createIcon(deletePlayList, "icons\\playlist-icons-2\\png\\001-garbage.png", 35, 35);
                                 } catch (IOException e1) {
@@ -367,12 +325,13 @@ public class PlayLists extends JPanel implements AddIcon {
                             }
                         }
                     });
-//                    }
 
                     addToPlaylist.addMouseListener(new MouseListener() {
                         @Override
                         public void mouseClicked(MouseEvent e) {
                             chooseFrame = new JFrame("All Songs");
+                            chooseFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                            System.out.println("222222222222222222222222");
                             chooseFrame.setVisible(true);
                             JPanel panel = new JPanel();
                             BoxLayout layout = new BoxLayout(panel, BoxLayout.Y_AXIS);
@@ -387,7 +346,6 @@ public class PlayLists extends JPanel implements AddIcon {
                             panel.add(label);
                             label.setFont(font2);
                             panel.add(Box.createVerticalStrut(20));
-//                        chooseFrame.pack();
 
                             for (int counter = 0; counter < save.getSortedMusics().size(); counter++) {
                                 try {
@@ -460,26 +418,6 @@ public class PlayLists extends JPanel implements AddIcon {
                 clickedButton.setForeground(Color.WHITE);
             }
         });
-    }
-
-    public void addPlayList() {
-        JPanel playListButton = new JPanel();
-        JLabel playListName = new JLabel();
-        JButton addMusic = new JButton();
-        JButton deletePlayList = new JButton();
-
-        playListButton.setLayout(new FlowLayout());
-        add(Box.createVerticalStrut(25));
-        add(playListButton);
-
-        playListName.setText("PlayList");
-        addMusic.setText("+");
-        deletePlayList.setText("-");
-
-        playListName.setPreferredSize(new Dimension(150, 35));
-        playListButton.add(playListName);
-        playListButton.add(addMusic);
-        playListButton.add(deletePlayList);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -588,24 +526,6 @@ public class PlayLists extends JPanel implements AddIcon {
         title.setForeground(Color.white);
         title.setFont(font);
 
-//        deletePlayList = new JButton();
-//        deletePlayList.setFont(font2);
-//        deletePlayList.setPreferredSize(new Dimension(100, 100));
-//        deletePlayList.setOpaque(true);
-//        deletePlayList.setBackground(Color.gray);
-//        deletePlayList.setFocusPainted(false);
-//        deletePlayList.setBorderPainted(false);
-//        createIcon(deletePlayList, "icons\\playlist-icons-2\\png\\001-garbage.png", 35, 35);
-//
-//        addToPlaylist = new JButton("+");
-//        addToPlaylist.setFont(font2);
-//        addToPlaylist.setPreferredSize(new Dimension(100, 100));
-//        addToPlaylist.setOpaque(true);
-//        addToPlaylist.setBackground(Color.gray);
-//        addToPlaylist.setFocusPainted(false);
-//        addToPlaylist.setBorderPainted(false);
-//        createIcon(addToPlaylist, "icons\\playlist-icons-2\\png\\003-plus.png", 35, 35);
-
         allMusicsInNewFrame = new JButton[100];
 
         JButton[] buttons = new JButton[50];
@@ -623,7 +543,6 @@ public class PlayLists extends JPanel implements AddIcon {
             add(buttons[i]);
             if (i == save.getPlayListsName().size() - 1)
                 add(Box.createVerticalStrut(20));
-//            addPlayList();
         }
 
         add(addPlaylistButton);
@@ -654,8 +573,6 @@ public class PlayLists extends JPanel implements AddIcon {
         exchangePannel = new JFrame("Exchange Pannel");
         exchangePannel.setVisible(true);
         exchangePannel.setSize(600, 600);
-//        chooseFrame.setSize(600, 600);
-//        exchangePannel.setLayout(new FlowLayout());
         JPanel panel = new JPanel();
         BoxLayout layout = new BoxLayout(panel, BoxLayout.Y_AXIS);
         panel.setLayout(layout);
@@ -738,83 +655,13 @@ public class PlayLists extends JPanel implements AddIcon {
                             filepath2 = "";
                             revalidate();
                             repaint();
-                            SwingUtilities.updateComponentTreeUI(FormGUI.getFormGUI());
+                            SwingUtilities.updateComponentTreeUI(getMusicController().getInteractivePart());
 
                         }
                     }
                 }
             }
         });
-        /*button.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                for (i = 0; i < arrayList.size(); i++) {
-                    if (e.getSource() == allMusicsInNewFrame[i]) {
-                        if (index == 1) {
-                            if (filepath1.equals("")) {
-                                filepath1 = arrayList.get(i);
-                                filepath2 = "";
-                            }
-                        } else if (index == 2) {
-                            if (filepath2.equals("") && !filepath2.equals(filepath1)) {
-                                filepath2 = arrayList.get(i);
-                                int index1 = 0, index2 = 0;
-                                for (int j = 0; j < arrayList.size(); j++) {
-                                    if (arrayList.get(j).equals(filepath1)) {
-                                        index1 = j;
-                                    }
-                                    if (arrayList.get(j).equals(filepath2)) {
-                                        index2 = j;
-                                    }
-                                }
-                                Collections.swap(arrayList, index1, index2);
-                                try {
-                                    createAndSaveFile(fileName);
-                                } catch (IOException e1) {
-                                    e1.printStackTrace();
-                                }
-                                getMusicController().getInteractivePart().clearPanel();
-                                for (int j = 0; j < getSongs().size(); j++) {
-                                    try {
-                                        getMusicController().getInteractivePart().makeMusicPad(getSongs().get(j));
-                                        exchangePannel.dispose();
-                                    } catch (InvalidDataException | UnsupportedTagException | IOException e1) {
-                                        e1.printStackTrace();
-                                    }
-                                }
-                                filepath1 = "";
-                                filepath2 = "";
-                                revalidate();
-                                repaint();
-                                SwingUtilities.updateComponentTreeUI(FormGUI.getFormGUI());
-
-                            }
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-//                button.setForeground(Color.getHSBColor(104, 69, 55));
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-//                button.setForeground(Color.GREEN);
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-//                button.setForeground(Color.GREEN);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-//                button.setForeground(Color.WHITE);
-            }
-
-        });*/
     }
 
     @Override

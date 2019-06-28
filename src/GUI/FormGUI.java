@@ -12,11 +12,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FormGUI extends JFrame {
-    //    private final int WIDTH = 1500, HEIGHT = 1500;
-    private static FormGUI formGUI;
     private PlayerBox playerBox;
     private CentralPanel centralPanel;
     private FriendActivity friendActivity;
+
+    private static FormGUI formGUI;
 
     public FormGUI() throws Exception {
         super();
@@ -29,7 +29,6 @@ public class FormGUI extends JFrame {
 
         centralPanel = new CentralPanel(getPlayerBox().getSongInfo(), playerBox);
         add(centralPanel, BorderLayout.CENTER);
-//        centralPanel.setPreferredSize(new Dimension(200, 350));
 
         friendActivity = new FriendActivity();
         add(friendActivity, BorderLayout.EAST);
@@ -64,7 +63,7 @@ public class FormGUI extends JFrame {
 
         HashMap<String, ArrayList<Music>> test = new HashMap<>();
         ArrayList<Music> arrayList = new ArrayList<>();
-        Music music = new Music("C:\\Users\\Pooria\\Downloads\\Music\\Hayedeh - Bezan Tar.mp3");
+        Music music = new Music("D:\\Mehdi Ahmadvand - Dard.wav");
         arrayList.add(music);
         test.put("pooria", arrayList);
 
@@ -80,15 +79,13 @@ public class FormGUI extends JFrame {
 
         formGUI.getFriendActivity().refreshFriendList(client.getHashMap());
 
-        Music music1 = new Music("C:\\Users\\Pooria\\Downloads\\Music\\Hayedeh - Ashiooneh.mp3");
+        Music music1 = new Music("D:\\Mehdi Ahmadvand - Dard.wav");
         ArrayList arrayList1 = new ArrayList();
         arrayList1.add(music1);
         test.put("saeed", arrayList1);
 
-
         Thread.sleep(5000);
 
-        System.out.println("heloooooo");
         formGUI.getFriendActivity().refreshFriendList(client.getHashMap());
     }
 }

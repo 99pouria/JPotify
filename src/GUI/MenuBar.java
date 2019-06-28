@@ -1,6 +1,5 @@
 package GUI;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -13,7 +12,7 @@ public class MenuBar extends JMenuBar {
     private JMenuItem undo, redo;
     private JMenuItem play, next, previous, seekForward, seekBackward;
 
-    public MenuBar() throws IOException {
+    public MenuBar() {
         super();
         Font font = new Font("MyFont", 1, 24);
         Font JMenuFonts = new Font("MyFont", 7, 18);

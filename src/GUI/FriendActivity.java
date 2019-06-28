@@ -3,7 +3,6 @@ package GUI;
 import Logic.Music;
 
 import javax.swing.*;
-import javax.swing.text.html.parser.Entity;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +11,7 @@ import java.util.Map;
 public class FriendActivity extends JPanel {
     private JPanel friendsList;
     private JButton[] buttons;
+
     public FriendActivity() {
         super();
         setPreferredSize(new Dimension(250, 600));

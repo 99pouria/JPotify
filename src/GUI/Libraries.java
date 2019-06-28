@@ -13,18 +13,20 @@ import java.util.Map;
 
 public class Libraries extends JPanel {
     private JButton[] buttons;
-    private Save save = new Save();
-    //    private InteractivePart interactivePart;
+    private Save save ;
     private MusicController musicController;
     private JLabel label;
+
     private Font font1 = new Font("Font1", 2, 70);
 
 
     public Libraries(MusicController musicController) {
         super();
         this.musicController = musicController;
-//        this.interactivePart=interactivePart;
+
         setLayout(new GridLayout(5, 1));
+
+        save = new Save();
 
         Font font = new Font("MyFont", 1, 19);
         Font font1 = new Font("Font1", Font.ITALIC, 17);
@@ -60,11 +62,6 @@ public class Libraries extends JPanel {
         setBackground(Color.BLACK);
     }
 
-//    public InteractivePart getInteractivePart() {
-//        return interactivePart;
-//    }
-
-
     public MusicController getMusicController() {
         return musicController;
     }
@@ -75,12 +72,7 @@ public class Libraries extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 if (e.getSource() == buttons[0]) {
                     InteractivePart.setPart(0);
-//                    for (Map.Entry<String,Boolean> entry:
-//                         save.readFile().entrySet()) {
-//                        System.out.println(entry.getKey());
-//                    }
                     try {
-//                        getMusicController().getInteractivePart().clearPanel();
                         getMusicController().clearMusidControler();
                         save.setSortedMusicsCopy(save.getSortedMusics());
 
@@ -97,7 +89,6 @@ public class Libraries extends JPanel {
                 if (e.getSource() == buttons[1]) {
                     try {
                         InteractivePart.setPart(0);
-//                        getMusicController().getInteractivePart().clearPanel();
                         getMusicController().clearMusidControler();
 
                         label = new JLabel("............ Fovourits ............");

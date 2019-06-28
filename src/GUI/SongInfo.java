@@ -28,7 +28,7 @@ public class SongInfo extends JPanel implements AddIcon {
     private createArtWorkPanel createArtWorkPanel;
     private likeIcon likeIcon;
 
-    public SongInfo(String path) throws IOException, InvalidDataException, UnsupportedTagException {
+    public SongInfo(String path) throws IOException{
 
         super();
         setPreferredSize(new Dimension(250, 70));
@@ -44,7 +44,6 @@ public class SongInfo extends JPanel implements AddIcon {
     }
 
     public void changeSongInfo(String filePath) throws IOException, InvalidDataException, UnsupportedTagException {
-        System.out.println("the picture changed!!!!!!!!!!!!");
         createInfoPanel.changeSongInfo(filePath);
         createArtWorkPanel.changeSongInfo(filePath);
     }
@@ -113,15 +112,13 @@ public class SongInfo extends JPanel implements AddIcon {
 
 
     class createArtWorkPanel {
-        public createArtWorkPanel(String filePath) throws InvalidDataException, IOException, UnsupportedTagException {
+        public createArtWorkPanel(String filePath) {
             artWork = new JPanel();
             artWork.setPreferredSize(new Dimension(70, 70));
             artWork.setOpaque(true);
             artWork.setBackground(Color.DARK_GRAY);
             JPanel pic = new JPanel();
             pic.setPreferredSize(new Dimension(60, 60));
-
-//            showCoverImage(artWork, filePath);
         }
 
         public void changeSongInfo(String path) throws InvalidDataException, IOException, UnsupportedTagException {
@@ -146,7 +143,6 @@ public class SongInfo extends JPanel implements AddIcon {
                 save.readFile();
             }
 
-//            save.addMusic("F:\\Reza Bahram - Az Eshgh Bego.mp3",true);
             if (path != null) {
                 if (save.getMusics().get(path)) {
                     createIcon(button, "icons\\colored-buttons-2\\png\\003-favorite-heart-button.png", 18, 18);

@@ -3,31 +3,26 @@ package GUI;
 import Logic.RunMusic;
 import Logic.Save;
 import com.mpatric.mp3agic.*;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Map;
-
 import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.Player;
 
 public class CentralPanel extends JPanel {
+    private MusicController musicController;
+
     private static String path;
     private static Thread thread = null;
-    private MusicController musicController;
     private static boolean Playing = false;
     private static RunMusic runMusic;
     private static ArrayList<String> currentList;
 
-//    private InteractivePart interactivePart;
 
     public CentralPanel(SongInfo songInfo, PlayerBox playerBox) throws IOException, InvalidDataException, UnsupportedTagException, JavaLayerException {
         setLayout(new BorderLayout());
@@ -36,12 +31,9 @@ public class CentralPanel extends JPanel {
 
         musicController = new MusicController(songInfo, playerBox);
         TitleBar titleBar = new TitleBar(getMusicController(),getMusicController().getInteractivePart());
-//        interactivePart = new InteractivePart(songInfo);
 
         add(titleBar, BorderLayout.NORTH);
         add(musicController, BorderLayout.CENTER);
-//        add(interactivePart, BorderLayout.CENTER);
-
     }
 
     public static String getPath() {
@@ -80,9 +72,6 @@ public class CentralPanel extends JPanel {
         CentralPanel.runMusic = runMusic;
     }
 
-    //    public InteractivePart getInteractivePart() {
-//        return interactivePart;
-//    }
 }
 
 
@@ -91,7 +80,7 @@ class MusicController extends JPanel {
     private InteractivePart interactivePart;
     private JScrollPane scrollableInteractive;
 
-    public MusicController(SongInfo songInfo, PlayerBox playerBox) throws InvalidDataException, IOException, UnsupportedTagException {
+    public MusicController(SongInfo songInfo, PlayerBox playerBox) {
         setLayout(new BorderLayout());
 
         title = new JPanel();
@@ -105,6 +94,7 @@ class MusicController extends JPanel {
 
         add(title, BorderLayout.NORTH);
         add(scrollableInteractive, BorderLayout.CENTER);
+
     }
 
     public InteractivePart getInteractivePart() {
@@ -120,6 +110,10 @@ class MusicController extends JPanel {
         getInteractivePart().clearPanel();
         revalidate();
         repaint();
+    }
+
+    public JScrollPane getScrollableInteractive() {
+        return scrollableInteractive;
     }
 }
 
@@ -157,13 +151,10 @@ class TitleBar extends JPanel implements MouseListener {
         setSearchBarGUI();
         setIdGUI();
         setEmptySpaceGUI();
-//        setLineGUI();
 
         add(searchBar, BorderLayout.WEST);
         add(emptySpace, BorderLayout.CENTER);
         add(id, BorderLayout.EAST);
-//        add(line,BorderLayout.SOUTH);
-
     }
 
     public MusicController getMusicController() {
@@ -174,7 +165,7 @@ class TitleBar extends JPanel implements MouseListener {
         return interactivePart;
     }
 
-    public void setSearchBarGUI() throws IOException, JavaLayerException {
+    public void setSearchBarGUI() throws IOException {
         Save save=new Save();
         previousBtn = new JButton();
         nextBtn = new JButton();
@@ -242,21 +233,12 @@ class TitleBar extends JPanel implements MouseListener {
         previousBtn.setContentAreaFilled(false);
         previousBtn.setFocusPainted(false);
 
-//        RunMusic runMusic=new RunMusic(CentralPanel.getPath());
-//        Thread thread=new Thread(runMusic);
 
-        previousBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (CentralPanel.getRunMusic().isAlive()) {
-//    ///////////////////////////////////                CentralPanel.getThread().resume();
-                    CentralPanel.getRunMusic().mp3Resume();
-//                    CentralPanel.setPlaying(true);
-                } else {
-                    CentralPanel.getRunMusic().start();
-//                  ///////////////////////////////  CentralPanel.getThread().start();
-//                    CentralPanel.setPlaying(true);
-                }
+        previousBtn.addActionListener(e -> {
+            if (CentralPanel.getRunMusic().isAlive()) {
+                CentralPanel.getRunMusic().mp3Resume();
+            } else {
+                CentralPanel.getRunMusic().start();
             }
         });
 
@@ -268,17 +250,12 @@ class TitleBar extends JPanel implements MouseListener {
         nextBtn.setContentAreaFilled(false);
         nextBtn.setFocusPainted(false);
 
-        nextBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-//                    runMusic.stopThread(thread);
-                    CentralPanel.getRunMusic().mp3Resume();
-//    ///////////////////////////                CentralPanel.getThread().suspend();
-                    CentralPanel.setPlaying(false);
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
+        nextBtn.addActionListener(e -> {
+            try {
+                CentralPanel.getRunMusic().mp3Resume();
+                CentralPanel.setPlaying(false);
+            } catch (Exception e1) {
+                e1.printStackTrace();
             }
         });
 
@@ -302,11 +279,6 @@ class TitleBar extends JPanel implements MouseListener {
         id.add(idLabel);
 
         searchField.addMouseListener(this);
-    }
-
-    public void setLineGUI() {
-        line.setText("          _______________________________________________________________________________________________________________________");
-        line.setForeground(Color.DARK_GRAY);
     }
 
     public void setEmptySpaceGUI() {
@@ -352,23 +324,15 @@ class InteractivePart extends JPanel implements AddIcon {
     private Save save = new Save();
     private RunMusic runMusic;
 
-    public static int getGridX() {
-        return gridX;
-    }
-
     public static void setGridX(int gridX) {
         InteractivePart.gridX = gridX;
-    }
-
-    public static int getGridY() {
-        return gridY;
     }
 
     public static void setGridY(int gridY) {
         InteractivePart.gridY = gridY;
     }
 
-    public InteractivePart(SongInfo songInfo, PlayerBox playerBox) throws IOException, InvalidDataException, UnsupportedTagException {
+    public InteractivePart(SongInfo songInfo, PlayerBox playerBox) {
         super();
         this.songInfo = songInfo;
         this.playerBox = playerBox;
@@ -381,23 +345,7 @@ class InteractivePart extends JPanel implements AddIcon {
         if (Files.exists(Paths.get("C:\\Users\\Public\\Documents\\hashmap.ser"))) {
             save.readFile();
         }
-//        for (Map.Entry<String, Boolean> entry :
-//                save.getMusics().entrySet()) {
-//            makeMusicPad(entry.getKey());
-//            System.out.println(entry.getKey() + "-----------------");
-//        }
-
-
     }
-
-
-//    Image img = ImageIO.read(getClass().getResource("icons\\fence_notes_music_staff_139053_3840x2160.jpg"));
-//    public void paintComponent(Graphics g)
-//    {
-//        g.drawImage(img,0,0,null);
-//        repaint();
-//    }
-
 
     public String findSongInfo(String filePath, int index) throws IOException {
         File file = new File(filePath);
@@ -407,7 +355,7 @@ class InteractivePart extends JPanel implements AddIcon {
             songName[i] = fileContent[i + fileContent.length - 125 + index * 30];
         }
         String name = new String(songName);
-        System.out.println(name);
+//        System.out.println(name);
         return name;
     }
 
@@ -426,7 +374,6 @@ class InteractivePart extends JPanel implements AddIcon {
                 label.setIcon(icon);
             }
         }
-
         container.add(label);
     }
 
@@ -445,7 +392,6 @@ class InteractivePart extends JPanel implements AddIcon {
         panel.setBackground(Color.DARK_GRAY);
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(10, 10, 10, 10);
-//        constraints.fill = GridBagConstraints.BOTH;
         constraints.weightx = 2;
         constraints.gridx = gridX;
         constraints.gridy = gridY;
@@ -491,7 +437,6 @@ class InteractivePart extends JPanel implements AddIcon {
         albumName.setText(findSongInfo(path, 2));
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////
         Font font2 = new Font("Font2", Font.BOLD, 20);
         coverImageJust.setOpaque(true);
         coverImageJust.setBackground(Color.gray);
@@ -521,7 +466,6 @@ class InteractivePart extends JPanel implements AddIcon {
                     }
                 }
                 if (getPart() == 1) {
-                    System.out.println("gegegegegegegegegegege");
                     try {
                         deleteMusicTilesInPlayList(panel, PlayLists.getTheCurrentFilePath(), path);
                     } catch (IOException e1) {
@@ -554,12 +498,6 @@ class InteractivePart extends JPanel implements AddIcon {
                 delete.setText("");
             }
         });
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//        focusListener(coverImage);
-//        focusListener(artistName);
-//        focusListener(albumName);
-//        focusListener(artistName);
 
         panel.add(coverImage, BorderLayout.NORTH);
         panel.add(artistName, BorderLayout.CENTER);
@@ -576,8 +514,6 @@ class InteractivePart extends JPanel implements AddIcon {
             }
             CentralPanel.setPath(path);
             runMusic = new RunMusic(CentralPanel.getPath(),songInfo);
-//         //////////////////////   Thread thread = new Thread(runMusic);
-//          //////////////////////  CentralPanel.setThread(thread);
             CentralPanel.setRunMusic(runMusic);
             try {
                 if (songInfo != null) {
@@ -594,11 +530,8 @@ class InteractivePart extends JPanel implements AddIcon {
             if (CentralPanel.getRunMusic() != null) {
                 CentralPanel.getRunMusic().mp3Pause();/*stop*/
             }
-//            while (true) {
             CentralPanel.setPath(path);
             runMusic = new RunMusic(CentralPanel.getPath(),songInfo);
-//            ////////////////////////////Thread thread = new Thread(runMusic);
-//           ///////////////////// CentralPanel.setThread(thread);
             CentralPanel.setRunMusic(runMusic);
             try {
                 if (songInfo != null) {
@@ -621,8 +554,6 @@ class InteractivePart extends JPanel implements AddIcon {
                 }
                 CentralPanel.setPath(path);
                 runMusic = new RunMusic(CentralPanel.getPath(),songInfo);
-//        /////////////////////////////        Thread thread = new Thread(runMusic);
-//           ////////////////////////     CentralPanel.setThread(thread);
                 CentralPanel.setRunMusic(runMusic);
                 try {
                     if (songInfo != null) {
