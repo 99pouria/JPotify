@@ -13,6 +13,7 @@ import javazoom.jl.player.advanced.AdvancedPlayer;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Random;
 
@@ -24,6 +25,7 @@ public class RunMusic extends Thread {
     private Random random = new Random();
     private SongInfo songInfo;
     private boolean isPaused;
+    private static boolean doesSeek=false;
 
     public RunMusic(String path, SongInfo songInfo) {
         this.path = path;
@@ -35,18 +37,24 @@ public class RunMusic extends Thread {
         try {
             int randomNumber;
 
+            PlayerTools.setThePosition(0);
             bis = new BufferedInputStream(new FileInputStream(path));
             player = new AdvancedPlayer(bis);
             PlayerTools.setMaximum(path);
 
             while (player.play(1)) {
-                PlayerTools.setPosition(player.getPosition());
                 if (isPaused) {
-//                    PlayerTools.getThread().start();
                     synchronized (player) {
                         player.wait();
                     }
                 }
+                if (doesSeek)
+                {
+                    System.out.println((int)PlayerTools.getNewVal());
+                    seekTo((int) PlayerTools.getNewVal());
+                    doesSeek=false;
+                }
+                PlayerTools.setPosition(player.getPosition()+(float) PlayerTools.getThePosition()*100);
             }
 
             while (PlayerTools.isIsRepeat()) {
@@ -123,9 +131,10 @@ public class RunMusic extends Thread {
     }
 
 
-    public void seekTo(int frame) throws JavaLayerException {
+    public void seekTo(int frame) throws JavaLayerException, FileNotFoundException {
         synchronized (player) {
             player.close();
+            bis = new BufferedInputStream(new FileInputStream(path));
             player = new AdvancedPlayer(bis);
             player.play(frame, frame + 1);
         }
@@ -135,4 +144,7 @@ public class RunMusic extends Thread {
         return path;
     }
 
+    public static void setDoesSeek(boolean doesSeek) {
+        RunMusic.doesSeek = doesSeek;
+    }
 }

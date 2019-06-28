@@ -269,7 +269,6 @@ public class PlayLists extends JPanel implements AddIcon {
 
                         @Override
                         public void mousePressed(MouseEvent e) {
-
                         }
 
                         @Override
@@ -522,8 +521,10 @@ public class PlayLists extends JPanel implements AddIcon {
                 for (i = 0; i < save.getSortedMusics().size(); i++) {
                     if (e.getSource() == allMusicsInNewFrame[i]) {
                         try {
-                            getMusicController().getInteractivePart().makeMusicPad(save.getSortedMusics().get(i));
-                            addAndSave(save.getSortedMusics().get(i), getClickedButtonName());
+                            if (!getSongs().contains(save.getSortedMusics().get(i))) {
+                                getMusicController().getInteractivePart().makeMusicPad(save.getSortedMusics().get(i));
+                                addAndSave(save.getSortedMusics().get(i), getClickedButtonName());
+                            }
                             if (sorryLable != null) {
                                 sorryLable.setText("");
                             }
