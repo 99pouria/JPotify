@@ -1,9 +1,17 @@
 package GUI;
 
+import Logic.Music;
+
 import javax.swing.*;
+import javax.swing.text.html.parser.Entity;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FriendActivity extends JPanel {
+    private JPanel friendsList;
+    private JButton[] buttons;
     public FriendActivity() {
         super();
         setPreferredSize(new Dimension(250, 600));
@@ -21,7 +29,7 @@ public class FriendActivity extends JPanel {
         title.setHorizontalAlignment(SwingConstants.CENTER);
         title.setForeground(Color.WHITE);
         JLabel line = new JLabel("  _________________________________");
-        JPanel friendsList = new JPanel();
+        friendsList = new JPanel();
         friendsList.setOpaque(true);
         friendsList.setBackground(Color.BLACK);
         setForeground(Color.BLACK);
@@ -36,6 +44,17 @@ public class FriendActivity extends JPanel {
         add(title);
         add(line);
         add(friendsList);
+    }
 
+    public void refreshFriendList(HashMap<String, ArrayList<Music>> hashMap) {
+        friendsList.removeAll();
+        buttons = new JButton[hashMap.size()];
+        int index = 0;
+        for (Map.Entry<String, ArrayList<Music>> entry : hashMap.entrySet()) {
+            buttons[index] = new JButton(entry.getKey() + ": " + entry.getValue().get(entry.getValue().size()-1));
+            friendsList.add(buttons[index]);
+            index++;
+        }
+        SwingUtilities.updateComponentTreeUI(friendsList);
     }
 }

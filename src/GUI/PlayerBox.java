@@ -72,6 +72,10 @@ class VolumeBox extends JPanel {
         volumeSlider = new JSlider(0, 100, 25);
         volumeButton = new JButton();
 
+        Icon icon = new ImageIcon("icons\\circle.png");
+        UIDefaults uiDefaults = UIManager.getDefaults();
+        uiDefaults.put("Slider.horizontalThumbIcon", icon);
+
         setPreferredSize(new Dimension(250, 70));
         setOpaque(true);
         setBackground(Color.DARK_GRAY);
