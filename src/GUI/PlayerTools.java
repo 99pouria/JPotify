@@ -20,7 +20,6 @@ public class PlayerTools extends JPanel implements AddIcon {
 
     private RunMusic runMusic;
     private static JSlider progressBar;
-//    private static ProgressBar progressBar;
     private JPanel buttonsPanel;
     private JButton play;
     private JButton back;
@@ -30,6 +29,10 @@ public class PlayerTools extends JPanel implements AddIcon {
     private SongInfo songInfo;
     private boolean isShuffle = false;
     private static boolean isRepeat = false;
+    private static double newVal=0;
+    private static int frame;
+    private static double totalFrames;
+    private static double thePosition=0;
 
     public JButton getPlay() {
         return play;
@@ -83,6 +86,44 @@ public class PlayerTools extends JPanel implements AddIcon {
         progressBar.setOpaque(true);
         progressBar.setBackground(Color.DARK_GRAY);
         progressBar.setSnapToTicks(true);
+        progressBar.putClientProperty( "Slider.paintThumbArrowShape", Boolean.FALSE );
+        progressBar.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                Point p = e.getPoint();
+                double percent = p.x / (double) progressBar.getWidth();
+                double range = progressBar.getMaximum();
+                thePosition = percent * range/100.0f;
+                newVal =  percent *  totalFrames;
+//                progressBar.setValue((int)newVal);
+
+                System.out.println(newVal);
+                RunMusic.setDoesSeek(true);
+                System.out.println(thePosition);
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+
 //        progressBar.addChangeListener(new ChangeListener() {
 //            @Override
 //            public void stateChanged(ChangeEvent e) {
@@ -101,6 +142,7 @@ public class PlayerTools extends JPanel implements AddIcon {
     public static boolean isIsRepeat() {
         return isRepeat;
     }
+
 
     public void buttonEventHandler(JButton button, String icon1, String icon2, String icon3, String icon4) {
         button.addMouseListener(new MouseListener() {
@@ -419,10 +461,24 @@ public class PlayerTools extends JPanel implements AddIcon {
         Mp3File song = new Mp3File(path);
         long time= song.getLengthInSeconds();
         progressBar.setMaximum((int) time*1000);
+        totalFrames=song.getFrameCount();
     }
 
     public static void setPosition(float position){
+        System.out.println(position+"fwfwfwfwf");
         progressBar.setValue((int)position);
+    }
+
+    public static double getNewVal() {
+        return newVal;
+    }
+
+    public static double getThePosition() {
+        return thePosition;
+    }
+
+    public static void setThePosition(double thePosition) {
+        PlayerTools.thePosition = thePosition;
     }
 }
 

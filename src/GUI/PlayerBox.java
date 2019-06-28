@@ -83,8 +83,10 @@ class VolumeBox extends JPanel {
 
         volumeSlider.setOpaque(true);
         volumeSlider.setBackground(Color.DARK_GRAY);
+        volumeSlider.putClientProperty( "Slider.paintThumbArrowShape", Boolean.TRUE );
 
-        volumeSlider.setExtent(50);
+
+//        volumeSlider.setExtent(50);
 
         add(volumeButton);
         add(volumeSlider);
